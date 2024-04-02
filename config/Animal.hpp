@@ -5,11 +5,12 @@
 using namespace std;
 
 class Animal : public GameObject {
-    private:
+    protected:
         string type;
         int weight_to_harvest;
     public:
         Animal(string type, int w, int id, string code, string name, int price);
+        ~Animal();
 };
 
 
