@@ -1,5 +1,5 @@
 # Struktur Folder
-
+```
 │ .gitignore
 │ README.md
 ├── bin          # klw kamu jago baca ini binary code
@@ -29,3 +29,4 @@
 │   │   ├── header
 │   │   └── body
 .   └── Main
+```
