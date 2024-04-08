@@ -33,11 +33,6 @@ all: build run
 
 build: $(MAIN_OUT)
 
-print:
-	@echo "$(MAIN_OBJ)"
-	@echo "$(ALL_OBJ)"
-	@echo "$(MAIN)"
-
 run:
 	$(MAIN_OUT)
 
