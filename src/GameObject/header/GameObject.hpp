@@ -73,7 +73,7 @@ public:
 
     /**
      * Mengganti seluruh nilai atribut dengan nilai default
-     * Mengosongkan object
+     * a.k.a. Mengosongkan object
     */
     virtual void clearData();
 };
