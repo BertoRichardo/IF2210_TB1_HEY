@@ -4,6 +4,13 @@
 #include <iostream>
 using namespace std;
 
+/**
+ * BaseClass for Building, Product, Plant, and Animal classes
+ * Inherited attribute:
+ * - kodeHuruf : string
+ * - name : string
+ * - price : int
+*/
 class GameObject
 {
 protected:
@@ -31,10 +38,20 @@ public:
     GameObject(const string &, const string &, int);
 
     /**
+     * Copy Constructor GameObject
+     * @param other - GameObject lain yang akan dicopy
+    */
+    GameObject(const GameObject&);
+
+    /**
+     * assigment operator
+    */
+   GameObject& operator=(const GameObject&);
+    /**
      * Destructor 
      * - do nothing
     */
-    ~GameObject();
+    virtual ~GameObject();
     
     /*Selektor*/
     /**
@@ -72,10 +89,10 @@ public:
     bool isEmpty() const;
 
     /**
-     * Mengganti seluruh nilai atribut dengan nilai default
+     * Mengganti seluruh nilai atribut dengan nilai default.
      * a.k.a. Mengosongkan object
     */
-    virtual void clearData();
+    void clearData();
 };
 
 #endif

@@ -14,10 +14,26 @@ GameObject::GameObject(const string &kodeHuruf_, const string &name_, int price_
     price = price_;
 }
 
-GameObject::~GameObject()
+GameObject::GameObject(const GameObject& other)
 {
-
+    kodeHuruf = other.kodeHuruf;
+    name = other.name;
+    price = other.price;
 }
+
+GameObject& GameObject::operator=(const GameObject& other)
+{
+    if (this != &other)
+    {
+        kodeHuruf = other.kodeHuruf;
+        name = other.name;
+        price = other.price;
+    }
+    return *this;
+}
+
+GameObject::~GameObject()
+{ }
 
 string GameObject::getKodeHuruf() const 
 {
