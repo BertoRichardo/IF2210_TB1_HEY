@@ -2,3 +2,7 @@
 .vscode/
 
 testing/
+bin/output
+bin/driver
+bin/main
+src/*/test/
