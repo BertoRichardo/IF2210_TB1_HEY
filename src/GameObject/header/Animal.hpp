@@ -3,6 +3,7 @@
 
 #include "GameObject.hpp"
 #include "Product.hpp"
+#include <vector>
 #include "../../GameException/header/GameException.hpp"
 
 /** Abstract Class for Animal */
@@ -11,7 +12,7 @@ protected:
     string type;
     int harvestWeight;
     int weight;
-    Product product;
+    vector<Product> products;
 
 public:
     /**
@@ -21,7 +22,7 @@ public:
      * - type = ""
      * - harvestWeight = 0
      * - weight = 0
-     * - product = new Product()
+     * - products = new vector<Product>
     */
     Animal();
     /**
@@ -32,7 +33,7 @@ public:
      * @param type_ tipe tanaman
      * @param harvestWeight_ berat tanaman untuk dipanen
      * @param weight_ umur tanaman saat ini
-     * @param product_ product yang akan dihasilkan jika dipanen
+     * @param products_ product yang akan dihasilkan jika dipanen
     */
     Animal(
         const string& kodeHuruf_, 
@@ -41,7 +42,7 @@ public:
         const string& type_, 
         int harvestWeight_, 
         int weight_, 
-        const Product& product_
+        const vector<Product>& products_
     );
 
     /**
@@ -67,8 +68,8 @@ public:
     int getWeight() const;
     void setWeight(int weight_);
 
-    Product getProduct() const;
-    void setProduct(const Product &product_);
+    vector<Product> getProduct() const;
+    void setProduct(const vector<Product> &products_);
 
     /**
      * Memberi pakan untuk hewan
@@ -88,7 +89,7 @@ public:
      * Memanen hewan
      * @return product : Product
     */
-    Product harvest();
+    vector<Product> harvest();
 };
 
 class Carnivore: public Animal {
@@ -115,7 +116,7 @@ public:
         const string& type_, 
         int harvestWeight_, 
         int weight_, 
-        const Product& product_
+        const vector<Product>& products_
     );
     /**
      * cctor
@@ -158,7 +159,7 @@ public:
      * @param type_ tipe tanaman
      * @param harvestWeight_ berat tanaman untuk dipanen
      * @param weight_ umur tanaman saat ini
-     * @param product_ product yang akan dihasilkan jika dipanen
+     * @param products_ product yang akan dihasilkan jika dipanen
     */
     Herbivore(
         const string& kodeHuruf_, 
@@ -167,7 +168,7 @@ public:
         const string& type_, 
         int harvestWeight_, 
         int weight_, 
-        const Product& product_
+        const vector<Product>& products_
     );
     /**
      * cctor
@@ -210,7 +211,7 @@ public:
      * @param type_ tipe tanaman
      * @param harvestWeight_ berat tanaman untuk dipanen
      * @param weight_ umur tanaman saat ini
-     * @param product_ product yang akan dihasilkan jika dipanen
+     * @param products_ product yang akan dihasilkan jika dipanen
     */
     Omnivore(
         const string& kodeHuruf_, 
@@ -219,7 +220,7 @@ public:
         const string& type_, 
         int harvestWeight_, 
         int weight_, 
-        const Product& product_
+        const vector<Product>& products_
     );
     /**
      * cctor

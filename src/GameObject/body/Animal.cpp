@@ -17,13 +17,13 @@ Animal::Animal(
     const string& type_, 
     int harvestWeight_, 
     int weight_, 
-    const Product& product_
+    const vector<Product>& products_
 ): GameObject(kodeHuruf_, name_, price_) 
 {
     type = type_;
     harvestWeight = harvestWeight_;
     weight = weight_;
-    product = product_;
+    products = products_;
 }
 
 Animal::Animal(const Animal& other)
@@ -32,7 +32,7 @@ Animal::Animal(const Animal& other)
     type = other.type;
     harvestWeight = other.harvestWeight;
     weight = other.weight;
-    product = other.product;
+    products = other.products;
 }
 
 Animal& Animal::operator=(const Animal& other)
@@ -45,7 +45,7 @@ Animal& Animal::operator=(const Animal& other)
         type = other.type;
         harvestWeight = other.harvestWeight;
         weight = other.weight;
-        product = other.product;
+        products = other.products;
     }
     return *this;
 }
@@ -82,18 +82,18 @@ void Animal::setWeight(int weight_)
     weight = weight_; 
 }
 
-Product Animal::getProduct() const 
+vector<Product> Animal::getProduct() const 
 { 
-    return product; 
+    return products; 
 }
-void Animal::setProduct(const Product &product_) 
+void Animal::setProduct(const vector<Product> &products_) 
 { 
-    product = product_; 
+    products = products_; 
 }
 
-Product Animal::harvest()
+vector<Product> Animal::harvest()
 {
-    return product;
+    return products;
 }
 
 ///
@@ -109,7 +109,7 @@ Carnivore::Carnivore(
     const string& type_, 
     int harvestWeight_, 
     int weight_, 
-    const Product& product_
+    const vector<Product>& products_
 ) : Animal(
     kodeHuruf_, 
     name_, 
@@ -117,7 +117,7 @@ Carnivore::Carnivore(
     type_, 
     harvestWeight_, 
     weight_, 
-    product_
+    products_
 ) {}
 
 Carnivore::Carnivore(const Carnivore& other): Animal(other) {}
@@ -132,7 +132,7 @@ Carnivore& Carnivore::operator=(const Carnivore& other)
         type = other.type;
         harvestWeight = other.harvestWeight;
         weight = other.weight;
-        product = other.product;
+        products = other.products;
     }
     return *this;
 }
@@ -167,7 +167,7 @@ Herbivore::Herbivore(
     const string& type_, 
     int harvestWeight_, 
     int weight_, 
-    const Product& product_
+    const vector<Product>& products_
 ) : Animal(
     kodeHuruf_, 
     name_, 
@@ -175,7 +175,7 @@ Herbivore::Herbivore(
     type_, 
     harvestWeight_, 
     weight_, 
-    product_
+    products_
 ) {}
 
 Herbivore::Herbivore(const Herbivore& other): Animal(other) {}
@@ -190,7 +190,7 @@ Herbivore& Herbivore::operator=(const Herbivore& other)
         type = other.type;
         harvestWeight = other.harvestWeight;
         weight = other.weight;
-        product = other.product;
+        products = other.products;
     }
     return *this;
 }
@@ -225,7 +225,7 @@ Omnivore::Omnivore(
     const string& type_, 
     int harvestWeight_, 
     int weight_, 
-    const Product& product_
+    const vector<Product>& products_
 ) : Animal(
     kodeHuruf_, 
     name_, 
@@ -233,7 +233,7 @@ Omnivore::Omnivore(
     type_, 
     harvestWeight_, 
     weight_, 
-    product_
+    products_
 ) {}
 
 Omnivore::Omnivore(const Omnivore& other): Animal(other) {}
@@ -248,7 +248,7 @@ Omnivore& Omnivore::operator=(const Omnivore& other)
         type = other.type;
         harvestWeight = other.harvestWeight;
         weight = other.weight;
-        product = other.product;
+        products = other.products;
     }
     return *this;
 }
