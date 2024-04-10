@@ -29,16 +29,16 @@ public:
      * @param origin asal product
      * @param addedWeight berat tambahan jika dimakan oleh Player atau Animal
     */
-    Product(const string&, const string&, int, const string&, const string&, int);
+    Product(const string& kodeHuruf_, const string& name_, int price_, const string& type_, const string& origin_, int addedWeight_);
     /**
      * Copy Constructor
      * @param other - Product lain yang akan dicopy
     */
-    Product(const Product&);
+    Product(const Product& other);
     /**
      * assignment operator
     */
-    Product& operator=(const Product&);
+    Product& operator=(const Product& other);
     
     ~Product();
 

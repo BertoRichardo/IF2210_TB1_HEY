@@ -84,6 +84,11 @@ void Plant::setProduct(const Product &product_)
     product = product_;
 }
 
+bool Plant::isReadyToHarvest()
+{
+    return duration >= harvestDuration;
+}
+
 Product Plant::harvest()
 {
     return product;
