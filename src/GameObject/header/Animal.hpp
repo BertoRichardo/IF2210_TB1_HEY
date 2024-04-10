@@ -173,11 +173,11 @@ public:
     /**
      * cctor
     */
-    Herbivore(const Carnivore& other);
+    Herbivore(const Herbivore& other);
     /**
      * assignment operator
     */
-    Herbivore& operator=(const Carnivore&);
+    Herbivore& operator=(const Herbivore&);
 
     ~Herbivore();
 
@@ -225,11 +225,11 @@ public:
     /**
      * cctor
     */
-    Omnivore(const Carnivore& other);
+    Omnivore(const Omnivore& other);
     /**
      * assignment operator
     */
-    Carnivore& operator=(const Carnivore&);
+    Omnivore& operator=(const Omnivore&);
 
     ~Omnivore();
 
