@@ -41,8 +41,11 @@ clean:
 
 recompile: clean all
 
-$(OBJ_PATH)/%.o : $(SRC_PATH)/%.cpp
-	$(CC) $(CXXFLAGS) -c -o $(OBJ_PATH)/$(notdir $*.o) $<
+%.run: %/driver
+	$(BIN_PATH)/driver
+
+%/driver: $(ALL_OBJ) $(OBJ_PATH)/%/$(SRC_TEST)/driver.o
+	$(CC) $(CXXFLAGS) -o $(BIN_PATH)/driver $(foreach f, $^,$(OBJ_PATH)/$(notdir $f))
 
 $(MAIN_OUT): $(ALL_OBJ) $(MAIN_OBJ)
 	$(CC) $(CXXFLAGS) -o $@ $(foreach f, $^,$(OBJ_PATH)/$(notdir $f))
