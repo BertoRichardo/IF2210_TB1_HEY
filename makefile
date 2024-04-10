@@ -49,3 +49,6 @@ recompile: clean all
 
 $(MAIN_OUT): $(ALL_OBJ) $(MAIN_OBJ)
 	$(CC) $(CXXFLAGS) -o $@ $(foreach f, $^,$(OBJ_PATH)/$(notdir $f))
+
+$(OBJ_PATH)/%.o : $(SRC_PATH)/%.cpp
+	$(CC) $(CXXFLAGS) -c -o $(OBJ_PATH)/$(notdir $*.o) $<
