@@ -26,9 +26,8 @@ Animal::Animal(
     products = products_;
 }
 
-Animal::Animal(const Animal& other)
+Animal::Animal(const Animal& other): GameObject(other)
 {
-    GameObject(other);
     type = other.type;
     harvestWeight = other.harvestWeight;
     weight = other.weight;

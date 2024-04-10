@@ -7,17 +7,16 @@ Product::Product(): GameObject()
     addedWeight = 0;
 }
 
-Product::Product(const string& kodeHuruf_, const string& name_, int price_, const string& type_, const string& origin_, int addedWeight_)
+Product::Product(const string& kodeHuruf_, const string& name_, int price_, const string& type_, const string& origin_, int addedWeight_):
+GameObject(kodeHuruf_, name_, price_)
 {
-    GameObject(kodeHuruf_, name_, price_);
     type = type_;
     origin = origin_;
     addedWeight = addedWeight_;
 }
 
-Product::Product(const Product& other)
+Product::Product(const Product& other): GameObject(other)
 {
-    GameObject(other);
     type = other.type;
     origin = other.origin;
     addedWeight = other.addedWeight;

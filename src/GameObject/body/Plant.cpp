@@ -1,25 +1,23 @@
 #include "../header/Plant.hpp"
 
-Plant::Plant()
+Plant::Plant() : GameObject()
 {
-    GameObject();
     type = "";
     harvestDuration = 0;
     duration = 0;
 }
 
-Plant::Plant(const string& kodeHuruf_, const string& name_, int price_, const string& type_, int harvestDuration_, int duration_, const Product& product_)
+Plant::Plant(const string& kodeHuruf_, const string& name_, int price_, const string& type_, int harvestDuration_, int duration_, const Product& product_):
+GameObject(kodeHuruf_, name_, price_)
 {
-    GameObject(kodeHuruf_, name_, price_);
     type = type_;
     harvestDuration = harvestDuration_;
     duration = duration_;
     product = product_;
 }
 
-Plant::Plant(const Plant& other)
+Plant::Plant(const Plant& other): GameObject(other)
 {
-    GameObject(other);
     type = other.type;
     harvestDuration = other.harvestDuration;
     duration = other.duration;

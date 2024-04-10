@@ -1,19 +1,16 @@
 #include "../header/Building.hpp"
 
-Building::Building()
-{
-    GameObject();
-}
+Building::Building(): GameObject()
+{}
 
-Building::Building(const string& kodeHuruf_, const string& name_, int price_, const vector<pair<string, int>> &recipe_)
+Building::Building(const string& kodeHuruf_, const string& name_, int price_, const vector<pair<string, int>> &recipe_):
+GameObject(kodeHuruf_, name_, price_)
 {
-    GameObject(kodeHuruf_, name_, price_);
     recipe = recipe_;
 }
 
-Building::Building(const Building& other)
+Building::Building(const Building& other): GameObject(other)
 {
-    GameObject(other);
     recipe = other.recipe;
 }
 
