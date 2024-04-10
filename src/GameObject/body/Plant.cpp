@@ -42,7 +42,9 @@ Plant& Plant::operator=(const Plant& other)
 }
 
 Plant::~Plant()
-{}
+{
+    type.clear();
+}
 
 string Plant::getType()
 {

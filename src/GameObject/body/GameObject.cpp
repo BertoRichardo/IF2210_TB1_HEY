@@ -33,7 +33,10 @@ GameObject& GameObject::operator=(const GameObject& other)
 }
 
 GameObject::~GameObject()
-{ }
+{ 
+    kodeHuruf.clear();
+    name.clear();
+}
 
 string GameObject::getKodeHuruf() const 
 {

@@ -38,7 +38,10 @@ Product& Product::operator=(const Product& other)
 }
 
 Product::~Product()
-{}
+{
+    type.clear();
+    origin.clear();
+}
 
 string Product::getType() const
 {
