@@ -9,6 +9,7 @@ CXXFLAGS = $(DEBUG_CXXFLAG) $(WARNING_CXXFLAG)
 # Directory
 SRC_PATH = src
 SRC_BODY = body
+SRC_TEST = test
 BIN_PATH = bin
 OBJ_PATH = $(BIN_PATH)/output
 
