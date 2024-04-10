@@ -4,6 +4,8 @@
 using namespace std;
 #include <iostream>
 #include <string>
+#include <sstream>
+#include <iomanip>
 #include <vector>
 
 template <class T>
@@ -16,12 +18,24 @@ private:
 
 public:
     /**
+     * Default Constructor
+     */
+    MatrixContainer()
+    {
+        rowSize = 0;
+        colSize = 0;
+        buffer.resize(0);
+    }
+
+    /**
      * User Defined Constructor
      * @param r ukuran row
      * @param c ukuran column
      */
     MatrixContainer(int r, int c)
     {
+        rowSize = r;
+        colSize = c;
         buffer.resize(r);
         for (int i = 0; i < r; ++i)
         {
@@ -79,6 +93,52 @@ public:
     }
 
     /**
+     * Mendapatkan item dari matrix[r][c]
+     * @param r row
+     * @param c column
+     * @return Item pada cell tersebut : T
+     */
+    T getItem(string koordinat)
+    {
+        // Cari nilai kolom
+        int i = 0;
+        int c = 0;
+        if (koordinat[i] < 'A' || koordinat[i] > 'Z')
+        {
+            /**
+             * TODO: Throw invalidInput
+             */
+        }
+        else
+        {
+            while (koordinat[i] >= 'A' && koordinat[i] <= 'Z')
+            {
+                c += c * 10 + koordinat[i] - 'A';
+                i++;
+            }
+        }
+
+        // Cari nilai baris
+        int r = 0;
+        for (int j = i; j < koordinat.length(); i++)
+        {
+            // Cek
+            if (koordinat[i] >= '0' && koordinat[i] <= '9')
+            {
+                r += r * 10 + koordinat[i] - '0';
+            }
+            else
+            {
+                /**
+                 * TODO: throw invalidInput
+                 */
+            }
+        }
+
+        return getItem(r, c);
+    }
+
+    /**
      * Menghapus item dari matrix[r][c]
      * @param r row
      * @param c column
@@ -112,25 +172,69 @@ public:
 
     void printMatrix()
     {
+        cout << rowSize << endl;
+        cout << colSize << endl;
+        char c = 'A';
+        int idx = 0;
+        for (int j = 0; j < colSize; j++)
+        {
+            if (j == 0)
+            {
+                cout << "   ";
+            }
+            if (idx <= 25)
+            {
+                cout << "   " << char(c + idx) << "  ";
+            }
+            else
+            {
+                char front = c + (((idx / 26) - 1) % 26);
+                char back = c + (idx % 26);
+                cout << "  " << front << back << "  ";
+            }
+            idx++;
+        }
+        cout << endl;
         for (int i = 0; i < rowSize; i++)
         {
-
             for (int j = 0; j < colSize; j++)
             {
-                cout << "+---";
+                if (j == 0)
+                {
+                    cout << "   ";
+                }
+                cout << "+-----";
             }
-            cout << "+";
+            cout << "+" << endl;
             for (int j = 0; j < colSize; j++)
             {
-                cout << "|" << buffer[i][j].getKodeHuruf();
+                if (j == 0)
+                {
+                    cout << setfill('0') << setw(2) << i + 1 << " ";
+                }
+                if (buffer[i][j].getKodeHuruf() == "")
+                {
+                    cout << "|"
+                         << "     ";
+                }
+                else
+                {
+                    cout << "| " << buffer[i][j].getKodeHuruf() << " ";
+                }
             }
-            cout << "|";
+            // cout << "|  " << i + 1 << endl;
+            cout << "|" << endl;
         }
         for (int j = 0; j < colSize; j++)
         {
-            cout << "+---";
+            if (j == 0)
+            {
+                cout << "   ";
+            }
+            cout << "+-----";
         }
         cout << "+";
+        cout << endl;
     }
 };
 
