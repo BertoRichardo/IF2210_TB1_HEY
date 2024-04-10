@@ -21,19 +21,19 @@ public:
      * @param price_ harga bangunan
      * @param recipe_ resep bangunan
     */
-    Building(const string&, const string&, int, const vector<pair<string, int>> &);
+    Building(const string& kodeHuruf_, const string& name_, int price_, const vector<pair<string, int>> &recipe_);
     /**
      * Copy Constructor Bangunan
      * @param other bangunan lain yang akan di-copy
     */
-    Building(const Building&);
+    Building(const Building& other);
     /**
      * Melakukan clear pada recipe untuk melepaskan memori 
     */
    /**
     * assignment operator
    */
-    Building& operator=(const Building&);
+    Building& operator=(const Building& other);
     
     ~Building();
 
@@ -41,7 +41,7 @@ public:
      * Selector
     */
     vector<pair<string,int>> getRecipe() const;
-    void setRecipe(const vector<pair<string,int>> &);
+    void setRecipe(const vector<pair<string,int>> &recipe_);
 };
 
 #endif

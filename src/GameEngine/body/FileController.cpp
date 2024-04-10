@@ -20,7 +20,6 @@ vector<vector<string>> FileController::readFile(string path) {
     file.open(path, ios::in);
     if (file.is_open()) {
         string line;
-        int i = 0;
         while (getline(file, line)) {
             vector<string> this_line;
             this_line = split(line, ' ');

@@ -35,18 +35,18 @@ public:
      * @param _name Nama object yang sesuai dengan config
      * @param _price Nilai harga jual/beli object
     */
-    GameObject(const string &, const string &, int);
+    GameObject(const string &kodeHuruf_, const string &name_, int price_);
 
     /**
      * Copy Constructor GameObject
      * @param other - GameObject lain yang akan dicopy
     */
-    GameObject(const GameObject&);
+    GameObject(const GameObject& other);
 
     /**
      * assigment operator
     */
-   GameObject& operator=(const GameObject&);
+   GameObject& operator=(const GameObject& other);
     /**
      * Destructor 
      * - do nothing
@@ -61,7 +61,7 @@ public:
     /**
      * @param kodeHuruf_ kodeHuruf baru yang akan diassign pada kodeHuruf
     */
-    void setKodeHuruf(const string &);
+    void setKodeHuruf(const string &kodeHuruf_);
 
     /**
      * @return name : string
@@ -70,7 +70,7 @@ public:
     /**
      * @param name_ nama object yang baru
     */
-    void setName(const string &);
+    void setName(const string & name_);
 
     /**
      * @return price : int
@@ -79,7 +79,7 @@ public:
     /**
      * @param price price baru
     */
-    void setPrice(int);
+    void setPrice(int price_);
 
     /**
      * Mengecek apakah object kosong atau tidak.

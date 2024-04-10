@@ -28,16 +28,16 @@ public:
      * @param duration_ umur tanaman saat ini
      * @param product_ product yang akan dihasilkan jika dipanen
     */
-   Plant(const string&, const string&, int, const string&, int, int, const Product&);
+   Plant(const string& kodeHuruf_, const string& name_, int price_, const string& type_, int harvestDuration_, int duration_, const Product& product_);
    /**
     * cctor
     * @param other Tanaman lain
    */
-    Plant(const Plant&);
+    Plant(const Plant& other);
     /**
      * operator assignment
     */
-    Plant& operator=(const Plant&);
+    Plant& operator=(const Plant& other);
     ~Plant();
 
     /**
@@ -55,6 +55,11 @@ public:
     Product getProduct() const;
     void setProduct(const Product &product_);
 
+    /**
+     * Mengecek apakah Plant dapat dipanen 
+     * @return duration >= harvestDuration 
+    */
+    bool isReadyToHarvest();
     /**
      * Memanen tanaman jika tanaman sudah dapat dipanen
      * @return product : Product

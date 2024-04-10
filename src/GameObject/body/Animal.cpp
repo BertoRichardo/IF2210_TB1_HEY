@@ -90,6 +90,11 @@ void Animal::setProduct(const vector<Product> &products_)
     products = products_; 
 }
 
+bool Animal::isReadyToHarvest()
+{
+    return weight >= harvestWeight;
+}
+
 vector<Product> Animal::harvest()
 {
     return products;

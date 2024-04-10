@@ -52,7 +52,7 @@ public:
     /**
      * assignment operator
     */
-    Animal& operator=(const Animal&);
+    Animal& operator=(const Animal& other);
 
     ~Animal();
 
@@ -85,6 +85,11 @@ public:
     */
     virtual void operator+=(const Product& food) = 0;
 
+    /**
+     * Mengecek apakah animal sudah bisa dipanen atau tidak
+     * @return weight >= harvestWeight
+    */
+    bool isReadyToHarvest();
     /**
      * Memanen hewan
      * @return product : Product
@@ -125,7 +130,7 @@ public:
     /**
      * assignment operator
     */
-    Carnivore& operator=(const Carnivore&);
+    Carnivore& operator=(const Carnivore& other);
 
     ~Carnivore();
 
@@ -177,7 +182,7 @@ public:
     /**
      * assignment operator
     */
-    Herbivore& operator=(const Herbivore&);
+    Herbivore& operator=(const Herbivore& other);
 
     ~Herbivore();
 
@@ -229,7 +234,7 @@ public:
     /**
      * assignment operator
     */
-    Omnivore& operator=(const Omnivore&);
+    Omnivore& operator=(const Omnivore& other);
 
     ~Omnivore();
 
