@@ -7,6 +7,8 @@ using namespace std;
 #include <sstream>
 #include <iomanip>
 #include <vector>
+#include <utility>
+#include "../../GameObject/header/Product.hpp"
 
 template <class T>
 class MatrixContainer
@@ -48,8 +50,24 @@ public:
      */
     ~MatrixContainer()
     {
+        for (int i = 0; i < rowSize; ++i)
+        {
+            buffer[i].clear();
+        }
+        buffer.clear();
     }
 
+    // *Getter */
+    int getRow()
+    {
+        return rowSize;
+    }
+
+    int getCol()
+    {
+        return colSize;
+    }
+    
     /* SELECTOR */
     /**
      * Menambahakan item pada matrix[r][c]
@@ -59,15 +77,25 @@ public:
      */
     void addItem(int r, int c, T item)
     {
-        if (isCellEmpty(r, c))
+        // handle out of idx
+        if (r - 1 > rowSize || c - 1 > colSize)
         {
-            buffer[r][c] = item;
+            /**
+             * -TODO: throw IndexOutOfBound
+             */
         }
         else
         {
-            /**
-             * -TODO: throw
-             */
+            if (isCellEmpty(r - 1, c - 1))
+            {
+                buffer[r - 1][c - 1] = item;
+            }
+            else
+            {
+                /**
+                 * -TODO: throw
+                 */
+            }
         }
     }
 
@@ -79,26 +107,35 @@ public:
      */
     T getItem(int r, int c)
     {
-        if (!isCellEmpty(r, c))
+
+        if (r - 1 > rowSize || c - 1 > colSize)
         {
-            return buffer[r][c];
+            /**
+             * -TODO: throw IndexOutOfBound
+             */
         }
         else
         {
-            return buffer[r][c];
-            /**
-             * -TODO: throw
-             */
+            if (!isCellEmpty(r - 1, c - 1))
+            {
+                return buffer[r - 1][c - 1];
+            }
+            else
+            {
+                return buffer[r - 1][c - 1];
+                /**
+                 * -TODO: throw CellEmpty
+                 */
+            }
         }
     }
 
     /**
-     * Mendapatkan item dari matrix[r][c]
-     * @param r row
-     * @param c column
+     * Mendapatkan item dari suatu cell
+     * @param koordinat
      * @return Item pada cell tersebut : T
      */
-    T getItem(string koordinat)
+    pair<int, int> strToRowCol(string koordinat)
     {
         // Cari nilai kolom
         int i = 0;
@@ -113,19 +150,21 @@ public:
         {
             while (koordinat[i] >= 'A' && koordinat[i] <= 'Z')
             {
-                c += c * 10 + koordinat[i] - 'A';
+                c *= 26;
+                c += koordinat[i] - 'A' + 1;
                 i++;
             }
         }
 
         // Cari nilai baris
         int r = 0;
-        for (int j = i; j < koordinat.length(); i++)
+        for (int j = i; j < koordinat.length(); j++)
         {
             // Cek
-            if (koordinat[i] >= '0' && koordinat[i] <= '9')
+            if (koordinat[j] >= '0' && koordinat[j] <= '9')
             {
-                r += r * 10 + koordinat[i] - '0';
+                r *= 10;
+                r += koordinat[j] - '0';
             }
             else
             {
@@ -134,10 +173,36 @@ public:
                  */
             }
         }
-
-        return getItem(r, c);
+        return pair<r, c>;
     }
 
+    /**
+     * Mendapatkan makanan dari suatu cell
+     * @param koordinat
+     * @return makanan pada cell tersebut atau throw NotEdible atau NotProduct
+     */
+    T getMakanan(int r, int c)
+    {
+        if (dynamic_cast<Product *>(getItem(r, c)) != NULL)
+        {
+            if (dynamic_cast<Product *>(getItem(r, c))->getAddedWeight() != 0)
+            {
+                return getItem(r, c);
+            }
+            else
+            {
+                /**
+                 * -TODO: throw NotEdible
+                 */
+            }
+        }
+        else
+        {
+            /**
+             * -TODO: throw NotProduct
+             */
+        }
+    }
     /**
      * Menghapus item dari matrix[r][c]
      * @param r row
@@ -147,14 +212,12 @@ public:
     {
         if (!isCellEmpty(r, c))
         {
-            int start = c;
-            int end = c + 1;
-            buffer[r].erase(std::next(buffer[r].begin(), start), std::next(buffer[r].begin(), end));
+            buffer[r][c] = NULL;
         }
         else
         {
             /**
-             * -TODO: throw
+             * -TODO: throw CellEMpty
              */
         }
     }
@@ -167,13 +230,91 @@ public:
      */
     bool isCellEmpty(int r, int c)
     {
-        return buffer[r][c].isEmpty();
+        return buffer[r][c] == NULL;
+    }
+
+    /**
+     * Mengecek cell matrix[r][c] kosong atau tidak
+     * @param obj objek pembanding
+     * @return true jika matrix mengandung objek dengan kelas yang sama dengan obj
+     */
+    bool isTypeEmpty(T obj)
+    {
+        for (int i = 0; i < rowSize; i++)
+        {
+            for (int j = 0; j < colSize; j++)
+            {
+                if (!isCellEmpty(i, j) && typeid(buffer[i][j]) == typeid(obj))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    bool isFoodEmpty()
+    {
+        for (int i = 0; i < rowSize; i++)
+        {
+            for (int j = 0; j < colSize; j++)
+            {
+                if (!isCellEmpty(i, j) &&
+                    typeid(buffer[i][j]) == typeid(obj) &&
+                    dynamic_cast<Product *>(getItem(koordinat))->getAddedWeight() != 0)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Mengecek apakah matrix kosong atau tidak
+     * @return true jika matrix kosong
+     */
+    bool isMatrixEmpty()
+    {
+        for (int i = 0; i < rowSize; i++)
+        {
+            for (int j = 0; j < colSize; j++)
+            {
+                if (buffer[i][j] != NULL)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Mengecek apakah matrix penuh atau tidak
+     * @return true jika matrix penuh
+     */
+    bool isMatrixFull()
+    {
+        for (int i = 0; i < rowSize; i++)
+        {
+            for (int j = 0; j < colSize; j++)
+            {
+                if (buffer[i][j] == NULL)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     void printMatrix()
     {
+        // print size
         cout << rowSize << endl;
         cout << colSize << endl;
+
+        // print koordinat column
         char c = 'A';
         int idx = 0;
         for (int j = 0; j < colSize; j++)
@@ -195,8 +336,10 @@ public:
             idx++;
         }
         cout << endl;
+
         for (int i = 0; i < rowSize; i++)
         {
+            // print tabel
             for (int j = 0; j < colSize; j++)
             {
                 if (j == 0)
@@ -206,25 +349,31 @@ public:
                 cout << "+-----";
             }
             cout << "+" << endl;
+
             for (int j = 0; j < colSize; j++)
             {
+                // print koordinat baris
                 if (j == 0)
                 {
                     cout << setfill('0') << setw(2) << i + 1 << " ";
                 }
-                if (buffer[i][j].getKodeHuruf() == "")
+
+                // print kode
+                if (buffer[i][j] == NULL)
                 {
                     cout << "|"
                          << "     ";
                 }
-                else
+                else // tidak null
                 {
-                    cout << "| " << buffer[i][j].getKodeHuruf() << " ";
+                    cout << "| " << buffer[i][j]->getKodeHuruf() << " ";
                 }
             }
             // cout << "|  " << i + 1 << endl;
             cout << "|" << endl;
         }
+
+        // print tabel paling bawag(cont.)
         for (int j = 0; j < colSize; j++)
         {
             if (j == 0)
@@ -235,6 +384,9 @@ public:
         }
         cout << "+";
         cout << endl;
+    }
+    bool map_compare(map<string,int> const &recipe, map<string,int> const &current){
+        
     }
 };
 

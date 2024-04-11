@@ -14,14 +14,14 @@ GameObject::GameObject(const string &kodeHuruf_, const string &name_, int price_
     price = price_;
 }
 
-GameObject::GameObject(const GameObject& other)
+GameObject::GameObject(const GameObject &other)
 {
     kodeHuruf = other.kodeHuruf;
     name = other.name;
     price = other.price;
 }
 
-GameObject& GameObject::operator=(const GameObject& other)
+GameObject &GameObject::operator=(const GameObject &other)
 {
     if (this != &other)
     {
@@ -33,12 +33,12 @@ GameObject& GameObject::operator=(const GameObject& other)
 }
 
 GameObject::~GameObject()
-{ 
+{
     kodeHuruf.clear();
     name.clear();
 }
 
-string GameObject::getKodeHuruf() const 
+string GameObject::getKodeHuruf() const
 {
     return kodeHuruf;
 }
@@ -48,17 +48,17 @@ void GameObject::setKodeHuruf(const string &kodeHuruf_)
     kodeHuruf = kodeHuruf_;
 }
 
-string GameObject::getName() const \
+string GameObject::getName() const
 {
     return name;
 }
 
-void GameObject::setName(const string &name_) 
+void GameObject::setName(const string &name_)
 {
     name = name_;
 }
 
-int GameObject::getPrice() const 
+int GameObject::getPrice() const
 {
     return price;
 }
@@ -68,7 +68,7 @@ void GameObject::setPrice(int price_)
     price = price_;
 }
 
-bool GameObject::isEmpty() const 
+bool GameObject::isEmpty() const
 {
     return kodeHuruf == "";
 }
