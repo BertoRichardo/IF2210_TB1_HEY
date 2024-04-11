@@ -22,7 +22,7 @@ ProductConfig::ProductConfig(int id,
     this->added_weight = added_weight;
 }
 
-string ProductConfig::getType() {
+string ProductConfig::getType() const {
     return this->type;
 }
 
@@ -30,7 +30,7 @@ void ProductConfig::setType(string type) {
     this->type = type;
 }
 
-string ProductConfig::getOrigin() {
+string ProductConfig::getOrigin() const {
     return this->origin;
 }
 
@@ -38,7 +38,7 @@ void ProductConfig::setOrigin(string origin) {
     this->origin = origin;
 }
 
-int ProductConfig::getAddedWeight() {
+int ProductConfig::getAddedWeight() const {
     return this->added_weight;
 }
 

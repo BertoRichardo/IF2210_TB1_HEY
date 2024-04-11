@@ -2,6 +2,9 @@
 #define _WALIKOTA_HPP_
 
 #include "Player.hpp"
+#include "../../GameContext/header/BuildingConfig.hpp"
+#include "../../GameContext/header/Config.hpp"
+using namespace std;
 
 class Walikota : public Player
 {
@@ -21,12 +24,16 @@ public:
     /**
      * Membuat bangunan dan menunjukkan IO nya
      */
-    void buatBangunan(const map<string, bangunanConfig>);
+    void buatBangunan(const map<string, BuildingConfig> &);
+
+    /**
+     * Menthrow 
+    */
+    void cekRecipe(const map<string, BuildingConfig> &);
 
     /**
      * Membangun bangunan atau men-throw eror
      */
-    void cekRecipe(map<GameObject *, int> recipe);
     void jual();
     void beli();
 };

@@ -11,7 +11,7 @@ void Walikota::tarikPajak()
      */
 }
 
-void Walikota::buatBangunan()
+void Walikota::buatBangunan(const map<string, BuildingConfig> &buildings)
 {
     /**
      * TODO: tampilkan resep
@@ -19,7 +19,7 @@ void Walikota::buatBangunan()
 
     if (inventory.isMatrixFull())
     {
-        throw MatrixPenuhException;
+        // throw MatrixPenuhException;
     }
 
     bool isDone = false;
@@ -27,49 +27,80 @@ void Walikota::buatBangunan()
     {
         try
         {
-            string building;
-            cin >> building;
-            if(!cekBuild(building))
+            cekRecipe(buildings);
         }
-        catch (InputInvalidException e)
+        catch (const GameException &e)
         {
-            /**
-             * TODO: throw
-             */
-        }
-        catch (GuldenInsufficientException e)
-        {
-            isDone = true;
-        }
-        catch (MaterialInsufficientException e)
-        {
-            isDone = true;
+            e.displayMessage();
         }
     }
 }
 
-void Walikota::cekRecipe(map<GameObject *, int> material, int guldenCost)
+void Walikota::cekRecipe(const map<string, BuildingConfig> &buildings)
 {
-    if (guldenCost > gulden)
+    string input;
+    cout << "Bangunan yang ingin dibangun" << endl;
+    cin >> input;
+
+    if (buildings.find(input) == buildings.end())
     {
-        throw GuldenInsufficientException;
-    }
-    else
-    {
+        // throw
         /**
-        * TODO: bandingkan material yang ada dengan bahan
-        */
-        map<string, int> materialCount;
-        materialCount = getInventoryCount();
-        
+         * TODO: RecipeNotFoundException
+         */
     }
-}
 
-bool Walikota::map_compare(map const &recipe, map const &current)
-{
-    // No predicate needed because there is operator== for pairs already.
-    return lhs.size() == rhs.size() && std::equal(lhs.begin(), lhs.end(),
-                                                  rhs.begin());
+    vector<pair<string, int>> recipe = buildings.at(input).getRecipe();
+
+    map<string, int> inventoryCount = getInventoryCount();
+    vector<pair<string, int>> InsufficentMaterial;
+
+    // cek material
+    for (auto i = recipe.begin(); i != recipe.end(); i++)
+    {
+        if (i->second > inventoryCount[i->first])
+        {
+            InsufficentMaterial.push_back(pair(i->first, i->second - inventoryCount[i->first]));
+        }
+    }
+    // cek gulden
+    int harga = buildings.at(input).getPrice();
+    int newGulden = getGulden() < harga;
+    if (newGulden || InsufficentMaterial.size() != 0)
+    {
+        cout << "throw insufficient" << endl;
+        /**
+         * TODO: throw MaterialInsufficientException
+         */
+    }
+
+    // Set GUlden
+    setGulden(newGulden);
+
+    // hilangkan material yang dipakai
+    for (auto i = recipe.begin(); i != recipe.end(); i++)
+    {
+        int x = 0;
+        int y = 0;
+        int j = i->second;
+
+        while (j != 0)
+        {
+            if (!inventory.isCellEmpty(y, x))
+            {
+                if (inventory.getItem(y, x)->getName() == i->first)
+                {
+                    j--;
+                }
+                x++;
+                if (x > inventory.getCol())
+                {
+                    x = 0;
+                    y++;
+                }
+            }
+        }
+    }
 }
 
 void Walikota::jual()
@@ -77,4 +108,5 @@ void Walikota::jual()
     /**
      *
      */
+    
 }

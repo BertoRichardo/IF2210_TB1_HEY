@@ -101,19 +101,15 @@ void Player::eat()
             /**
              * TODO: KERJAKAN CATCH
              */
-            catch (IndexInvalidException e)
+            catch (const GameException &e)
             {
                 e.displayMessage();
             }
-            // catch (EatTypeInvalidException e)
-            // {
-            // e.displayMessage()
-            // }
         }
         /**
          * TODO: implement InputInvalid
          */
-        catch (InputInvalidException e)
+        catch (const GameException &e)
         {
         }
     }

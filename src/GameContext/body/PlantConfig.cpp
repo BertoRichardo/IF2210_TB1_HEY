@@ -19,7 +19,7 @@ PlantConfig::PlantConfig(int id,
     this->duration_to_harvest = duration_to_harvest;
 }
 
-string PlantConfig::getType() {
+string PlantConfig::getType() const {
     return this->type;
 }
 
@@ -27,7 +27,7 @@ void PlantConfig::setType(string type) {
     this->type = type;
 }
 
-int PlantConfig::getDurationToHarvest() {
+int PlantConfig::getDurationToHarvest() const {
     return this->duration_to_harvest;
 }
 

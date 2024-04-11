@@ -36,7 +36,7 @@ class GameContext {
             /** ANIMALS GETTER
              * @return list of animals and its name
             */
-            map<string,AnimalConfig> getAnimals();
+            map<string,AnimalConfig> getAnimals() const;
 
             /** ANIMALS SETTER
              * @param animals Replaces the old animals list with the new one
@@ -48,7 +48,7 @@ class GameContext {
             /** BUILDINGS GETTER
              * @return list of buildings and its name
             */
-            map<string,BuildingConfig> getBuildings();
+            map<string,BuildingConfig> getBuildings() const;
 
             /** BUILDINGS SETTER
              * @param buildings Replaces the old buildings list with the new one
@@ -60,7 +60,7 @@ class GameContext {
             /** PLANTS GETTER
              * @return list of plants and its name
             */
-            map<string,PlantConfig> getPlants();
+            map<string,PlantConfig> getPlants() const;
 
             /** PLANTS SETTER
              * @param plants Replaces the old plants list with the new one
@@ -72,7 +72,7 @@ class GameContext {
             /** PRODUCTS GETTER
              * @return list of products and its name
             */
-            map<string,ProductConfig> getProducts();
+            map<string,ProductConfig> getProducts() const;
 
             /** PRODUCTS SETTER
              * @param products Replaces the old products list with the new one

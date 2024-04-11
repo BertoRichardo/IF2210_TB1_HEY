@@ -15,7 +15,7 @@ BuildingConfig::BuildingConfig(int id,
     this->recipe = recipe;
 }
 
-vector<pair<string,int>> BuildingConfig::getRecipe() {
+vector<pair<string,int>> BuildingConfig::getRecipe() const {
     return this->recipe;
 }
 
@@ -23,7 +23,7 @@ void BuildingConfig::setRecipe(const vector<pair<string,int>> recipe) {
     this->recipe = recipe;
 }
 
-pair<string,int> BuildingConfig::getRecipeComp(int idx) {
+pair<string,int> BuildingConfig::getRecipeComp(int idx) const {
     cout << idx << " " << this->recipe.size() << endl;
     if (idx >= this->recipe.size()) {
         throw IndexInvalidException();
@@ -35,7 +35,7 @@ void BuildingConfig::setRecipeComp(pair<string,int> element, int idx) {
     this->recipe.at(idx) = element;
 }
 
-string BuildingConfig::getProductName(int idx) {
+string BuildingConfig::getProductName(int idx) const {
     return this->recipe.at(idx).first;
 }
 
@@ -43,7 +43,7 @@ void BuildingConfig::setProductName(string nama, int idx) {
     this->recipe.at(idx).first = nama;
 }
 
-int BuildingConfig::getQuantity(int idx) {
+int BuildingConfig::getQuantity(int idx) const {
     return this->recipe.at(idx).second;
 }
 

@@ -33,10 +33,8 @@ void FeedTypeInvalidException::displayMessage() const
 }
 
 /*IndexInvalidException*/
-IndexInvalidException::IndexInvalidException(const int &row_, const int &col_) : GameException("Index Out Of Bound")
+IndexInvalidException::IndexInvalidException() : GameException("Index Out Of Bound")
 {
-    row = row_;
-    col = col_;
 }
 
 void IndexInvalidException::displayMessage() const

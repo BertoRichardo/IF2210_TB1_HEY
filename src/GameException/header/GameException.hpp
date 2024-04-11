@@ -66,20 +66,15 @@ public:
 
 class IndexInvalidException : public GameException
 {
-private:
-    int row;
-    int col;
 
 public:
     /**
      * Menciptakan GameException dengan pesan
      * "Index Invalid"
-     * @param row
-     * @param col
      */
-    IndexInvalidException(const int &, const int &);
+    IndexInvalidException();
 
-        void displayMessage() const;
+    void displayMessage() const;
 };
 
 /**

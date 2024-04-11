@@ -75,7 +75,7 @@ public:
      * @param c column
      * @param T item
      */
-    void addItem(int r, int c, T item)
+    void addItem(int r, int c, const T& item)
     {
         // handle out of idx
         if (r - 1 > rowSize || c - 1 > colSize)
@@ -105,7 +105,7 @@ public:
      * @param c column
      * @return Item pada cell tersebut : T
      */
-    T getItem(int r, int c)
+    T getItem(int r, int c) const
     {
 
         if (r - 1 > rowSize || c - 1 > colSize)
@@ -135,7 +135,7 @@ public:
      * @param koordinat
      * @return Item pada cell tersebut : T
      */
-    pair<int, int> strToRowCol(string koordinat)
+    pair<int, int> strToRowCol(string koordinat) 
     {
         // Cari nilai kolom
         int i = 0;

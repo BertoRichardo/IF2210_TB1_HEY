@@ -16,7 +16,7 @@ GameContext::GameContext(map<string,AnimalConfig> animals,
     this->products = products;
 }
 
-map<string,AnimalConfig> GameContext::getAnimals() {
+map<string,AnimalConfig> GameContext::getAnimals() const {
     return this->animals;
 }
 
@@ -24,7 +24,7 @@ void GameContext::setAnimals(map<string,AnimalConfig> animals) {
     this->animals = animals;
 }
 
-map<string,BuildingConfig> GameContext::getBuildings() {
+map<string,BuildingConfig> GameContext::getBuildings() const {
     return this->buildings;
 }
 
@@ -32,7 +32,7 @@ void GameContext::setBuildings(map<string,BuildingConfig> buildings) {
     this->buildings = buildings;
 }
 
-map<string,PlantConfig> GameContext::getPlants() {
+map<string,PlantConfig> GameContext::getPlants() const {
     return this->plants;
 }
 
@@ -40,7 +40,7 @@ void GameContext::setPlants(map<string,PlantConfig> plants) {
     this->plants = plants;
 }
 
-map<string,ProductConfig> GameContext::getProducts() {
+map<string,ProductConfig> GameContext::getProducts() const {
     return this->products;
 }
 
