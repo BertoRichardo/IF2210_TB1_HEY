@@ -79,7 +79,7 @@ public:
      */
     IndexInvalidException(const int &, const int &);
 
-    void displayMessage() const;
+        void displayMessage() const;
 };
 
 /**
