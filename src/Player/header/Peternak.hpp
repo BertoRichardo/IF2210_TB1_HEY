@@ -12,7 +12,7 @@ public:
     /**
      * User Defined Constructor
      */
-    Peternak(string username_);
+    Peternak(string username_, int row, int col);
 
     /**
      * Destructor
@@ -27,12 +27,12 @@ public:
     void kasihMakan();
 
     /**
-     * Memanen ternak
+     * Memanen ternak dan mengeluarkan pesan 
      */
     void panenTernak();
 
     /**
-     * Memanen ternak
+     * Memanen ternak atau men-throw error
      */
     void cekPanen(string cell);
 

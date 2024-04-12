@@ -1,8 +1,8 @@
 #include "../header/Peternak.hpp"
 
-Peternak::Peternak(string username_) : Player::Player(username_)
+Peternak::Peternak(string username_, int row, int col) : Player::Player(username_)
 {
-    MatrixContainer<Plant *> peternakan(10, 10);
+    MatrixContainer<Animal *> peternakan(row, col);
     // peternakan = peternakan_;
 }
 
@@ -179,6 +179,8 @@ void Peternak::panenTernak()
          * @TODO: throw NotEnoughSpace
          */
     }
+
+    // Mengambil hewan dari peternakan
     int j = 1;
     while (j <= q)
     {
@@ -248,6 +250,7 @@ void Peternak::letakTernak()
     peternakan.printMatrix(true);
     cout << '\n';
 
+    // mengambil ternak dari petak tanah
     while (!isDone)
     {
         try
