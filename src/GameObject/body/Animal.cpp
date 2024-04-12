@@ -261,7 +261,7 @@ Omnivore::~Omnivore() {}
 
 void Omnivore::feed(const Product &food)
 {
-    if (food.getType() == "PRODUCT_MATERIAL_PLANT") {
+    if (food.getType() != "PRODUCT_FRUIT_PLANT" && food.getType() != "PRODUCT_ANIMAL") {
         throw FeedTypeInvalidException(type, food.getType());
     } else {
         weight += food.getAddedWeight();

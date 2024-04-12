@@ -5,7 +5,10 @@
 #include <vector>
 #include <map>
 using namespace std;
+
 #include "../../GameObject/header/Building.hpp"
+#include "../../GameObject/header/Plant.hpp"
+#include "../../GameObject/header/Animal.hpp"
 
 class Shop
 {
@@ -59,6 +62,18 @@ public:
      */
     void setGoods(pair<GameObject *, int>, int);
 
+    /** GAMEOBJECT GETTER
+     * @param nama name of the object program wanted to find
+     * @return GameObject of object
+     */
+    GameObject *getGameObject(string) const;
+
+    /** GAMEOBJECT GETTER
+     * @param idx index of the object program wanted to find
+     * @return GameObject of object
+     */
+    GameObject *getGameObject(int) const;
+
     /** STOCK GETTER
      * @param nama name of the object program wanted to find
      * @return stock of object
@@ -87,6 +102,11 @@ public:
      * @param element new object program that will be added to vector
      */
     void addGoods(pair<GameObject *, int>);
+
+    /**
+     * Mencetak barang yang ada di tokko
+     */
+    void printToko();
 };
 
 #endif

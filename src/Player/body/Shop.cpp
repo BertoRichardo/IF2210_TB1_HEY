@@ -54,6 +54,23 @@ void Shop::setGoods(pair<GameObject *, int> element, int idx)
     content[idx] = element;
 }
 
+GameObject *Shop::getGameObject(string nama) const
+{
+    for (int i = 0; i < size; i++)
+    {
+        if (content[i].first->getName() == nama)
+        {
+            return content[i].first;
+        }
+    }
+}
+
+GameObject *Shop::getGameObject(int idx) const
+{
+
+    return content[idx].first;
+}
+
 int Shop::getStock(string nama) const
 {
     for (int i = 0; i < size; i++)
@@ -90,4 +107,27 @@ void Shop::addGoods(pair<GameObject *, int> goods)
 {
     size++;
     content.push_back(goods);
+}
+
+void Shop::printToko()
+{
+    cout << "Selamat datang di toko!!" << endl;
+    cout << "Berikut adalah hal yang dapat Anda beli " << endl;
+
+    for (int i = 0; i < size; i++)
+    {
+
+        cout << i + 1 << ". " << getGameObject(i)->getName() << " - " << getGameObject(i)->getPrice();
+        
+        // Avoid print stock for unlimited object 
+        Plant *plant = dynamic_cast<Plant *>(getGameObject(i));
+        Animal *animal = dynamic_cast<Animal *>(getGameObject(i));
+
+        // Print for limited object
+        if (plant == NULL && animal == NULL)
+        {
+            cout << "(" << getStock(i) << ")" << endl;
+        }
+    }
+
 }

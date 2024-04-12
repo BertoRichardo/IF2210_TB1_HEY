@@ -32,10 +32,14 @@ public:
     void cekRecipe(const map<string, BuildingConfig> &);
 
     /**
-     * Membangun bangunan atau men-throw eror
+     * Menjual bangunan atau product
      */
-    void jual();
-    void beli();
+    void jual(Shop);
+    
+    /**
+     * Menjual bangunan atau product
+     */
+    void beli(Shop);
 };
 
 #endif

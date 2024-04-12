@@ -9,6 +9,7 @@ using namespace std;
 #include "../../GameObject/header/GameObject.hpp"
 #include "../../GameObject/header/Product.hpp"
 #include "../../GameException/header/GameException.hpp"
+#include "Shop.hpp"
 
 class Player
 {
@@ -80,10 +81,28 @@ public:
     void eat();
 
     /**
-     * virtual function
+     * jual : virtual function
      */
-    virtual void jual() = 0;
-    virtual void beli() = 0;
+    virtual void jual(Shop toko);
+
+    /**
+     * beli : sama untuk petani dan peternak, override untuk walikota
+     */
+    virtual void beli(Shop toko);
+
+    /**
+     * Melakukan proses pembelian atau throw erro
+     */
+    virtual void cekBeli(Shop toko);
+
+    /**
+     * Melakukan proses penjualan atau throw erro
+     */
+    virtual void cekJual(Shop toko);
+    /**
+     * parser slot
+     */
+    friend vector<string> parserSlot(string);
 };
 
 #endif

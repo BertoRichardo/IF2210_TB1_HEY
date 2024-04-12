@@ -8,7 +8,12 @@ using namespace std;
 #include <iomanip>
 #include <vector>
 #include <utility>
-#include "../../GameObject/header/Product.hpp"
+// #include "../../GameObject/header/GameObject.hpp"
+#include "../../GameObject/header/Animal.hpp"
+#include "../../GameObject/header/Plant.hpp"
+// #include "../../GameObject/header/Product.hpp"
+// #include "../../GameObject/header/Building.hpp"
+#include "pcolor.hpp"
 
 template <class T>
 class MatrixContainer
@@ -67,7 +72,7 @@ public:
     {
         return colSize;
     }
-    
+
     /* SELECTOR */
     /**
      * Menambahakan item pada matrix[r][c]
@@ -75,10 +80,10 @@ public:
      * @param c column
      * @param T item
      */
-    void addItem(int r, int c, const T& item)
+    void addItem(int r, int c, const T &item)
     {
         // handle out of idx
-        if (r - 1 > rowSize || c - 1 > colSize)
+        if (r >= rowSize || c >= colSize || r < 0 || c < 0)
         {
             /**
              * -TODO: throw IndexOutOfBound
@@ -86,29 +91,41 @@ public:
         }
         else
         {
-            if (isCellEmpty(r - 1, c - 1))
+            if (isCellEmpty(r, c))
             {
-                buffer[r - 1][c - 1] = item;
+                buffer[r][c] = item;
             }
             else
             {
                 /**
-                 * -TODO: throw
+                 * TODO: throw cellterisi ?
                  */
             }
         }
     }
 
     /**
-     * Mendapatkan item dari matrix[r][c]
+     * addItem by string
+     * @param koordinat : string
+     * @param item : T
+     * @return Item
+     */
+    T addItem(string koordinat, T item)
+    {
+        pair<int, int> pair = strToRowCol(koordinat);
+        addItem(pair.first, pair.second, item);
+    }
+
+    /**
+     Mendapatkan item dari matrix[r][c]
+     *(indexing dari 1)
      * @param r row
      * @param c column
      * @return Item pada cell tersebut : T
      */
-    T getItem(int r, int c) const
+    T getItem(int r, int c)
     {
-
-        if (r - 1 > rowSize || c - 1 > colSize)
+        if (r >= rowSize || c >= colSize || r < 0 || r < 0)
         {
             /**
              * -TODO: throw IndexOutOfBound
@@ -116,18 +133,25 @@ public:
         }
         else
         {
-            if (!isCellEmpty(r - 1, c - 1))
+            if (isCellEmpty(r, c))
             {
-                return buffer[r - 1][c - 1];
-            }
-            else
-            {
-                return buffer[r - 1][c - 1];
                 /**
-                 * -TODO: throw CellEmpty
+                 * TODO: throuw CellEmptyException
                  */
             }
         }
+        return buffer[r][c];
+    }
+
+    /**
+     * getItem by string
+     * @param koordinat : string
+     * @return Item
+     */
+    T getItem(string koordinat)
+    {
+        pair<int, int> pair = strToRowCol(koordinat);
+        getItem(pair.first, pair.second);
     }
 
     /**
@@ -135,11 +159,12 @@ public:
      * @param koordinat
      * @return Item pada cell tersebut : T
      */
-    pair<int, int> strToRowCol(string koordinat) 
+    pair<int, int> strToRowCol(string koordinat)
     {
         // Cari nilai kolom
         int i = 0;
         int c = 0;
+        pair<int, int> pair;
         if (koordinat[i] < 'A' || koordinat[i] > 'Z')
         {
             /**
@@ -173,7 +198,9 @@ public:
                  */
             }
         }
-        return pair<r, c>;
+        r--;
+        c--;
+        return pair;
     }
 
     /**
@@ -203,6 +230,17 @@ public:
              */
         }
     }
+
+    /**
+     * getMakananbyString
+     * @param koordinat : string
+     */
+    T getMakanan(string koordinat)
+    {
+        pair<int, int> pair = strToRowCol(koordinat);
+        getMakanan(pair.first, pair.second);
+    }
+
     /**
      * Menghapus item dari matrix[r][c]
      * @param r row
@@ -223,6 +261,17 @@ public:
     }
 
     /**
+     * removeItem by string
+     * @param koordinat : string
+     * @return Item
+     */
+    T removeItem(string koordinat)
+    {
+        pair<int, int> pair = strToRowCol(koordinat);
+        removeItem(pair.first, pair.second);
+    }
+
+    /**
      * Mengecek cell matrix[r][c] kosong atau tidak
      * @param r row
      * @param c column
@@ -231,6 +280,17 @@ public:
     bool isCellEmpty(int r, int c)
     {
         return buffer[r][c] == NULL;
+    }
+
+    /**
+     * Mengecek cell matrix[r][c] kosong atau tidak
+     * @param koordinat string koordinat
+     * @return cell matrix berisi atau kosong : boolean
+     */
+    bool isCellEmpty(string koordinat)
+    {
+        pair<int, int> pair = strToRowCol(koordinat);
+        isCellEmpty(pair.first, pair.second);
     }
 
     /**
@@ -253,21 +313,32 @@ public:
         return false;
     }
 
+    /**
+     * @return true jika tidak ada makanan edible pada matrix
+     */
     bool isFoodEmpty()
     {
+        Product *temp = new Product();
         for (int i = 0; i < rowSize; i++)
         {
             for (int j = 0; j < colSize; j++)
             {
-                if (!isCellEmpty(i, j) &&
-                    typeid(buffer[i][j]) == typeid(obj) &&
-                    dynamic_cast<Product *>(getItem(koordinat))->getAddedWeight() != 0)
+
+                if (!isCellEmpty(i, j))
                 {
-                    return true;
+                    Product *obj = dynamic_cast<Product *>(getItem(i, j));
+                    if (typeid(obj) == typeid(temp) && obj->getAddedWeight() != 0)
+                    {
+                        temp->~Product();
+                        obj->~Product();
+                        return false;
+                    }
+                    obj->~Product();
                 }
             }
         }
-        return false;
+        temp->~Product();
+        return true;
     }
 
     /**
@@ -308,38 +379,104 @@ public:
         return true;
     }
 
-    void printMatrix()
+    /**
+     * Memprint matrix
+     */
+    void printMatrix(bool isWarna)
     {
-        // print size
-        cout << rowSize << endl;
-        cout << colSize << endl;
-
-        // print koordinat column
-        char c = 'A';
-        int idx = 0;
-        for (int j = 0; j < colSize; j++)
+        if (isWarna)
         {
-            if (j == 0)
+            // print koordinat column
+            char c = 'A';
+            int idx = 0;
+            for (int j = 0; j < colSize; j++)
             {
-                cout << "   ";
+                if (j == 0)
+                {
+                    cout << "   ";
+                }
+                if (idx <= 25)
+                {
+                    cout << "   " << char(c + idx) << "  ";
+                }
+                else
+                {
+                    char front = c + (((idx / 26) - 1) % 26);
+                    char back = c + (idx % 26);
+                    cout << "  " << front << back << "  ";
+                }
+                idx++;
             }
-            if (idx <= 25)
-            {
-                cout << "   " << char(c + idx) << "  ";
-            }
-            else
-            {
-                char front = c + (((idx / 26) - 1) % 26);
-                char back = c + (idx % 26);
-                cout << "  " << front << back << "  ";
-            }
-            idx++;
-        }
-        cout << endl;
+            cout << endl;
 
-        for (int i = 0; i < rowSize; i++)
-        {
-            // print tabel
+            for (int i = 0; i < rowSize; i++)
+            {
+                // print tabel
+                for (int j = 0; j < colSize; j++)
+                {
+                    if (j == 0)
+                    {
+                        cout << "   ";
+                    }
+                    cout << "+-----";
+                }
+                cout << "+" << endl;
+
+                for (int j = 0; j < colSize; j++)
+                {
+                    // print koordinat baris
+                    if (j == 0)
+                    {
+                        cout << setfill('0') << setw(2) << i + 1 << " ";
+                    }
+
+                    // print kode
+                    if (buffer[i][j] == NULL)
+                    {
+                        cout << "|"
+                             << "     ";
+                    }
+                    else // tidak null
+                    {
+                        Animal *a = dynamic_cast<Animal *>(buffer[i][j]);
+                        Plant *p = dynamic_cast<Plant *>(buffer[i][j]);
+                        if (a == NULL)
+                        {
+                            if (p->isReadyToHarvest())
+                            {
+                                cout << "| ";
+                                print_greens(buffer[i][j]->getKodeHuruf());
+                                cout << " ";
+                            }
+                            else
+                            {
+                                cout << "| ";
+                                print_reds(buffer[i][j]->getKodeHuruf());
+                                cout << " ";
+                            }
+                        }
+                        else
+                        {
+                            if (a->isReadyToHarvest())
+                            {
+                                cout << "| ";
+                                print_greens(buffer[i][j]->getKodeHuruf());
+                                cout << " ";
+                            }
+                            else
+                            {
+                                cout << "| ";
+                                print_reds(buffer[i][j]->getKodeHuruf());
+                                cout << " ";
+                            }
+                        }
+                    }
+                }
+                // cout << "|  " << i + 1 << endl;
+                cout << "|" << endl;
+            }
+
+            // print tabel paling bawag(cont.)
             for (int j = 0; j < colSize; j++)
             {
                 if (j == 0)
@@ -348,45 +485,120 @@ public:
                 }
                 cout << "+-----";
             }
-            cout << "+" << endl;
-
+            cout << "+";
+            cout << endl;
+        }
+        else
+        {
+            // print koordinat column
+            char c = 'A';
+            int idx = 0;
             for (int j = 0; j < colSize; j++)
             {
-                // print koordinat baris
                 if (j == 0)
                 {
-                    cout << setfill('0') << setw(2) << i + 1 << " ";
+                    cout << "   ";
                 }
-
-                // print kode
-                if (buffer[i][j] == NULL)
+                if (idx <= 25)
                 {
-                    cout << "|"
-                         << "     ";
+                    cout << "   " << char(c + idx) << "  ";
                 }
-                else // tidak null
+                else
                 {
-                    cout << "| " << buffer[i][j]->getKodeHuruf() << " ";
+                    char front = c + (((idx / 26) - 1) % 26);
+                    char back = c + (idx % 26);
+                    cout << "  " << front << back << "  ";
                 }
+                idx++;
             }
-            // cout << "|  " << i + 1 << endl;
-            cout << "|" << endl;
-        }
+            cout << endl;
 
-        // print tabel paling bawag(cont.)
-        for (int j = 0; j < colSize; j++)
-        {
-            if (j == 0)
+            for (int i = 0; i < rowSize; i++)
             {
-                cout << "   ";
+                // print tabel
+                for (int j = 0; j < colSize; j++)
+                {
+                    if (j == 0)
+                    {
+                        cout << "   ";
+                    }
+                    cout << "+-----";
+                }
+                cout << "+" << endl;
+
+                for (int j = 0; j < colSize; j++)
+                {
+                    // print koordinat baris
+                    if (j == 0)
+                    {
+                        cout << setfill('0') << setw(2) << i + 1 << " ";
+                    }
+
+                    // print kode
+                    if (buffer[i][j] == NULL)
+                    {
+                        cout << "|"
+                             << "     ";
+                    }
+                    else // tidak null
+                    {
+                        cout << "| " << buffer[i][j]->getKodeHuruf() << " ";
+                    }
+                }
+                // cout << "|  " << i + 1 << endl;
+                cout << "|" << endl;
             }
-            cout << "+-----";
+
+            // print tabel paling bawag(cont.)
+            for (int j = 0; j < colSize; j++)
+            {
+                if (j == 0)
+                {
+                    cout << "   ";
+                }
+                cout << "+-----";
+            }
+            cout << "+";
+            cout << endl;
         }
-        cout << "+";
-        cout << endl;
     }
-    bool map_compare(map<string,int> const &recipe, map<string,int> const &current){
-        
+
+    /**
+     * @return banyaknya space kosong pada matrix
+     */
+    int emptySpace()
+    {
+        int hasil = 0;
+        for (int i = 0; i < rowSize; i++)
+        {
+            for (int j = 0; j < colSize; j++)
+            {
+                if (isCellEmpty(i, j))
+                {
+                    hasil++;
+                }
+            }
+        }
+        return hasil;
+    }
+
+    /**
+     * @return true if object with class T exist in the matrix
+     */
+    template <class T>
+    bool isObjectEmpty()
+    {
+        for (int i = 0; i < row; i++)
+        {
+            for (int j = 0; j < col; j++)
+            {
+                if (!isCellEmpty(i + 1, j + 1) && dynamic_cast<T>(buffer[i][j]) != NULL)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 };
 
