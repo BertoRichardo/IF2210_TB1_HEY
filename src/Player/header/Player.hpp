@@ -7,7 +7,10 @@ using namespace std;
 #include <map>
 #include "MatrixContainer.hpp"
 #include "../../GameObject/header/GameObject.hpp"
+#include "../../GameObject/header/Animal.hpp"
+#include "../../GameObject/header/Plant.hpp"
 #include "../../GameObject/header/Product.hpp"
+#include "../../GameObject/header/Building.hpp"
 #include "../../GameException/header/GameException.hpp"
 #include "Shop.hpp"
 
@@ -43,6 +46,11 @@ public:
      * @param username_ nama pemain : string
      */
     void setUsername(string username_);
+
+    /**
+     * @return type : string
+     */
+    virtual string getType() const;
 
     /**
      * @return weight : int
@@ -83,25 +91,33 @@ public:
     /**
      * jual : virtual function
      */
-    virtual void jual(Shop toko);
+    virtual void jual(Shop &toko);
 
     /**
      * beli : sama untuk petani dan peternak, override untuk walikota
      */
-    virtual void beli(Shop toko);
+    virtual void beli(Shop &toko);
 
     /**
      * Melakukan proses pembelian atau throw erro
      */
-    virtual void cekBeli(Shop toko);
+    virtual void cekBeli(Shop &toko);
 
     /**
      * Melakukan proses penjualan atau throw erro
      */
-    virtual void cekJual(Shop toko);
+    virtual void cekJual(Shop &toko);
     /**
      * parser slot
      */
+
+    /**
+     * obj is not Null
+     * @param obj 
+     * @return item as one of the child of gameObject
+     */
+    GameObject *callCCtor(GameObject *obj);
+
     friend vector<string> parserSlot(string);
 };
 

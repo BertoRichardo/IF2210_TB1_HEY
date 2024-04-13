@@ -119,7 +119,7 @@ void Shop::printToko()
 
         cout << i + 1 << ". " << getGameObject(i)->getName() << " - " << getGameObject(i)->getPrice();
         
-        // Avoid print stock for unlimited object 
+        // Avoid print stock for unlimited object
         Plant *plant = dynamic_cast<Plant *>(getGameObject(i));
         Animal *animal = dynamic_cast<Animal *>(getGameObject(i));
 
@@ -127,6 +127,8 @@ void Shop::printToko()
         if (plant == NULL && animal == NULL)
         {
             cout << "(" << getStock(i) << ")" << endl;
+        }else{
+            cout << endl;
         }
     }
 

@@ -82,6 +82,7 @@ public:
      */
     void addItem(int r, int c, const T &item)
     {
+        GameObject *p = new Plant();
         // handle out of idx
         if (r >= rowSize || c >= colSize || r < 0 || c < 0)
         {
@@ -110,7 +111,7 @@ public:
      * @param item : T
      * @return Item
      */
-    T addItem(string koordinat, T item)
+    void addItem(string koordinat, T item)
     {
         pair<int, int> pair = strToRowCol(koordinat);
         addItem(pair.first, pair.second, item);
@@ -600,6 +601,8 @@ public:
         }
         return true;
     }
+
+   
 };
 
 #endif

@@ -20,6 +20,11 @@ public:
     ~Peternak();
 
     /**
+     * @return type : string
+     */
+    string getType() const;
+
+    /**
      * Memilih ternak yang ingin diberi makan,
      * lalu memilih item dari inventory
      * lakukan validasi

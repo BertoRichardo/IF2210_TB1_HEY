@@ -5,10 +5,10 @@ using namespace std;
 
 GameContext::GameContext() {}
 
-GameContext::GameContext(map<string,AnimalConfig> animals,
-                         map<string,BuildingConfig> buildings,
-                         map<string,PlantConfig> plants,
-                         map<string,ProductConfig> products)
+GameContext::GameContext(map<string, AnimalConfig> animals,
+                         map<string, BuildingConfig> buildings,
+                         map<string, PlantConfig> plants,
+                         map<string, ProductConfig> products)
 {
     this->animals = animals;
     this->buildings = buildings;
@@ -16,39 +16,48 @@ GameContext::GameContext(map<string,AnimalConfig> animals,
     this->products = products;
 }
 
-map<string,AnimalConfig> GameContext::getAnimals() const {
+map<string, AnimalConfig> GameContext::getAnimals() const
+{
     return this->animals;
 }
 
-void GameContext::setAnimals(map<string,AnimalConfig> animals) {
+void GameContext::setAnimals(map<string, AnimalConfig> animals)
+{
     this->animals = animals;
 }
 
-map<string,BuildingConfig> GameContext::getBuildings() const {
+map<string, BuildingConfig> GameContext::getBuildings() const
+{
     return this->buildings;
 }
 
-void GameContext::setBuildings(map<string,BuildingConfig> buildings) {
+void GameContext::setBuildings(map<string, BuildingConfig> buildings)
+{
     this->buildings = buildings;
 }
 
-map<string,PlantConfig> GameContext::getPlants() const {
+map<string, PlantConfig> GameContext::getPlants() const
+{
     return this->plants;
 }
 
-void GameContext::setPlants(map<string,PlantConfig> plants) {
+void GameContext::setPlants(map<string, PlantConfig> plants)
+{
     this->plants = plants;
 }
 
-map<string,ProductConfig> GameContext::getProducts() const {
+map<string, ProductConfig> GameContext::getProducts() const
+{
     return this->products;
 }
 
-void GameContext::setProducts(map<string,ProductConfig> products) {
+void GameContext::setProducts(map<string, ProductConfig> products)
+{
     this->products = products;
 }
 
-void GameContext::readConfig() {
+void GameContext::readConfig()
+{
     vector<vector<string>> animal_list;
     vector<vector<string>> plant_list;
     vector<vector<string>> building_list;
@@ -68,8 +77,8 @@ void GameContext::readConfig() {
     int temp_weight_to_harvest;
     int temp_duration_to_harvest;
     int temp_added_weight;
-    pair<string,int> temp_comp;
-    vector<pair<string,int>> temp_recipe;
+    pair<string, int> temp_comp;
+    vector<pair<string, int>> temp_recipe;
 
     AnimalConfig temp_animal;
     PlantConfig temp_plant;
@@ -77,47 +86,52 @@ void GameContext::readConfig() {
     ProductConfig temp_product;
 
     // Assign animal to game context
-    for (int i = 0; i < animal_list.size(); i++) {
+    for (int i = 0; i < (int)animal_list.size(); i++)
+    {
         temp_id = stoi(animal_list.at(i).at(0));
         temp_kode_huruf = animal_list.at(i).at(1);
         temp_nama = animal_list.at(i).at(2);
         temp_type = animal_list.at(i).at(3);
         temp_weight_to_harvest = stoi(animal_list.at(i).at(4));
         temp_price = stoi(animal_list.at(i).at(5));
-        temp_animal.setAll(temp_id,temp_kode_huruf,temp_nama,temp_price,temp_type,temp_weight_to_harvest);
-        this->animals.insert({temp_nama,temp_animal});
+        temp_animal.setAll(temp_id, temp_kode_huruf, temp_nama, temp_price, temp_type, temp_weight_to_harvest);
+        this->animals.insert({temp_nama, temp_animal});
     }
 
     // Assign plant to game context
-    for (int i = 0; i < plant_list.size(); i++) {
+    for (int i = 0; i < (int)plant_list.size(); i++)
+    {
         temp_id = stoi(plant_list.at(i).at(0));
         temp_kode_huruf = plant_list.at(i).at(1);
         temp_nama = plant_list.at(i).at(2);
         temp_type = plant_list.at(i).at(3);
         temp_duration_to_harvest = stoi(plant_list.at(i).at(4));
         temp_price = stoi(plant_list.at(i).at(5));
-        temp_plant.setAll(temp_id,temp_kode_huruf,temp_nama,temp_price,temp_type,temp_duration_to_harvest);
-        this->plants.insert({temp_nama,temp_plant});
+        temp_plant.setAll(temp_id, temp_kode_huruf, temp_nama, temp_price, temp_type, temp_duration_to_harvest);
+        this->plants.insert({temp_nama, temp_plant});
     }
 
     // Assign building to game context
-    for (int i = 0; i < building_list.size(); i++) {
+    for (int i = 0; i < (int)building_list.size(); i++)
+    {
         temp_id = stoi(building_list.at(i).at(0));
         temp_kode_huruf = building_list.at(i).at(1);
         temp_nama = building_list.at(i).at(2);
         temp_price = stoi(building_list.at(i).at(3));
-        for (int j = 4; j < building_list.at(i).size(); j += 2) {
+        for (int j = 4; j < (int)building_list.at(i).size(); j += 2)
+        {
             temp_comp.first = building_list.at(i).at(j);
-            temp_comp.second = stoi(building_list.at(i).at(j+1));
+            temp_comp.second = stoi(building_list.at(i).at(j + 1));
             temp_recipe.push_back(temp_comp);
         }
-        temp_building.setAll(temp_id,temp_kode_huruf,temp_nama,temp_price,temp_recipe);
-        this->buildings.insert({temp_nama,temp_building});
+        temp_building.setAll(temp_id, temp_kode_huruf, temp_nama, temp_price, temp_recipe);
+        this->buildings.insert({temp_nama, temp_building});
         temp_recipe.clear();
     }
 
     // Assign product to game context
-    for (int i = 0; i < product_list.size(); i++) {
+    for (int i = 0; i < (int)product_list.size(); i++)
+    {
         temp_id = stoi(product_list.at(i).at(0));
         temp_kode_huruf = product_list.at(i).at(1);
         temp_nama = product_list.at(i).at(2);
@@ -125,7 +139,7 @@ void GameContext::readConfig() {
         temp_origin = product_list.at(i).at(4);
         temp_added_weight = stoi(product_list.at(i).at(5));
         temp_price = stoi(product_list.at(i).at(6));
-        temp_product.setAll(temp_id,temp_kode_huruf,temp_nama,temp_price,temp_type,temp_origin,temp_added_weight);
-        this->products.insert({temp_nama,temp_product});
+        temp_product.setAll(temp_id, temp_kode_huruf, temp_nama, temp_price, temp_type, temp_origin, temp_added_weight);
+        this->products.insert({temp_nama, temp_product});
     }
 }

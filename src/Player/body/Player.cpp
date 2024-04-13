@@ -21,6 +21,11 @@ void Player::setUsername(string username_)
     username = username_;
 }
 
+string Player::getType() const
+{
+    return "PLAYER";
+}
+
 int Player::getWeight() const
 {
     return weigth;
@@ -125,7 +130,7 @@ vector<string> parserSlots(string in)
     return hasil;
 }
 
-void Player::beli(Shop toko)
+void Player::beli(Shop &toko)
 {
     toko.printToko();
 
@@ -145,7 +150,7 @@ void Player::beli(Shop toko)
     }
 }
 
-void Player::cekBeli(Shop toko)
+void Player::cekBeli(Shop &toko)
 {
     // Minta masukan dari user
     int masukan;
@@ -154,7 +159,7 @@ void Player::cekBeli(Shop toko)
     cout << endl;
 
     // validasi masukan
-    if (masukan <= 0 || masukan > toko.getSize())
+    if (masukan < 1 || masukan > toko.getSize())
     {
         // throw inputInvalidException
     }
@@ -170,16 +175,23 @@ void Player::cekBeli(Shop toko)
     }
 
     // validasi gulden
-    if (quantity * toko.getGameObject(masukan)->getPrice() > getGulden())
+    if (quantity * toko.getGameObject(masukan - 1)->getPrice() > getGulden())
     {
-
         /**
          * throw Gulden kurang (?)
          */
     }
 
+    // validasi stock di toko
+    if (toko.getStock(masukan - 1) != -1 && quantity > toko.getStock(masukan - 1))
+    {
+        /**
+         * TODO: throw StockInsufficient
+         */
+    }
+
     // Berikan IO dan kurangi uang
-    setGulden(getGulden() - quantity * toko.getGameObject(masukan)->getPrice());
+    setGulden(getGulden() - quantity * toko.getGameObject(masukan - 1)->getPrice());
     cout << "Selamat Anda berhasil membeli " << quantity << " " << toko.getGameObject(masukan)->getName() << ".";
     cout << "Uang Anda tersisa " << getGulden();
 
@@ -188,13 +200,11 @@ void Player::cekBeli(Shop toko)
     cout << "[Penyimpanan]:" << endl;
     inventory.printMatrix(false);
 
-    //
-    GameObject *item = new GameObject(*toko.getGameObject(masukan));
-
     // Pilih slot
     bool isDone = false;
     while (!isDone)
     {
+        GameObject *item = callCCtor(toko.getGameObject(masukan - 1));
         string inSlot;
         cout << "Petak slot: ";
         cin >> inSlot;
@@ -210,7 +220,7 @@ void Player::cekBeli(Shop toko)
             isDone = true;
             if (dynamic_cast<Plant *>(item) == NULL && dynamic_cast<Animal *>(item) == NULL)
             {
-                toko.setStock(item->getName(), toko.getStock(masukan) - quantity);
+                toko.setStock(item->getName(), toko.getStock(masukan - 1) - quantity);
             }
         }
         catch (const GameException &e)
@@ -224,7 +234,44 @@ void Player::cekBeli(Shop toko)
     }
 }
 
-void Player::jual(Shop toko)
+GameObject *Player::callCCtor(GameObject *obj)
+{
+    if (dynamic_cast<Plant *>(obj) != NULL)
+    {
+        Plant *item = new Plant(*dynamic_cast<Plant *>(obj));
+        return item;
+    }
+    else if (dynamic_cast<Animal *>(obj) != NULL)
+    {
+        if (dynamic_cast<Carnivore *>(obj) != NULL)
+        {
+            Carnivore *item = new Carnivore(*dynamic_cast<Carnivore *>(obj));
+            return item;
+        }
+        else if (dynamic_cast<Herbivore *>(obj) != NULL)
+        {
+            Herbivore *item = new Herbivore(*dynamic_cast<Herbivore *>(obj));
+            return item;
+        }
+        else if (dynamic_cast<Omnivore *>(obj) != NULL)
+        {
+            Omnivore *item = new Omnivore(*dynamic_cast<Omnivore *>(obj));
+            return item;
+        }
+    }
+    else if (dynamic_cast<Product *>(obj) != NULL)
+    {
+        Product *item = new Product(*dynamic_cast<Product *>(obj));
+        return item;
+    }
+    else // if (dynamic_cast<Building *>(obj) != NULL)
+    {
+        Building *item = new Building(*dynamic_cast<Building *>(obj));
+        return item;
+    }
+}
+
+void Player::jual(Shop &toko)
 {
     cout << "Berikut merupakan penyimnpanan Anda" << endl;
     cout << "[Penyimpanan]:";
@@ -240,7 +287,7 @@ void Player::jual(Shop toko)
     }
 }
 
-void Player::cekJual(Shop toko)
+void Player::cekJual(Shop &toko)
 {
     bool isDone = false;
     while (!isDone)
@@ -294,11 +341,3 @@ void Player::cekJual(Shop toko)
         }
     }
 }
-
-
-
-
-
-
-
-

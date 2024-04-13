@@ -11,6 +11,11 @@ Peternak::~Peternak()
     peternakan.~MatrixContainer();
 }
 
+string Player::getType() const
+{
+    return "PETERNAK";
+}
+
 void Peternak::kasihMakan()
 {
     cout << "Pilih petak kandang yang akan ditinggali" << endl;

@@ -4,6 +4,7 @@
 #include "Player.hpp"
 #include "../../GameContext/header/BuildingConfig.hpp"
 #include "../../GameContext/header/Config.hpp"
+#include "../../GameObject/header/Building.hpp"
 using namespace std;
 
 class Walikota : public Player
@@ -17,6 +18,11 @@ public:
     Walikota(string username_);
 
     /**
+     * @return type : string
+     */
+    string getType() const;
+
+    /**
      * Menarik pajak dari pemain
      */
     void tarikPajak();
@@ -27,19 +33,37 @@ public:
     void buatBangunan(const map<string, BuildingConfig> &);
 
     /**
-     * Menthrow 
-    */
+     * Menthrow
+     */
     void cekRecipe(const map<string, BuildingConfig> &);
 
     /**
      * Menjual bangunan atau product
      */
-    void jual(Shop);
-    
+    void jual(Shop &toko);
+
+    /**
+     * Menerima IO dan melakukan pembelian atau throw error
+     */
+    void cekJual(Shop &toko);
+
     /**
      * Menjual bangunan atau product
      */
-    void beli(Shop);
+    void beli(Shop &toko);
+
+    /**
+     * Menerima IO dan melakukan pembelian atau throw error
+     */
+    void cekBeli(Shop &toko);
+
+    /**
+     *
+     */
+    pair<string, string> tambahPemain()
+    {
+        
+    }
 };
 
 #endif

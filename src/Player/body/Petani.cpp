@@ -10,6 +10,11 @@ Petani::~Petani()
     lahan.~MatrixContainer();
 }
 
+string Player::getType() const
+{
+    return "PETANI";
+}
+
 bool Petani::isPanenableMatrix()
 {
     for (int i = 0; i < lahan.getRow(); i++)

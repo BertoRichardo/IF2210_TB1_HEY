@@ -4,6 +4,11 @@ Walikota::Walikota(string username_) : Player(username_)
 {
 }
 
+string Player::getType() const
+{
+    return "WALIKOTA";
+}
+
 void Walikota::tarikPajak()
 {
     /**
@@ -101,16 +106,27 @@ void Walikota::cekRecipe(const map<string, BuildingConfig> &buildings)
             }
         }
     }
+
+    BuildingConfig config = buildings.at(input);
+    Building *bangunan = new Building(config.getKodeHuruf(), config.getNama(), config.getPrice(), config.getRecipe());
+
+    bool stored = false;
+    while (!stored)
+    {
+        for (int i = 0; i < inventory.getRow(); i++)
+        {
+            for (int j = 0; j < inventory.getCol(); j++)
+            {
+                if (inventory.isCellEmpty(i, j))
+                {
+                    inventory.addItem(i, j, bangunan);
+                }
+            }
+        }
+    }
 }
 
-void Walikota::jual(Shop toko) 
-{
-    /**
-     *
-     */
-}
-
-void Walikota::beli(Shop toko)
+void Walikota::beli(Shop &toko)
 {
     toko.printToko();
 
@@ -130,7 +146,7 @@ void Walikota::beli(Shop toko)
     }
 }
 
-void Player::cekBeli(Shop toko)
+void Walikota::cekBeli(Shop &toko)
 {
     // Minta masukan dari user
     int masukan;
@@ -144,15 +160,17 @@ void Player::cekBeli(Shop toko)
         // throw InputInvalidException
     }
 
-    if(dynamic_cast<Building*>(toko.getGameObject(masukan)) != NULL){
+    if (dynamic_cast<Building *>(toko.getGameObject(masukan)) != NULL)
+    {
         // throw CantBuyBuilding
     }
 
-    // validasi penyimpanan
+    // validasi inventory
     int quantity;
     cout << "Kuantitas: ";
     cin >> quantity;
     cout << endl;
+
     if (quantity == 0 || quantity > inventory.emptySpace())
     {
         // throw inputInvalidException
@@ -167,6 +185,14 @@ void Player::cekBeli(Shop toko)
          */
     }
 
+    // Validasi stock
+    if (toko.getStock(masukan - 1) != -1 && quantity > toko.getStock(masukan - 1))
+    {
+        /**
+         * TODO: throw StockKurang Exception
+         */
+    }
+
     // Berikan IO dan kurangi uang
     setGulden(getGulden() - quantity * toko.getGameObject(masukan)->getPrice());
     cout << "Selamat Anda berhasil membeli " << quantity << " " << toko.getGameObject(masukan)->getName() << ".";
@@ -177,13 +203,11 @@ void Player::cekBeli(Shop toko)
     cout << "[Penyimpanan]:" << endl;
     inventory.printMatrix(false);
 
-    //
-    GameObject *item = new GameObject(*toko.getGameObject(masukan));
-
     // Pilih slot
     bool isDone = false;
     while (!isDone)
     {
+        GameObject *item = callCCtor(toko.getGameObject(masukan - 1));
         string inSlot;
         cout << "Petak slot: ";
         cin >> inSlot;
@@ -197,7 +221,10 @@ void Player::cekBeli(Shop toko)
                 inventory.addItem(slotS[i], item);
             }
             isDone = true;
-            toko.setStock(item->getName(), toko.getStock(masukan) - quantity);
+            if (dynamic_cast<Plant *>(item) == NULL && dynamic_cast<Animal *>(item) == NULL)
+            {
+                toko.setStock(item->getName(), toko.getStock(masukan - 1) - quantity);
+            }
         }
         catch (const GameException &e)
         {
@@ -226,13 +253,19 @@ vector<string> parserSlots(string in)
         {
             temp.push_back(in.at(i));
         }
-    } 
+    }
     hasil.push_back(temp);
     return hasil;
 }
 
+void Walikota::jual(Shop &toko)
+{
+    /**
+     *
+     */
+}
 
-void Player::cekJual(Shop toko)
+void Walikota::cekJual(Shop &toko)
 {
     bool isDone = false;
     while (!isDone)
@@ -280,11 +313,3 @@ void Player::cekJual(Shop toko)
         }
     }
 }
-
-
-
-
-
-
-
-

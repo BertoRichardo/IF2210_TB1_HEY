@@ -9,53 +9,61 @@ BuildingConfig::BuildingConfig(int id,
                                string kode_huruf,
                                string nama,
                                int price,
-                               vector<pair<string,int>> recipe) :
-                               Config(id,kode_huruf,nama,price)
+                               vector<pair<string, int>> recipe) : Config(id, kode_huruf, nama, price)
 {
     this->recipe = recipe;
 }
 
-vector<pair<string,int>> BuildingConfig::getRecipe() const {
+vector<pair<string, int>> BuildingConfig::getRecipe() const
+{
     return this->recipe;
 }
 
-void BuildingConfig::setRecipe(const vector<pair<string,int>> recipe) {
+void BuildingConfig::setRecipe(const vector<pair<string, int>> recipe)
+{
     this->recipe = recipe;
 }
 
-pair<string,int> BuildingConfig::getRecipeComp(int idx) const {
+pair<string, int> BuildingConfig::getRecipeComp(int idx) const
+{
     cout << idx << " " << this->recipe.size() << endl;
-    if (idx >= this->recipe.size()) {
+    if (idx >= (int)this->recipe.size())
+    {
         throw IndexInvalidException();
     }
     return this->recipe.at(idx);
 }
 
-void BuildingConfig::setRecipeComp(pair<string,int> element, int idx) {
+void BuildingConfig::setRecipeComp(pair<string, int> element, int idx)
+{
     this->recipe.at(idx) = element;
 }
 
-string BuildingConfig::getProductName(int idx) const {
+string BuildingConfig::getProductName(int idx) const
+{
     return this->recipe.at(idx).first;
 }
 
-void BuildingConfig::setProductName(string nama, int idx) {
+void BuildingConfig::setProductName(string nama, int idx)
+{
     this->recipe.at(idx).first = nama;
 }
 
-int BuildingConfig::getQuantity(int idx) const {
+int BuildingConfig::getQuantity(int idx) const
+{
     return this->recipe.at(idx).second;
 }
 
-void BuildingConfig::setQuantity(int val, int idx) {
+void BuildingConfig::setQuantity(int val, int idx)
+{
     this->recipe.at(idx).second = val;
 }
 
-void BuildingConfig::setAll(int id, 
-                            string kode_huruf, 
-                            string nama, 
-                            int price, 
-                            vector<pair<string,int>> recipe)
+void BuildingConfig::setAll(int id,
+                            string kode_huruf,
+                            string nama,
+                            int price,
+                            vector<pair<string, int>> recipe)
 {
     setID(id);
     setKodeHuruf(kode_huruf);

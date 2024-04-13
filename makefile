@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 # Compiler
 CC = g++
 

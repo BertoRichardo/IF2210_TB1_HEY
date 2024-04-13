@@ -20,6 +20,11 @@ public:
     ~Petani();
 
     /**
+     * @return type : string
+     */
+    string getType() const;
+
+    /**
      * Memanen tanaman atau men-throw error
      */
     void cekPanen(string cell);
