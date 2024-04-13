@@ -1,12 +1,20 @@
 #include "../header/Petani.hpp"
 
-Petani::Petani(string username_, int row, int col) : Player::Player(username_), lahan(row, col)
+Petani::Petani(string username_,
+               int invRow, int invCol,
+               int lahanRow, int lahanCol)
+    : Player::Player(username_, invRow, invCol), lahan(lahanRow, lahanCol)
 {
 }
 
 Petani::~Petani()
 {
     lahan.~MatrixContainer();
+}
+
+MatrixContainer<Plant *> Petani::getLahan() const
+{
+    return lahan;
 }
 
 string Petani::getType() const
@@ -66,7 +74,6 @@ void Petani::cekPanen(string cell)
          * @TODO: throw NotReadyToHarvest
          */
     }
-    lahan.removeItem(cell);
 }
 
 void Petani::panenTanaman()
@@ -79,8 +86,9 @@ void Petani::panenTanaman()
     }
 
     // Cetak matrix
-    cout << "[Ladang]";
+    cout << "[Ladang]" << endl;
     lahan.printMatrix();
+
     map<string, int> temp;
 
     // mapping sementara dari lahan
@@ -88,24 +96,26 @@ void Petani::panenTanaman()
     {
         for (int j = 0; j < lahan.getCol(); j++)
         {
-            if (lahan.getItem(i, j)->isReadyToHarvest())
+            if (!lahan.isCellEmpty(i, j) && lahan.getItem(i, j)->isReadyToHarvest())
             {
-                // Tidak tau perlu atau gak
-                // cout << "- " << angkaToHuruf(j) << i << lahan.getItem(i, j)->getName() << endl;
-                temp[lahan.getMakanan(i, j)->getKodeHuruf()]++;
+                cout << "- " << Util::angkaToHuruf(j) << i + 1 << ": " << lahan.getItem(i, j)->getName() << endl;
+                temp[lahan.getItem(i, j)->getKodeHuruf()]++;
             }
         }
     }
+
     // menampilkan tanaman yang bisa dipanen
-    cout << "Pilih tanaman siap panen yang kamu miliki" << endl;
+    cout << endl
+         << "Pilih tanaman siap panen yang kamu miliki" << endl;
     map<string, int>::iterator it = temp.begin();
     int i = 1;
     while (it != temp.end())
     {
-        cout << i << " ." << it->first << " (" << it->second << "petak siap dipanen)" << endl;
+        cout << i << ". " << it->first << " (" << it->second << " petak siap dipanen)" << endl;
         ++it;
         i++;
     }
+    cout << endl;
 
     // Memilih tanaman dari map yang sudah dibuat
     cout << "Nomor tanaman yang ingin dipanen: ";
@@ -129,7 +139,7 @@ void Petani::panenTanaman()
     cout << "Berapa petak yang ingin dipanen: ";
     int quantity;
     cin >> quantity;
-
+    cout << endl;
     // cek error
     if (quantity > item->second)
     {
@@ -158,16 +168,19 @@ void Petani::panenTanaman()
             string cell;
             cin >> cell;
 
-            // validasi cell masukan
+            // validasi cell masukanl;
             cekPanen(cell);
 
             // adjust row and col
             row = avail[j - 1].first;
             col = avail[j - 1].second;
 
+            cout << "row:  " << row << "  col : " << col << endl;
             // masukan product ke item
+            // EROR GOLAPPPPPPP
             Product prod = lahan.getItem(cell)->getProduct();
             inventory.addItem(row, col, (&prod));
+            inventory.printMatrix();
 
             // hilangkan plant dari lahan
             lahan.getItem(cell)->~Plant();
@@ -191,7 +204,7 @@ void Petani::tanam()
          */
     }
 
-    if (inventory.isObjectEmpty<Animal *>())
+    if (inventory.isObjectEmpty<Plant *>())
     {
         /**
          * TODO: Throw MatrixEmptyException
@@ -201,6 +214,9 @@ void Petani::tanam()
     // pilih dari inventory
     Plant *plant = NULL;
     string inventoryKoor;
+
+    // print inventory
+    printInventory();
 
     while (plant == NULL)
     {
@@ -228,7 +244,7 @@ void Petani::tanam()
     // pilih petak lahan
     bool isDone = false;
     string lahanKoor;
-    cout << "Pilih petak tanah yang akan dijadikan kandang\n\n";
+    cout << "Pilih petak tanah yang akan ditanami\n\n";
     cout << "    ================[ lahan ]==================\n\n";
     lahan.printMatrix();
     cout << '\n';
@@ -244,8 +260,10 @@ void Petani::tanam()
             lahan.addItem(lahanKoor, plant);
             isDone = true;
 
-            cout << "Cangkul, cangkul, cangkul yang dalam~!" << plant->getName() << " di kandang.\n\n";
-            cout << plant->getName() << " berhasil ditanam!";
+            cout << "Cangkul, cangkul, cangkul yang dalam~!" << endl
+                 << endl;
+            cout << plant->getName() << " berhasil ditanam!" << endl
+                 << endl;
         }
         catch (const GameException &e)
         {
@@ -266,4 +284,31 @@ void Petani::tambahUmurTanaman()
             }
         }
     }
+}
+
+void Petani::printLahan()
+{
+    printHeader("   Lahan   ");
+
+    // Cetak matrix
+    lahan.printMatrix();
+    map<string, string> temp;
+    for (int i = 0; i < lahan.getRow(); i++)
+    {
+        for (int j = 0; j < lahan.getCol(); j++)
+        {
+            if (!lahan.isCellEmpty(i, j))
+            {
+                temp[lahan.getItem(i, j)->getKodeHuruf()] = lahan.getItem(i, j)->getName();
+            }
+        }
+    }
+    map<string, string>::iterator item = temp.begin();
+    for (int i = 0; i < (int)temp.size(); i++)
+    {
+        cout << item->first << ": " << item->second << endl;
+        ++item;
+    }
+
+    // mappjng sementara darj lahan
 }

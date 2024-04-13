@@ -6,18 +6,19 @@
 class Petani : public Player
 {
 private:
-    MatrixContainer<Plant *> lahan;
-
 public:
+    MatrixContainer<Plant *> lahan;
     /**
      * User Defined Constructor
      */
-    Petani(string username_, int row, int col);
+    Petani(string username_, int invRow, int invCol, int lahanRow, int lahanCol);
 
     /**
      * Destructor
      */
     ~Petani();
+
+    MatrixContainer<Plant *> getLahan() const;
 
     /**
      * @return type : string
@@ -54,6 +55,10 @@ public:
      */
     void tambahUmurTanaman();
 
+    /**
+     * Mencetak Lahan
+     */
+    void printLahan();
 };
 
 #endif

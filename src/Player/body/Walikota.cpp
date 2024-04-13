@@ -1,6 +1,9 @@
 #include "../header/Walikota.hpp"
 
-Walikota::Walikota(string username_) : Player(username_)
+Walikota::Walikota(string username_,
+                   int invRow,
+                   int invCol)
+    : Player(username_, invRow, invCol)
 {
 }
 
@@ -57,15 +60,15 @@ void Walikota::cekRecipe(const map<string, BuildingConfig> &buildings)
 
     vector<pair<string, int>> recipe = buildings.at(input).getRecipe();
 
-    map<string, int> inventoryCount = getInventoryCount();
+    map<string, int> groupedItem = inventory.getGroupedItem();
     vector<pair<string, int>> InsufficentMaterial;
 
     // cek material
     for (auto i = recipe.begin(); i != recipe.end(); i++)
     {
-        if (i->second > inventoryCount[i->first])
+        if (i->second > groupedItem[i->first])
         {
-            InsufficentMaterial.push_back(pair(i->first, i->second - inventoryCount[i->first]));
+            InsufficentMaterial.push_back(pair(i->first, i->second - groupedItem[i->first]));
         }
     }
     // cek gulden

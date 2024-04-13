@@ -1,9 +1,10 @@
 #include "../header/Peternak.hpp"
 
-Peternak::Peternak(string username_, int row, int col) : Player::Player(username_)
+Peternak::Peternak(string username_,
+                   int invRow, int invCol,
+                   int peternakanRow, int peternakanCol)
+    : Player::Player(username_, invRow, invCol), peternakan(peternakanRow, peternakanCol)
 {
-    MatrixContainer<Animal *> peternakan(row, col);
-    // peternakan = peternakan_;
 }
 
 Peternak::~Peternak()
@@ -37,6 +38,11 @@ int Peternak::getPajak() const
     int kkp = wealth - 11;
 
     return kkp * Util::persenPajak(kkp);
+}
+
+MatrixContainer<Animal *> Peternak::getPeternakan() const
+{
+    return peternakan;
 }
 
 void Peternak::kasihMakan()
@@ -141,8 +147,7 @@ void Peternak::panenTernak()
         {
             if (peternakan.getItem(i, j)->isReadyToHarvest())
             {
-                // Tidak tau perlu atau gak
-                // cout << "- " << angkaToHuruf(j) << i << peternakan.getItem(i, j)->getName() << endl;
+                cout << "- " << Util::angkaToHuruf(j) << i << ": " << peternakan.getItem(i, j)->getName() << endl;
                 temp[peternakan.getItem(i, j)->getKodeHuruf()]++;
             }
         }
@@ -266,6 +271,9 @@ void Peternak::letakTernak()
          */
     }
 
+    // print inventory
+    printInventory();
+
     // pilih dari inventory
     Animal *animal = NULL;
     string inventoryKoor;
@@ -313,12 +321,34 @@ void Peternak::letakTernak()
             peternakan.addItem(peternakanKoor, animal);
             isDone = true;
 
-            cout << "Dengan hati-hati, kamu meletakkan seekor " << animal->getName() << " di kandang.\n\n";
-            cout << animal->getName() << " telah menjadi peliharaanmu sekarang!\n";
+            cout << "Dengan hati-hati, kamu meletakkan seekor " << animal->getName() << " di kandang." << endl
+                 << endl;
+            cout << animal->getName() << " telah menjadi peliharaanmu sekarang!" << endl
+                 << endl;
         }
         catch (const GameException &e)
         {
             e.displayMessage();
+        }
+    }
+}
+
+void Peternak::printPeternakan()
+{
+    printHeader("Peternakan");
+
+    // Cetak matrix
+    peternakan.printMatrix();
+
+    // mapping sementara dari peternakan
+    for (int i = 0; i < peternakan.getRow(); i++)
+    {
+        for (int j = 0; j < peternakan.getCol(); j++)
+        {
+            if (!peternakan.isCellEmpty(i, j) && peternakan.getItem(i, j)->isReadyToHarvest())
+            {
+                cout << "- " << Util::angkaToHuruf(j) << i << ": " << peternakan.getItem(i, j)->getName() << endl;
+            }
         }
     }
 }

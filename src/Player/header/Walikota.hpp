@@ -16,7 +16,7 @@ public:
      * User defined constructor
      * @param username_ : string
      */
-    Walikota(string username_);
+    Walikota(string username_, int invRow, int invCol);
 
     /**
      * @return type : string

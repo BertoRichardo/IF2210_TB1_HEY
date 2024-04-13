@@ -1,10 +1,9 @@
 #include "../header/Player.hpp"
 
-Player::Player(string username_)
+Player::Player(string username_, int invRow, int invCol)
+    : inventory(invRow, invCol)
 {
     username = username_;
-    MatrixContainer<GameObject *> inventory(10, 10);
-    // inventory = inventory_;
     gulden = 50;
     weigth = 40;
 }
@@ -66,19 +65,6 @@ int Player::getGulden() const
 void Player::setGulden(int gulden_)
 {
     gulden = gulden_;
-}
-
-map<string, int> Player::getInventoryCount()
-{
-    map<string, int> inventoryCount;
-    for (int i = 0; i < inventory.getRow(); i++)
-    {
-        for (int j = 0; j < inventory.getCol(); j++)
-        {
-            inventoryCount[inventory.getItem(i, j)->getName()] += 1;
-        }
-    }
-    return inventoryCount;
 }
 
 void Player::eat()
@@ -312,4 +298,33 @@ void Player::cekJual(Shop &toko)
             }
         }
     }
+}
+
+void Player::printInventory()
+{
+    printHeader("Penyimpanan");
+    inventory.printMatrix();
+    cout << "Total slot kosong: " << inventory.emptySpace() << endl;
+}
+
+void Player::printHeader(string judul)
+{
+    cout << "   ";
+    if (inventory.getCol() * 6 + 1 > 13)
+    {
+        for (int i = 0; i < (inventory.getCol() * 6 - 12) / 2; i++)
+        {
+            cout << "=";
+        }
+        cout << judul;
+        for (int i = 0; i < (inventory.getCol() * 6 - 12) / 2; i++)
+        {
+            cout << "=";
+        }
+    }
+    else
+    {
+        cout << judul;
+    }
+    cout << endl;
 }

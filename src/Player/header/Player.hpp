@@ -21,15 +21,15 @@ protected:
     string username;
     int weigth;
     int gulden;
-    MatrixContainer<GameObject *> inventory;
 
 public:
+    MatrixContainer<GameObject *> inventory;
     /**
      * User defined Constructor
      * @param username_ nama player
      * -TODO: handle username tidak unik
      */
-    Player(string username_);
+    Player(string username_, int invRow, int invCol);
 
     /**
      * Destructor
@@ -80,13 +80,6 @@ public:
      */
     void setGulden(int gulden_);
 
-    /*UTIL*/
-    /**
-     * Mendapatkan Inventory dan jumlahnya
-     * @return map<string, pair<GameObject* , int>>
-     */
-    map<string, int> getInventoryCount();
-
     /*COMMAND*/
 
     /**
@@ -117,6 +110,15 @@ public:
      * parser slot
      */
 
+    /**
+     * Mencetak Header untuk matrix
+     */
+    void printHeader(string judul);
+
+    /**
+     * Mencetak header inventory, isinya, dan total slot kosong
+     */
+    void printInventory();
 };
 
 #endif

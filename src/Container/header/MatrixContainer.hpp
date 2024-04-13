@@ -6,6 +6,7 @@ using namespace std;
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include <map>
 #include <vector>
 #include "../../Util/header/Util.hpp"
 #include "../../GameObject/header/Animal.hpp"
@@ -446,13 +447,30 @@ public:
         {
             for (int j = 0; j < colSize; j++)
             {
-                if (isCellEmpty(i,j))
+                if (isCellEmpty(i, j))
                 {
                     result.push_back(make_pair(i, j));
                 }
             }
         }
         return result;
+    }
+
+    /**
+     * Mendapatkan Inventory dan jumlahnya
+     * @return map<string, pair<GameObject* , int>>
+     */
+    map<string, int> getGroupedItem()
+    {
+        map<string, int> groupedItem;
+        for (int i = 0; i < getRow(); i++)
+        {
+            for (int j = 0; j < getCol(); j++)
+            {
+                groupedItem[getItem(i, j)->getName()] += 1;
+            }
+        }
+        return groupedItem;
     }
 
 public:
@@ -466,7 +484,7 @@ public:
         {
             for (int j = 0; j < colSize; j++)
             {
-                if (!isCellEmpty(i + 1, j + 1) && dynamic_cast<T>(buffer[i][j]) != NULL)
+                if (!isCellEmpty(i, j) && dynamic_cast<T>(buffer[i][j]) != NULL)
                 {
                     return false;
                 }

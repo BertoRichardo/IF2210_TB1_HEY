@@ -6,13 +6,15 @@
 class Peternak : public Player
 {
 private:
-    MatrixContainer<Animal *> peternakan;
 
 public:
+    MatrixContainer<Animal *> peternakan;
     /**
      * User Defined Constructor
      */
-    Peternak(string username_, int row, int col);
+    Peternak(string username_,
+             int invRow, int invCol,
+             int peternakanRow, int peternakanCol);
 
     /**
      * Destructor
@@ -23,6 +25,11 @@ public:
      * @return type : string
      */
     string getType() const;
+
+    /**
+     * @return peternakan
+     */
+    MatrixContainer<Animal *> getPeternakan() const;
 
     /**
      * @return pajak : int
@@ -37,7 +44,7 @@ public:
     void kasihMakan();
 
     /**
-     * Memanen ternak dan mengeluarkan pesan 
+     * Memanen ternak dan mengeluarkan pesan
      */
     void panenTernak();
 
@@ -57,10 +64,9 @@ public:
     void letakTernak();
 
     /**
-     * @return hasil convert dari angka huruf : 1 -> a
-     * handle hingga 26 * 26 + 26
+     * Mencetak peternakan
      */
-    friend string angkaToHuruf();
+    void printPeternakan();
 };
 
 #endif
