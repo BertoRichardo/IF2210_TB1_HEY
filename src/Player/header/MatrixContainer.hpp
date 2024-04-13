@@ -7,13 +7,9 @@ using namespace std;
 #include <sstream>
 #include <iomanip>
 #include <vector>
-#include <utility>
 #include "../../Util/header/Util.hpp"
-// #include "../../GameObject/header/GameObject.hpp"
 #include "../../GameObject/header/Animal.hpp"
 #include "../../GameObject/header/Plant.hpp"
-// #include "../../GameObject/header/Product.hpp"
-// #include "../../GameObject/header/Building.hpp"
 #include "pcolor.hpp"
 
 template <class T>
@@ -340,101 +336,34 @@ public:
     /**
      * Memprint matrix
      */
-    void printMatrix(bool isWarna)
+    void printMatrix()
     {
-        if (isWarna)
+        // print koordinat column
+        char c = 'A';
+        int idx = 0;
+        for (int j = 0; j < colSize; j++)
         {
-            // print koordinat column
-            char c = 'A';
-            int idx = 0;
-            for (int j = 0; j < colSize; j++)
+            if (j == 0)
             {
-                if (j == 0)
-                {
-                    cout << "   ";
-                }
-                if (idx <= 25)
-                {
-                    cout << "   " << char(c + idx) << "  ";
-                }
-                else
-                {
-                    char front = c + (((idx / 26) - 1) % 26);
-                    char back = c + (idx % 26);
-                    cout << "  " << front << back << "  ";
-                }
-                idx++;
+                cout << "   ";
             }
-            cout << endl;
-
-            for (int i = 0; i < rowSize; i++)
+            if (idx <= 25)
             {
-                // print tabel
-                for (int j = 0; j < colSize; j++)
-                {
-                    if (j == 0)
-                    {
-                        cout << "   ";
-                    }
-                    cout << "+-----";
-                }
-                cout << "+" << endl;
-
-                for (int j = 0; j < colSize; j++)
-                {
-                    // print koordinat baris
-                    if (j == 0)
-                    {
-                        cout << setfill('0') << setw(2) << i + 1 << " ";
-                    }
-
-                    // print kode
-                    if (buffer[i][j] == NULL)
-                    {
-                        cout << "|"
-                             << "     ";
-                    }
-                    else // tidak null
-                    {
-                        Animal *a = dynamic_cast<Animal *>(buffer[i][j]);
-                        Plant *p = dynamic_cast<Plant *>(buffer[i][j]);
-                        if (a == NULL)
-                        {
-                            if (p->isReadyToHarvest())
-                            {
-                                cout << "| ";
-                                print_greens(buffer[i][j]->getKodeHuruf());
-                                cout << " ";
-                            }
-                            else
-                            {
-                                cout << "| ";
-                                print_reds(buffer[i][j]->getKodeHuruf());
-                                cout << " ";
-                            }
-                        }
-                        else
-                        {
-                            if (a->isReadyToHarvest())
-                            {
-                                cout << "| ";
-                                print_greens(buffer[i][j]->getKodeHuruf());
-                                cout << " ";
-                            }
-                            else
-                            {
-                                cout << "| ";
-                                print_reds(buffer[i][j]->getKodeHuruf());
-                                cout << " ";
-                            }
-                        }
-                    }
-                }
-                // cout << "|  " << i + 1 << endl;
-                cout << "|" << endl;
+                cout << "   " << char(c + idx) << "  ";
             }
+            else
+            {
+                char front = c + (((idx / 26) - 1) % 26);
+                char back = c + (idx % 26);
+                cout << "  " << front << back << "  ";
+            }
+            idx++;
+        }
+        cout << endl;
 
-            // print tabel paling bawag(cont.)
+        for (int i = 0; i < rowSize; i++)
+        {
+            // print tabel
             for (int j = 0; j < colSize; j++)
             {
                 if (j == 0)
@@ -443,82 +372,49 @@ public:
                 }
                 cout << "+-----";
             }
-            cout << "+";
-            cout << endl;
+            cout << "+" << endl;
+
+            for (int j = 0; j < colSize; j++)
+            {
+                // print koordinat baris
+                if (j == 0)
+                {
+                    cout << setfill('0') << setw(2) << i + 1 << " ";
+                }
+
+                // print kode
+                if (buffer[i][j] == NULL)
+                {
+                    cout << "|"
+                         << "     ";
+                }
+                else // tidak null
+                {
+                    cout << "| ";
+                    printElmt(i, j);
+                    cout << " ";
+                }
+            }
+            // cout << "|  " << i + 1 << endl;
+            cout << "|" << endl;
         }
-        else
+
+        // print tabel paling bawag(cont.)
+        for (int j = 0; j < colSize; j++)
         {
-            // print koordinat column
-            char c = 'A';
-            int idx = 0;
-            for (int j = 0; j < colSize; j++)
+            if (j == 0)
             {
-                if (j == 0)
-                {
-                    cout << "   ";
-                }
-                if (idx <= 25)
-                {
-                    cout << "   " << char(c + idx) << "  ";
-                }
-                else
-                {
-                    char front = c + (((idx / 26) - 1) % 26);
-                    char back = c + (idx % 26);
-                    cout << "  " << front << back << "  ";
-                }
-                idx++;
+                cout << "   ";
             }
-            cout << endl;
-
-            for (int i = 0; i < rowSize; i++)
-            {
-                // print tabel
-                for (int j = 0; j < colSize; j++)
-                {
-                    if (j == 0)
-                    {
-                        cout << "   ";
-                    }
-                    cout << "+-----";
-                }
-                cout << "+" << endl;
-
-                for (int j = 0; j < colSize; j++)
-                {
-                    // print koordinat baris
-                    if (j == 0)
-                    {
-                        cout << setfill('0') << setw(2) << i + 1 << " ";
-                    }
-
-                    // print kode
-                    if (buffer[i][j] == NULL)
-                    {
-                        cout << "|"
-                             << "     ";
-                    }
-                    else // tidak null
-                    {
-                        cout << "| " << buffer[i][j]->getKodeHuruf() << " ";
-                    }
-                }
-                // cout << "|  " << i + 1 << endl;
-                cout << "|" << endl;
-            }
-
-            // print tabel paling bawag(cont.)
-            for (int j = 0; j < colSize; j++)
-            {
-                if (j == 0)
-                {
-                    cout << "   ";
-                }
-                cout << "+-----";
-            }
-            cout << "+";
-            cout << endl;
+            cout << "+-----";
         }
+        cout << "+";
+        cout << endl;
+    }
+
+    void printElmt(int r, int c)
+    {
+        cout << r << c << 'a';
     }
 
     /**
@@ -545,14 +441,14 @@ public:
      */
     vector<pair<int, int>> getEmptySpacePoints()
     {
-        vector<int, int> result;
+        vector<pair<int, int>> result;
         for (int i = 0; i < rowSize; i++)
         {
-            for (int j = 0; j < count; j++)
+            for (int j = 0; j < colSize; j++)
             {
-                if (isCellEmpty())
+                if (isCellEmpty(i,j))
                 {
-                    result.push_back({i, j});
+                    result.push_back(make_pair(i, j));
                 }
             }
         }

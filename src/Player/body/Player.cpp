@@ -86,7 +86,7 @@ void Player::eat()
     // Menampilkan Inventory
     cout << "Pilih makanan dari penyimpanan" << endl;
     cout << "[Penyimpanan]: " << endl;
-    inventory.printMatrix(false);
+    inventory.printMatrix();
 
     if (inventory.isFoodEmpty())
     {
@@ -196,7 +196,7 @@ void Player::cekBeli(Shop &toko)
     // IO pemilihan slot
     cout << "Pilih slot untuk menyimpan barang yang Anda beli!" << endl;
     cout << "[Penyimpanan]:" << endl;
-    inventory.printMatrix(false);
+    inventory.printMatrix();
 
     // Pilih slot
     bool isDone = false;
@@ -277,7 +277,7 @@ void Player::jual(Shop &toko)
 {
     cout << "Berikut merupakan penyimnpanan Anda" << endl;
     cout << "[Penyimpanan]:";
-    inventory.printMatrix(false);
+    inventory.printMatrix();
 
     try
     {

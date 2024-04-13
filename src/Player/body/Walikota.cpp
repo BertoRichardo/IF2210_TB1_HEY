@@ -201,7 +201,7 @@ void Walikota::cekBeli(Shop &toko)
     // IO pemilihan slot
     cout << "Pilih slot untuk menyimpan barang yang Anda beli!" << endl;
     cout << "[Penyimpanan]:" << endl;
-    inventory.printMatrix(false);
+    inventory.printMatrix();
 
     // Pilih slot
     bool isDone = false;
@@ -241,7 +241,7 @@ void Walikota::jual(Shop &toko)
 {
     cout << "Berikut merupakan penyimnpanan Anda" << endl;
     cout << "[Penyimpanan]:";
-    inventory.printMatrix(false);
+    inventory.printMatrix();
     try
     {
         cekJual(toko);

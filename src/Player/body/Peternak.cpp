@@ -42,7 +42,7 @@ int Peternak::getPajak() const
 void Peternak::kasihMakan()
 {
     cout << "Pilih petak kandang yang akan ditinggali" << endl;
-    peternakan.printMatrix(true);
+    peternakan.printMatrix();
     cout << "Petak kandang:";
     string cell;
     cin >> cell;
@@ -56,7 +56,7 @@ void Peternak::kasihMakan()
             cout << "Kamu memilih " << peternakan.getItem(cell)->getName() << " untuk diberi makan." << endl;
             cout << "Pilih pangan yang akan diberikan:" << endl;
             cout << "[Penyimpanan]:" << endl;
-            inventory.printMatrix(false);
+            inventory.printMatrix();
 
             // setIsDone
             valid = true;
@@ -131,7 +131,7 @@ void Peternak::panenTernak()
 
     // Cetak matrix
     cout << "[Peternakan]:" << endl;
-    peternakan.printMatrix(true);
+    peternakan.printMatrix();
     map<string, int> temp;
 
     // mapping sementara dari peternakan
@@ -233,7 +233,8 @@ void Peternak::panenTernak()
             {
                 row = avail[i + jumlahProduct * (j - 1)].first;
                 col = avail[i + jumlahProduct * (j - 1)].second;
-                inventory.addItem(row, col, ((&peternakan.getItem(cell)->getProduct()[i])));
+                Product prod = peternakan.getItem(cell)->getProduct()[i];
+                inventory.addItem(row, col, (&prod));
             };
 
             // destruct animal dan hilangkan dari peternakan
@@ -297,7 +298,7 @@ void Peternak::letakTernak()
     string peternakanKoor;
     cout << "Pilih petak tanah yang akan dijadikan kandang\n\n";
     cout << "    ================[ Peternakan ]==================\n\n";
-    peternakan.printMatrix(true);
+    peternakan.printMatrix();
     cout << '\n';
 
     // mengambil ternak dari petak tanah

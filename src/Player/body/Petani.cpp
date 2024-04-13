@@ -80,7 +80,7 @@ void Petani::panenTanaman()
 
     // Cetak matrix
     cout << "[Ladang]";
-    lahan.printMatrix(true);
+    lahan.printMatrix();
     map<string, int> temp;
 
     // mapping sementara dari lahan
@@ -161,8 +161,13 @@ void Petani::panenTanaman()
             // validasi cell masukan
             cekPanen(cell);
 
+            // adjust row and col
+            row = avail[j - 1].first;
+            col = avail[j - 1].second;
+
             // masukan product ke item
-            inventory.addItem(row, col, (&lahan.getItem(cell)->getProduct()));
+            Product prod = lahan.getItem(cell)->getProduct();
+            inventory.addItem(row, col, (&prod));
 
             // hilangkan plant dari lahan
             lahan.getItem(cell)->~Plant();
@@ -225,7 +230,7 @@ void Petani::tanam()
     string lahanKoor;
     cout << "Pilih petak tanah yang akan dijadikan kandang\n\n";
     cout << "    ================[ lahan ]==================\n\n";
-    lahan.printMatrix(true);
+    lahan.printMatrix();
     cout << '\n';
 
     while (!isDone)
