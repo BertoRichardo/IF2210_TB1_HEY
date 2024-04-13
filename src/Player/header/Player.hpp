@@ -5,7 +5,8 @@ using namespace std;
 #include <iostream>
 #include <string>
 #include <map>
-#include "MatrixContainer.hpp"
+#include "../../Container/header/MatrixContainer.hpp"
+#include "../../Shop/header/Shop.hpp"
 #include "../../GameObject/header/GameObject.hpp"
 #include "../../GameObject/header/Animal.hpp"
 #include "../../GameObject/header/Plant.hpp"
@@ -13,7 +14,6 @@ using namespace std;
 #include "../../GameObject/header/Building.hpp"
 #include "../../GameException/header/GameException.hpp"
 #include "../../Util/header/Util.hpp"
-#include "Shop.hpp"
 
 class Player
 {
