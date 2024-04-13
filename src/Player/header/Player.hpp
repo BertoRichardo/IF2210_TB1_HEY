@@ -12,6 +12,7 @@ using namespace std;
 #include "../../GameObject/header/Product.hpp"
 #include "../../GameObject/header/Building.hpp"
 #include "../../GameException/header/GameException.hpp"
+#include "../../Util/header/Util.hpp"
 #include "Shop.hpp"
 
 class Player
@@ -46,6 +47,11 @@ public:
      * @param username_ nama pemain : string
      */
     void setUsername(string username_);
+
+    /**
+     * @return kekayaan from inventory : int
+     */
+    int getWealthFromInv() const;
 
     /**
      * @return type : string
@@ -113,12 +119,10 @@ public:
 
     /**
      * obj is not Null
-     * @param obj 
+     * @param obj
      * @return item as one of the child of gameObject
      */
     GameObject *callCCtor(GameObject *obj);
-
-    friend vector<string> parserSlot(string);
 };
 
 #endif

@@ -1,8 +1,7 @@
 #include "../header/Petani.hpp"
 
-Petani::Petani(string username_, int row, int col) : Player::Player(username_)
+Petani::Petani(string username_, int row, int col) : Player::Player(username_), lahan(row, col)
 {
-    MatrixContainer<Plant *> lahan(row, col);
 }
 
 Petani::~Petani()
@@ -10,9 +9,32 @@ Petani::~Petani()
     lahan.~MatrixContainer();
 }
 
-string Player::getType() const
+string Petani::getType() const
 {
     return "PETANI";
+}
+
+int Petani::getPajak() const
+{
+    // inisialisasi
+    int wealth = getWealthFromInv();
+
+    // cari kekayaan dari lahan
+    for (int i = 0; i < lahan.getRow(); i++)
+    {
+        for (int j = 0; j < lahan.getCol(); j++)
+        {
+            if (!lahan.isCellEmpty(i, j))
+            {
+                wealth += lahan.getItem(i, j)->getPrice();
+            }
+        }
+    }
+
+    // KTKP = 13
+    int kkp = wealth - 13;
+
+    return kkp * Util::persenPajak(kkp);
 }
 
 bool Petani::isPanenableMatrix()
@@ -86,9 +108,10 @@ void Petani::panenTanaman()
     }
 
     // Memilih tanaman dari map yang sudah dibuat
+    cout << "Nomor tanaman yang ingin dipanen: ";
     int in;
     cin >> in;
-    if (in < 0 || in > temp.size())
+    if (in < 0 || in > (int)temp.size())
     {
         /**
          * @TODO: throw InvalidInput
@@ -120,7 +143,11 @@ void Petani::panenTanaman()
          * @TODO: throw NotEnoughSpace
          */
     }
-    
+
+    // cari available space
+    vector<pair<int, int>> avail = inventory.getEmptySpacePoints();
+    int row, col;
+
     // Mengambil tanaman dari lahan
     int j = 1;
     while (j <= quantity)
@@ -130,7 +157,17 @@ void Petani::panenTanaman()
             cout << "Petak ke-" << j << ": ";
             string cell;
             cin >> cell;
+
+            // validasi cell masukan
             cekPanen(cell);
+
+            // masukan product ke item
+            inventory.addItem(row, col, (&lahan.getItem(cell)->getProduct()));
+
+            // hilangkan plant dari lahan
+            lahan.getItem(cell)->~Plant();
+            lahan.removeItem(cell);
+
             j++;
         }
         catch (const GameException &e)
@@ -138,18 +175,6 @@ void Petani::panenTanaman()
             e.displayMessage();
         }
     }
-}
-
-string angkaToHuruf(int in)
-{
-    int sisa = in % 26;
-    int hasil = in / 26;
-    char back = 'A' + sisa;
-    char front = 'A' + hasil;
-    string result = "";
-    result.push_back(front);
-    result.push_back(back);
-    return result;
 }
 
 void Petani::tanam()
@@ -220,6 +245,20 @@ void Petani::tanam()
         catch (const GameException &e)
         {
             e.displayMessage();
+        }
+    }
+}
+
+void Petani::tambahUmurTanaman()
+{
+    for (int i = 0; i < lahan.getRow(); i++)
+    {
+        for (int j = 0; j < lahan.getRow(); j++)
+        {
+            if (!lahan.isCellEmpty(i, j))
+            {
+                lahan.getItem(i, j)->setDuration(lahan.getItem(i, j)->getDuration() + 1);
+            }
         }
     }
 }

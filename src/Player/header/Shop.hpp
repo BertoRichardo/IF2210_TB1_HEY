@@ -90,13 +90,13 @@ public:
      * @param nama name of the object program wanted to find
      * @param quantity new quantity that w*ll replace the old one
      */
-    int setStock(string, int);
+    void setStock(string, int);
 
     /** STOCK SETTER
      * @param idx index of the object program wanted to find
      * @param quantity new quantity that will replace the old one
      */
-    int setStock(int, int);
+    void setStock(int, int);
 
     /** ADD GOODS
      * @param element new object program that will be added to vector

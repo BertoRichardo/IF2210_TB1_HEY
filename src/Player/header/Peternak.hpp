@@ -25,6 +25,11 @@ public:
     string getType() const;
 
     /**
+     * @return pajak : int
+     */
+    int getPajak() const;
+
+    /**
      * Memilih ternak yang ingin diberi makan,
      * lalu memilih item dari inventory
      * lakukan validasi

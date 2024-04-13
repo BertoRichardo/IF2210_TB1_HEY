@@ -21,6 +21,28 @@ void Player::setUsername(string username_)
     username = username_;
 }
 
+int Player::getWealthFromInv() const
+{
+    // inisialisasi
+    int pajak = 0;
+
+    // kekayaan dari gulden
+    pajak += getGulden();
+
+    // cari kekayaan dari inventory
+    for (int i = 0; i < inventory.getRow(); i++)
+    {
+        for (int j = 0; j < inventory.getCol(); j++)
+        {
+            if (!inventory.isCellEmpty(i, j))
+            {
+                pajak += inventory.getItem(i, j)->getPrice();
+            }
+        }
+    }
+    return pajak;
+}
+
 string Player::getType() const
 {
     return "PLAYER";
@@ -59,10 +81,6 @@ map<string, int> Player::getInventoryCount()
     return inventoryCount;
 }
 
-/**
- * - TODO: Tambahkan eat, jual , beli
- */
-
 void Player::eat()
 {
     // Menampilkan Inventory
@@ -99,6 +117,7 @@ void Player::eat()
             // Makanan sudah dimakan
             isDone = true;
         }
+
         /**
          * TODO: implement Exception
          */
@@ -107,27 +126,6 @@ void Player::eat()
             e.displayMessage();
         }
     }
-}
-
-vector<string> parserSlots(string in)
-{
-    vector<string> hasil;
-    string temp = "";
-    for (int i = 0; i < in.length(); i++)
-    {
-        //
-        if (in.at(i) == ',')
-        {
-            hasil.push_back(temp);
-            temp = "";
-        }
-        else if (in.at(i) != ' ')
-        {
-            temp.push_back(in.at(i));
-        }
-    }
-    hasil.push_back(temp);
-    return hasil;
 }
 
 void Player::beli(Shop &toko)
@@ -204,27 +202,29 @@ void Player::cekBeli(Shop &toko)
     bool isDone = false;
     while (!isDone)
     {
-        GameObject *item = callCCtor(toko.getGameObject(masukan - 1));
         string inSlot;
         cout << "Petak slot: ";
         cin >> inSlot;
-        vector<string> slotS = parserSlots(inSlot);
+        vector<string> slotS = Util::parserSlots(inSlot);
         int cnt = 0;
         try
         {
             // eksekusi
-            for (int i = 0; i < slotS.size(); i++)
+            for (int i = 0; i < (int)slotS.size(); i++)
             {
+                GameObject *item = callCCtor(toko.getGameObject(masukan - 1));
                 inventory.addItem(slotS[i], item);
             }
+
             isDone = true;
-            if (dynamic_cast<Plant *>(item) == NULL && dynamic_cast<Animal *>(item) == NULL)
+            if (dynamic_cast<Plant *>(toko.getGameObject(masukan - 1)) == NULL && dynamic_cast<Animal *>(toko.getGameObject(masukan - 1)) == NULL)
             {
-                toko.setStock(item->getName(), toko.getStock(masukan - 1) - quantity);
+                toko.setStock(toko.getGameObject(masukan - 1)->getName(), toko.getStock(masukan - 1) - quantity);
             }
         }
         catch (const GameException &e)
         {
+            // batal beli
             for (int i = 0; i < cnt; i++)
             {
                 inventory.removeItem(slotS[i]);
@@ -269,6 +269,8 @@ GameObject *Player::callCCtor(GameObject *obj)
         Building *item = new Building(*dynamic_cast<Building *>(obj));
         return item;
     }
+
+    return NULL;
 }
 
 void Player::jual(Shop &toko)
@@ -296,12 +298,12 @@ void Player::cekJual(Shop &toko)
         cout << "Petak: ";
         string inSlot;
         cin >> inSlot;
-        vector<string> slotS = parserSlots(inSlot);
+        vector<string> slotS = Util::parserSlots(inSlot);
         vector<pair<GameObject *, string>> vectorTemp;
 
         try
         {
-            for (int i = 0; i < inSlot.size(); i++)
+            for (int i = 0; i < (int)inSlot.size(); i++)
             {
                 vectorTemp.push_back(pair(inventory.getItem(slotS[i]), slotS[i]));
 
@@ -317,8 +319,17 @@ void Player::cekJual(Shop &toko)
                     toko.setStock(inventory.getItem(slotS[i])->getName(), toko.getStock(inventory.getItem(slotS[i])->getName()) - 1);
                 }
 
-                inventory.removeItem(slotS[i]);
+                // setGulden
                 setGulden(getGulden() + inventory.getItem(slotS[i])->getPrice());
+
+                // remove dari inventory
+                inventory.removeItem(slotS[i]);
+            }
+
+            // delete vectorTemp
+            for (auto &obj : vectorTemp)
+            {
+                delete obj.first;
             }
         }
         catch (const GameException &e)
