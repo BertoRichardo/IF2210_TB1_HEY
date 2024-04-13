@@ -8,6 +8,7 @@ using namespace std;
 #include <iomanip>
 #include <vector>
 #include <utility>
+#include "../../Util/header/Util.hpp"
 // #include "../../GameObject/header/GameObject.hpp"
 #include "../../GameObject/header/Animal.hpp"
 #include "../../GameObject/header/Plant.hpp"
@@ -63,12 +64,18 @@ public:
     }
 
     // *Getter */
-    int getRow()
+    /**
+     * @return row matrix
+     */
+    int getRow() const
     {
         return rowSize;
     }
 
-    int getCol()
+    /**
+     * @return col Matrix
+     */
+    int getCol() const
     {
         return colSize;
     }
@@ -82,7 +89,6 @@ public:
      */
     void addItem(int r, int c, const T &item)
     {
-        GameObject *p = new Plant();
         // handle out of idx
         if (r >= rowSize || c >= colSize || r < 0 || c < 0)
         {
@@ -113,18 +119,17 @@ public:
      */
     void addItem(string koordinat, T item)
     {
-        pair<int, int> pair = strToRowCol(koordinat);
+        pair<int, int> pair = Util::strToRowCol(koordinat);
         addItem(pair.first, pair.second, item);
     }
 
     /**
      Mendapatkan item dari matrix[r][c]
-     *(indexing dari 1)
      * @param r row
      * @param c column
      * @return Item pada cell tersebut : T
      */
-    T getItem(int r, int c)
+    T getItem(int r, int c) const
     {
         if (r >= rowSize || c >= colSize || r < 0 || r < 0)
         {
@@ -149,59 +154,10 @@ public:
      * @param koordinat : string
      * @return Item
      */
-    T getItem(string koordinat)
+    T getItem(string koordinat) const
     {
-        pair<int, int> pair = strToRowCol(koordinat);
-        getItem(pair.first, pair.second);
-    }
-
-    /**
-     * Mendapatkan item dari suatu cell
-     * @param koordinat
-     * @return Item pada cell tersebut : T
-     */
-    pair<int, int> strToRowCol(string koordinat)
-    {
-        // Cari nilai kolom
-        int i = 0;
-        int c = 0;
-        pair<int, int> pair;
-        if (koordinat[i] < 'A' || koordinat[i] > 'Z')
-        {
-            /**
-             * TODO: Throw invalidInput
-             */
-        }
-        else
-        {
-            while (koordinat[i] >= 'A' && koordinat[i] <= 'Z')
-            {
-                c *= 26;
-                c += koordinat[i] - 'A' + 1;
-                i++;
-            }
-        }
-
-        // Cari nilai baris
-        int r = 0;
-        for (int j = i; j < koordinat.length(); j++)
-        {
-            // Cek
-            if (koordinat[j] >= '0' && koordinat[j] <= '9')
-            {
-                r *= 10;
-                r += koordinat[j] - '0';
-            }
-            else
-            {
-                /**
-                 * TODO: throw invalidInput
-                 */
-            }
-        }
-        r--;
-        c--;
-        return pair;
+        pair<int, int> pair = Util::strToRowCol(koordinat);
+        return getItem(pair.first, pair.second);
     }
 
     /**
@@ -230,6 +186,7 @@ public:
              * -TODO: throw NotProduct
              */
         }
+        return NULL;
     }
 
     /**
@@ -238,8 +195,8 @@ public:
      */
     T getMakanan(string koordinat)
     {
-        pair<int, int> pair = strToRowCol(koordinat);
-        getMakanan(pair.first, pair.second);
+        pair<int, int> pair = Util::strToRowCol(koordinat);
+        return getMakanan(pair.first, pair.second);
     }
 
     /**
@@ -266,9 +223,9 @@ public:
      * @param koordinat : string
      * @return Item
      */
-    T removeItem(string koordinat)
+    void removeItem(string koordinat)
     {
-        pair<int, int> pair = strToRowCol(koordinat);
+        pair<int, int> pair = Util::strToRowCol(koordinat);
         removeItem(pair.first, pair.second);
     }
 
@@ -278,7 +235,7 @@ public:
      * @param c column
      * @return cell matrix berisi atau kosong : boolean
      */
-    bool isCellEmpty(int r, int c)
+    bool isCellEmpty(int r, int c) const
     {
         return buffer[r][c] == NULL;
     }
@@ -290,8 +247,8 @@ public:
      */
     bool isCellEmpty(string koordinat)
     {
-        pair<int, int> pair = strToRowCol(koordinat);
-        isCellEmpty(pair.first, pair.second);
+        pair<int, int> pair = Util::strToRowCol(koordinat);
+        return isCellEmpty(pair.first, pair.second);
     }
 
     /**
@@ -584,14 +541,34 @@ public:
     }
 
     /**
+     * @return vector of pair emptyPoints
+     */
+    vector<pair<int, int>> getEmptySpacePoints()
+    {
+        vector<int, int> result;
+        for (int i = 0; i < rowSize; i++)
+        {
+            for (int j = 0; j < count; j++)
+            {
+                if (isCellEmpty())
+                {
+                    result.push_back({i, j});
+                }
+            }
+        }
+        return result;
+    }
+
+public:
+    /**
      * @return true if object with class T exist in the matrix
      */
-    template <class T>
+    template <class U>
     bool isObjectEmpty()
     {
-        for (int i = 0; i < row; i++)
+        for (int i = 0; i < rowSize; i++)
         {
-            for (int j = 0; j < col; j++)
+            for (int j = 0; j < colSize; j++)
             {
                 if (!isCellEmpty(i + 1, j + 1) && dynamic_cast<T>(buffer[i][j]) != NULL)
                 {
@@ -601,8 +578,6 @@ public:
         }
         return true;
     }
-
-   
 };
 
 #endif

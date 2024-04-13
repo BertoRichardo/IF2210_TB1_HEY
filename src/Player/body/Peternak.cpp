@@ -11,9 +11,32 @@ Peternak::~Peternak()
     peternakan.~MatrixContainer();
 }
 
-string Player::getType() const
+string Peternak::getType() const
 {
     return "PETERNAK";
+}
+
+int Peternak::getPajak() const
+{
+    // inisialisasi
+    int wealth = getWealthFromInv();
+
+    // cari kekayaan dari peternakan
+    for (int i = 0; i < peternakan.getRow(); i++)
+    {
+        for (int j = 0; j < peternakan.getCol(); j++)
+        {
+            if (!peternakan.isCellEmpty(i, j))
+            {
+                wealth += peternakan.getItem(i, j)->getPrice();
+            }
+        }
+    }
+
+    // KTKP = 13
+    int kkp = wealth - 11;
+
+    return kkp * Util::persenPajak(kkp);
 }
 
 void Peternak::kasihMakan()
@@ -81,18 +104,6 @@ bool Peternak::isPanenableMatrix()
     return false;
 }
 
-string angkaToHuruf(int in)
-{
-    int sisa = in % 26;
-    int hasil = in / 26;
-    char back = 'A' + sisa;
-    char front = 'A' + hasil;
-    string result = "";
-    result.push_back(front);
-    result.push_back(back);
-    return result;
-}
-
 void Peternak::cekPanen(string cell)
 {
     if (peternakan.isCellEmpty(cell))
@@ -107,7 +118,6 @@ void Peternak::cekPanen(string cell)
          * @TODO: throw NotReadyToHarvest
          */
     }
-    peternakan.removeItem(cell);
 }
 
 void Peternak::panenTernak()
@@ -133,7 +143,7 @@ void Peternak::panenTernak()
             {
                 // Tidak tau perlu atau gak
                 // cout << "- " << angkaToHuruf(j) << i << peternakan.getItem(i, j)->getName() << endl;
-                temp[peternakan.getMakanan(i, j)->getKodeHuruf()]++;
+                temp[peternakan.getItem(i, j)->getKodeHuruf()]++;
             }
         }
     }
@@ -150,9 +160,10 @@ void Peternak::panenTernak()
     }
 
     // Memilih hewan dari map yang sudah dibuat
+    cout << "Nomor hewan yang ingin dipanen: ";
     int in;
     cin >> in;
-    if (in < 0 || in > temp.size())
+    if (in < 0 || in > (int)temp.size())
     {
         /**
          * @TODO: throw InvalidInput
@@ -166,35 +177,69 @@ void Peternak::panenTernak()
         ++item;
     }
 
+    // memeriksa kapasitas inventory
+    int jumlahProduct;
+    for (int i = 0; i < peternakan.getRow(); i++)
+    {
+        for (int j = 0; j < peternakan.getCol(); j++)
+        {
+            if (peternakan.getItem(i, j)->getKodeHuruf() == item->first)
+            {
+                jumlahProduct = (int)peternakan.getItem(i, j)->getProduct().size();
+            }
+            break;
+        }
+    }
+
     // mengambil jumlah panen
     cout << "Berapa petak yang ingin dipanen: ";
-    int q;
-    cin >> q;
+    int quantity;
+    cin >> quantity;
 
     // proses dan cek error
-    if (q > item->second)
+    if (quantity > item->second)
     {
         /**
          * @TODO: throw NotEnoughPetakPanen
          */
     }
-    if (q > inventory.emptySpace())
+
+    if (quantity * jumlahProduct > inventory.emptySpace())
     {
         /**
          * @TODO: throw NotEnoughSpace
          */
     }
 
-    // Mengambil hewan dari peternakan
+    // cari koordinat available space
+    vector<pair<int, int>> avail = inventory.getEmptySpacePoints();
+    int row, col;
+
+    // meminta masukan petak dan proses sesuai masukan
     int j = 1;
-    while (j <= q)
+    while (j <= quantity)
     {
         try
         {
             cout << "Petak ke-" << j << ": ";
             string cell;
             cin >> cell;
+
+            // validasi cell masukan
             cekPanen(cell);
+
+            // Masukkan vector product ke item
+            for (int i = 0; i < jumlahProduct; i++)
+            {
+                row = avail[i + jumlahProduct * (j - 1)].first;
+                col = avail[i + jumlahProduct * (j - 1)].second;
+                inventory.addItem(row, col, ((&peternakan.getItem(cell)->getProduct()[i])));
+            };
+
+            // destruct animal dan hilangkan dari peternakan
+            peternakan.getItem(cell)->~Animal();
+            peternakan.removeItem(cell);
+
             j++;
         }
         catch (const GameException &e)

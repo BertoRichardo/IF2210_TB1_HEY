@@ -5,6 +5,7 @@
 #include "../../GameContext/header/BuildingConfig.hpp"
 #include "../../GameContext/header/Config.hpp"
 #include "../../GameObject/header/Building.hpp"
+#include <set>
 using namespace std;
 
 class Walikota : public Player
@@ -40,16 +41,6 @@ public:
     /**
      * Menjual bangunan atau product
      */
-    void jual(Shop &toko);
-
-    /**
-     * Menerima IO dan melakukan pembelian atau throw error
-     */
-    void cekJual(Shop &toko);
-
-    /**
-     * Menjual bangunan atau product
-     */
     void beli(Shop &toko);
 
     /**
@@ -58,12 +49,21 @@ public:
     void cekBeli(Shop &toko);
 
     /**
-     *
+     * Menjual bangunan atau product
      */
-    pair<string, string> tambahPemain()
-    {
-        
-    }
+    void jual(Shop &toko);
+
+    /**
+     * Menerima IO dan melakukan pembelian atau throw error
+     */
+    void cekJual(Shop &toko);
+
+    /**
+     * @param setNama : set<string>
+     * @return pair<nama, jenis>
+     */
+
+    pair<string, string> tambahPemain(set<string> &setNama);
 };
 
 #endif

@@ -30,7 +30,7 @@ void print_blue(char c)
 
 void print_reds(string s)
 {
-    for (int i = 0; i < s.length(); i++)
+    for (int i = 0; i < (int)s.length(); i++)
     {
         print_red(s[i]);
     }
@@ -38,7 +38,7 @@ void print_reds(string s)
 
 void print_greens(string s)
 {
-    for (int i = 0; i < s.length(); i++)
+    for (int i = 0; i < (int)s.length(); i++)
     {
         print_green(s[i]);
     }
@@ -46,7 +46,7 @@ void print_greens(string s)
 
 void print_blues(string s)
 {
-    for (int i = 0; i < s.length(); i++)
+    for (int i = 0; i < (int)s.length(); i++)
     {
         print_blue(s[i]);
     }

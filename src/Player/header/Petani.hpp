@@ -25,14 +25,19 @@ public:
     string getType() const;
 
     /**
-     * Memanen tanaman atau men-throw error
+     * @return pajak : int
      */
-    void cekPanen(string cell);
+    int getPajak() const;
 
     /**
      * @return true jika ada kotak lahan yang siap dipanen
      */
     bool isPanenableMatrix();
+
+    /**
+     * Memanen tanaman atau men-throw error
+     */
+    void cekPanen(string cell);
 
     /**
      * Memanen tanaman dan memberikan pesan
@@ -45,10 +50,10 @@ public:
     void tanam();
 
     /**
-     * @return hasil convert dari angka huruf : 1 -> a
-     * handle hingga 26 * 26 + 26
+     * Menambahkan umur setiap tanaman sebesar 1
      */
-    friend string angkaToHuruf();
+    void tambahUmurTanaman();
+
 };
 
 #endif

@@ -24,13 +24,18 @@ void Shop::setSize(int size_)
 
 pair<GameObject *, int> Shop::getGoods(string nama) const
 {
-    for (int i = 0; i < content.size(); i++)
+    for (int i = 0; i < (int)content.size(); i++)
     {
         if (nama == content.at(i).first->getName())
         {
             return content.at(i);
         }
     }
+
+    /**
+     * TODO: throwEmpty
+     */
+    return {NULL, -1};
 }
 
 pair<GameObject *, int> Shop::getGoods(int idx) const
@@ -40,7 +45,7 @@ pair<GameObject *, int> Shop::getGoods(int idx) const
 
 void Shop::setGoods(pair<GameObject *, int> element, string nama)
 {
-    for (int i = 0; i < content.size(); i++)
+    for (int i = 0; i < (int)content.size(); i++)
     {
         if (nama == content.at(i).first->getName())
         {
@@ -63,6 +68,10 @@ GameObject *Shop::getGameObject(string nama) const
             return content[i].first;
         }
     }
+    /**
+     * @TODO: throw error
+     */
+    return NULL;
 }
 
 GameObject *Shop::getGameObject(int idx) const
@@ -80,6 +89,10 @@ int Shop::getStock(string nama) const
             return content[i].second;
         }
     }
+    /**
+     * @TODO: throw error
+     */
+    return -1;
 }
 
 int Shop::getStock(int idx) const
@@ -87,9 +100,9 @@ int Shop::getStock(int idx) const
     return content[idx].second;
 }
 
-int Shop::setStock(string nama, int quantity)
+void Shop::setStock(string nama, int quantity)
 {
-    for (int i = 0; i < content.size(); i++)
+    for (int i = 0; i < (int)content.size(); i++)
     {
         if (content[i].first->getName() == nama)
         {
@@ -98,7 +111,7 @@ int Shop::setStock(string nama, int quantity)
     }
 }
 
-int Shop::setStock(int idx, int quantity)
+void Shop::setStock(int idx, int quantity)
 {
     content[idx].second = quantity;
 }
@@ -118,7 +131,7 @@ void Shop::printToko()
     {
 
         cout << i + 1 << ". " << getGameObject(i)->getName() << " - " << getGameObject(i)->getPrice();
-        
+
         // Avoid print stock for unlimited object
         Plant *plant = dynamic_cast<Plant *>(getGameObject(i));
         Animal *animal = dynamic_cast<Animal *>(getGameObject(i));
@@ -127,9 +140,10 @@ void Shop::printToko()
         if (plant == NULL && animal == NULL)
         {
             cout << "(" << getStock(i) << ")" << endl;
-        }else{
+        }
+        else
+        {
             cout << endl;
         }
     }
-
 }
