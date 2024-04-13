@@ -102,3 +102,42 @@ string Util::angkaToHuruf(int in)
     result.push_back(back);
     return result;
 }
+
+GameObject *Util::callCCtor(GameObject *obj)
+{
+    if (dynamic_cast<Plant *>(obj) != NULL)
+    {
+        Plant *item = new Plant(*dynamic_cast<Plant *>(obj));
+        return item;
+    }
+    else if (dynamic_cast<Animal *>(obj) != NULL)
+    {
+        if (dynamic_cast<Carnivore *>(obj) != NULL)
+        {
+            Carnivore *item = new Carnivore(*dynamic_cast<Carnivore *>(obj));
+            return item;
+        }
+        else if (dynamic_cast<Herbivore *>(obj) != NULL)
+        {
+            Herbivore *item = new Herbivore(*dynamic_cast<Herbivore *>(obj));
+            return item;
+        }
+        else if (dynamic_cast<Omnivore *>(obj) != NULL)
+        {
+            Omnivore *item = new Omnivore(*dynamic_cast<Omnivore *>(obj));
+            return item;
+        }
+    }
+    else if (dynamic_cast<Product *>(obj) != NULL)
+    {
+        Product *item = new Product(*dynamic_cast<Product *>(obj));
+        return item;
+    }
+    else // if (dynamic_cast<Building *>(obj) != NULL)
+    {
+        Building *item = new Building(*dynamic_cast<Building *>(obj));
+        return item;
+    }
+
+    return NULL;
+}

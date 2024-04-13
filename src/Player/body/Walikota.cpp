@@ -207,7 +207,7 @@ void Walikota::cekBeli(Shop &toko)
     bool isDone = false;
     while (!isDone)
     {
-        GameObject *item = callCCtor(toko.getGameObject(masukan - 1));
+        GameObject *item = Util::callCCtor(toko.getGameObject(masukan - 1));
         string inSlot;
         cout << "Petak slot: ";
         cin >> inSlot;

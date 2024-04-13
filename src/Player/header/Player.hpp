@@ -117,12 +117,6 @@ public:
      * parser slot
      */
 
-    /**
-     * obj is not Null
-     * @param obj
-     * @return item as one of the child of gameObject
-     */
-    GameObject *callCCtor(GameObject *obj);
 };
 
 #endif
