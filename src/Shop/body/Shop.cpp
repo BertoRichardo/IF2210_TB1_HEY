@@ -139,7 +139,7 @@ void Shop::printToko()
         // Print for limited object
         if (plant == NULL && animal == NULL)
         {
-            cout << "(" << getStock(i) << ")" << endl;
+            cout << " (" << getStock(i) << ")" << endl;
         }
         else
         {

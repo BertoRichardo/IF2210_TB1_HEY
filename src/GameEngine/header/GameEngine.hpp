@@ -14,8 +14,8 @@ class GameEngine
 {
 private:
     vector<Player *> players;
-    Shop shop;
     GameContext gameConfig;
+    Shop shop;
 
 public:
     GameEngine(); 
