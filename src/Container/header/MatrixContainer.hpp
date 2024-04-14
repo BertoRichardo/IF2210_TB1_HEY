@@ -130,7 +130,7 @@ public:
         {
             for (int j = 0; j < colSize; j++)
             {
-                if (isCellEmpty(i + 1, j + 1))
+                if (isCellEmpty(i, j))
                 {
                     buffer[i][j] = item;
                     return;
@@ -139,7 +139,7 @@ public:
         }
         /**
          * @todo: throw matrix full
-        */
+         */
     }
 
     /**
@@ -299,7 +299,6 @@ public:
         {
             for (int j = 0; j < colSize; j++)
             {
-
                 if (!isCellEmpty(i, j))
                 {
                     Product *obj = dynamic_cast<Product *>(getItem(i, j));

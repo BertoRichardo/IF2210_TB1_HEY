@@ -322,3 +322,8 @@ void Player::printHeader(string judul)
     }
     cout << endl;
 }
+
+int Player::getPajak() const
+{
+    return 0;
+};

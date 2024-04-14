@@ -7,7 +7,6 @@
 class Peternak : public Player
 {
 private:
-
 public:
     MatrixContainer<Animal *> peternakan;
     /**
@@ -71,7 +70,7 @@ public:
 
     /**
      * @return kekayaan dari peternakan : int
-    */
+     */
     int getWealthFromPeternakan() const;
 };
 

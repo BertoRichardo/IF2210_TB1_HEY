@@ -31,7 +31,7 @@ void Walikota::buatBangunan(const map<string, BuildingConfig> &buildings)
     }
 
     int num = 1;
-    for (auto building: buildings)
+    for (auto building : buildings)
     {
         cout << "   " << num++ << ". " << building.first << "(" << building.second.getPrice() << " gulden, ";
 
@@ -39,7 +39,7 @@ void Walikota::buatBangunan(const map<string, BuildingConfig> &buildings)
         for (int i = 0; i < (int)building.second.getRecipe().size(); i++)
         {
             cout << building.second.getRecipe()[i].first << " " << building.second.getRecipe()[i].second;
-            if (i != (int) building.second.getRecipe().size() - 1)
+            if (i != (int)building.second.getRecipe().size() - 1)
             {
                 cout << ", ";
             }
@@ -348,4 +348,54 @@ pair<string, string> Walikota::tambahPemain(set<string> &names)
     cout << "Pemain baru ditambahkan!" << endl;
     cout << "Selamat datang \"" << name << "\" di kota ini!" << endl;
     return {name, jenis};
+}
+
+void Walikota::tarikPajak(vector<Player *> &listOfPlayers)
+{
+    vector<pair<int, pair<string, string>>> wajibPajak;
+
+    int sumPajak = 0;
+    for (auto &player : listOfPlayers)
+    {
+        if (player->getType() != "WALIKOTA")
+        {
+            int pajak = player->getPajak();
+            int currGulden = player->getGulden();
+            int pajakActual;
+            // Player dapat membayar full
+            if (pajak < currGulden)
+            {
+                pajakActual = pajak;
+            }
+
+            // Player tidak dapat membayar full
+            else
+            {
+                pajakActual = currGulden;
+            }
+            player->setGulden(currGulden - pajakActual);
+            wajibPajak.push_back(make_pair(pajakActual, make_pair(player->getUsername(), player->getType())));
+        }
+    }
+    // sort data wajibPajak
+    sort(wajibPajak.begin(), wajibPajak.end(), Util::customComparator);
+
+    // Tampilkan data
+    int i = 0;
+    for (auto &data : wajibPajak)
+    {
+        cout << i + 1 << ". " << data.second.first << " - " << data.second.second << ": " << data.first << "gulden";
+        i++;
+    }
+
+    // setGulden Walikota
+    setGulden(getGulden() + sumPajak);
+
+    cout << "Negara mendapatkan pemasukan sebesar " << sumPajak << "gulden." << endl;
+    cout << "Gunakan dengan baik dan jangan dikorupsi ya!" << endl;
+}
+
+int Walikota::getPajak() const
+{
+    return 0;
 }

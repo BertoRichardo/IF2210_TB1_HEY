@@ -26,10 +26,12 @@ int Petani::getPajak() const
 {
     // inisialisasi
     int wealth = getWealthFromInv() + getWealthFromLahan() + getGulden();
+
     // KTKP = 13
     int kkp = wealth - 13;
 
-    return kkp * Util::persenPajak(kkp);
+    int pajak = round((float)(((float)kkp * (float)Util::persenPajak(kkp)) / (float)100));
+    return pajak;
 }
 
 bool Petani::isPanenableMatrix()
@@ -139,7 +141,7 @@ void Petani::panenTanaman()
 
     // Mengambil tanaman dari lahan
     int j = 1;
-    vector<string> vec;
+    vector<string> validCell;
     while (j <= quantity)
     {
         try
@@ -157,18 +159,20 @@ void Petani::panenTanaman()
             delete plant;
 
             j++;
-            vec.push_back(cell);
+            validCell.push_back(cell);
         }
         catch (const GameException &e)
         {
             e.displayMessage();
         }
     }
-    cout << vec.size() << " petak tanaman " << item->first << " pada petak";
-    for (int k = 0; k < (int)vec.size(); k++)
+
+    // Beri pesan
+    cout << validCell.size() << " petak tanaman " << item->first << " pada petak";
+    for (int k = 0; k < (int)validCell.size(); k++)
     {
-        cout << vec[k];
-        if (k != (int)vec.size() - 1)
+        cout << validCell[k];
+        if (k != (int)validCell.size() - 1)
         {
             cout << ", ";
         }
@@ -199,6 +203,7 @@ void Petani::tanam()
     string inventoryKoor;
 
     // print inventory
+    cout << "Pilih tanaman dari penyimpanan" << endl;
     printInventory();
 
     while (plant == NULL)

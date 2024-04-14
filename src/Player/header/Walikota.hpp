@@ -6,6 +6,7 @@
 #include "../../GameContext/header/Config.hpp"
 #include "../../GameObject/header/Building.hpp"
 #include <set>
+#include <queue>
 using namespace std;
 
 class Walikota : public Player
@@ -62,8 +63,18 @@ public:
      * @param setNama : set<string>
      * @return pair<nama, jenis>
      */
-
     pair<string, string> tambahPemain(set<string> &setNama);
+
+    /**
+     * @param listOfPlayers
+     * Mengurangi gulden player lain sesuai pajaknya dan menambahkan ke walikota
+     */
+    void tarikPajak(vector<Player *> &listOfPlayers);
+
+    /**
+     * tidak diimplementasikan untuk walikota
+     */
+    int getPajak() const;
 };
 
 #endif

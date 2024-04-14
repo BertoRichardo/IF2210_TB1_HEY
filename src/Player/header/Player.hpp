@@ -5,6 +5,7 @@ using namespace std;
 #include <iostream>
 #include <string>
 #include <map>
+#include <cmath>
 #include "../../Container/header/MatrixContainer.hpp"
 #include "../../Shop/header/Shop.hpp"
 #include "../../GameObject/header/GameObject.hpp"
@@ -119,6 +120,8 @@ public:
      * Mencetak header inventory, isinya, dan total slot kosong
      */
     void printInventory();
+
+    virtual int getPajak() const;
 };
 
 #endif

@@ -46,6 +46,11 @@ public:
      * @return item as one of the child of gameObject
      */
     static GameObject *callCCtor(GameObject *obj);
+
+    /**
+     * @return true jika urutan int naik. Jika sama, return true jika urutan pair string turun
+     */
+    static bool customComparator(const pair<int, pair<string, string>> &a, const pair<int, pair<string, string>> &b);
 };
 
 #endif
