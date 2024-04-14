@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <chrono>
+#include <thread>
 #include <algorithm>
 #include "../../GameObject/header/Plant.hpp"
 #include "../../GameObject/header/Animal.hpp"
@@ -46,6 +48,14 @@ public:
      * @return item as one of the child of gameObject
      */
     static GameObject *callCCtor(GameObject *obj);
+
+    static void clearScreen();
+
+    static void waitScreen(int ms);
+
+    static void displayStartingScreen();
+
+    static bool containSpace(string s);
 };
 
 #endif
