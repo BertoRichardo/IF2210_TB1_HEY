@@ -93,13 +93,15 @@ int Util::persenPajak(int kkp)
 
 string Util::angkaToHuruf(int in)
 {
-    int sisa = in % 26;
-    int hasil = in / 26;
-    char back = 'A' + sisa;
-    char front = 'A' + hasil;
     string result = "";
-    result.push_back(front);
-    result.push_back(back);
+    while (in != -1)
+    {
+        int sisa = in % 26;
+        result += (char)('A' + sisa);
+        in /= 26;
+        in--;
+    }
+    reverse(result.begin(), result.end());
     return result;
 }
 

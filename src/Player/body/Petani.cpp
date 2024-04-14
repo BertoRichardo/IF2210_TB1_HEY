@@ -183,6 +183,7 @@ void Petani::tanam()
         /**
          * TODO: Throw MatrixFullException
          */
+        return;
     }
 
     if (inventory.isObjectEmpty<Plant *>())
@@ -190,6 +191,7 @@ void Petani::tanam()
         /**
          * TODO: Throw MatrixEmptyException
          */
+        return;
     }
 
     // pilih dari inventory
@@ -267,24 +269,26 @@ void Petani::tambahUmurTanaman()
 
 void Petani::printLahan()
 {
-    cout << "    ================[ Lahan ]==================\n\n";
-    
+    printHeader("[Lahan]");
+
     // Cetak matrix
     lahan.printMatrix();
-    set<pair<string, string>> availablePlant;
+    map<string, string> temp;
     for (int i = 0; i < lahan.getRow(); i++)
     {
         for (int j = 0; j < lahan.getCol(); j++)
         {
             if (!lahan.isCellEmpty(i, j))
             {
-                availablePlant.insert({lahan.getItem(i, j)->getKodeHuruf(), lahan.getItem(i, j)->getName()});
+                temp[lahan.getItem(i, j)->getKodeHuruf()] = lahan.getItem(i, j)->getName();
             }
         }
     }
-    for (auto st : availablePlant)
+    map<string, string>::iterator item = temp.begin();
+    for (int i = 0; i < (int)temp.size(); i++)
     {
-        cout << "- " << st.first << ": " << st.second << '\n';
+        cout << item->first << ": " << item->second << endl;
+        ++item;
     }
 }
 

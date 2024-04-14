@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 #include "../../GameObject/header/Plant.hpp"
 #include "../../GameObject/header/Animal.hpp"
 #include "../../GameObject/header/Building.hpp"

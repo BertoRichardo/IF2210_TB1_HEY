@@ -42,7 +42,12 @@ clean:
 
 recompile: clean all
 
-%.run: %/driver
+%.run:
+	$(BIN_PATH)/driver
+
+%.build: %/driver
+
+%.all: %/driver
 	$(BIN_PATH)/driver
 
 %/driver: $(ALL_OBJ) $(OBJ_PATH)/%/$(SRC_TEST)/driver.o

@@ -161,7 +161,7 @@ void Peternak::panenTernak()
 
     // menampilkan hewan yang bisa dipanen
     cout << "Pilih hewan siap panen yang kamu miliki" << endl;
-    map<pair<string, int>,int>::iterator it = temp.begin();
+    map<pair<string, int>, int>::iterator it = temp.begin();
     int i = 1;
     while (it != temp.end())
     {
@@ -181,7 +181,7 @@ void Peternak::panenTernak()
     }
 
     // mengambil hewan
-    map<pair<string, int>,int>::iterator item = temp.begin();
+    map<pair<string, int>, int>::iterator item = temp.begin();
     advance(item, in - 1);
 
     // memeriksa kapasitas inventory
@@ -222,8 +222,8 @@ void Peternak::panenTernak()
 
             Animal *animal = peternakan.getItem(cell);
             peternakan.removeItem(cell);
-            vector <Product> products = animal->harvest();
-            for (auto product: products)
+            vector<Product> products = animal->harvest();
+            for (auto product : products)
             {
                 inventory.addItem(new Product(product));
             }
@@ -318,25 +318,21 @@ void Peternak::letakTernak()
 
 void Peternak::printPeternakan()
 {
-    cout << "    ================[ Peternakan ]==================\n\n";
+    printHeader("[Peternakan]");
 
     // Cetak matrix
     peternakan.printMatrix();
-    set<pair<string, string>> available;
+
     // mapping sementara dari peternakan
     for (int i = 0; i < peternakan.getRow(); i++)
     {
         for (int j = 0; j < peternakan.getCol(); j++)
         {
-            if (!peternakan.isCellEmpty(i, j))
+            if (!peternakan.isCellEmpty(i, j) && peternakan.getItem(i, j)->isReadyToHarvest())
             {
-                available.insert({peternakan.getItem(i, j)->getKodeHuruf(), peternakan.getItem(i, j)->getName()});
+                cout << "- " << Util::angkaToHuruf(j) << i << ": " << peternakan.getItem(i, j)->getName() << endl;
             }
         }
-    }
-    for (auto st : available)
-    {
-        cout << "- " << st.first << ": " << st.second << '\n';
     }
 }
 
