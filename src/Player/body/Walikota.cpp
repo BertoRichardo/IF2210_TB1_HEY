@@ -326,7 +326,7 @@ void Walikota::cekJual(Shop &toko)
     }
 }
 
-pair<string, string> Walikota::tambahPemain(set<string> &names)
+pair<string, string> Walikota::tambahPemain(vector<string> &names)
 {
     // Input Jenis pemain
     string name, jenis;
@@ -343,7 +343,7 @@ pair<string, string> Walikota::tambahPemain(set<string> &names)
     cout << "Masukkan nama pemain:";
     cin >> name;
     cout << endl;
-    if (names.find(name) != names.end())
+    if (binary_search(names.begin(), names.end(), name))
     {
         /**
          * TODO: throw NameIsNotUnique

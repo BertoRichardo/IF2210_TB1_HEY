@@ -5,6 +5,7 @@
 #include "../../GameContext/header/BuildingConfig.hpp"
 #include "../../GameContext/header/Config.hpp"
 #include "../../GameObject/header/Building.hpp"
+#include <algorithm>
 #include <set>
 using namespace std;
 
@@ -63,7 +64,7 @@ public:
      * @return pair<nama, jenis>
      */
 
-    pair<string, string> tambahPemain(set<string> &setNama);
+    pair<string, string> tambahPemain(vector<string> &setNama);
 };
 
 #endif

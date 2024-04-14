@@ -22,17 +22,18 @@ GameEngine::GameEngine() : gameConfig(), shop()
     gameConfig.readConfig();
 }
 
-GameEngine::~GameEngine() {
-    for (auto player: players)
+GameEngine::~GameEngine()
+{
+    for (auto player : players)
     {
         delete player.second;
     }
 }
 
-vector<Player*> GameEngine::getPlayerVector()
+vector<Player *> GameEngine::getPlayerVector()
 {
-    vector <Player*> res;
-    for (auto player: players)
+    vector<Player *> res;
+    for (auto player : players)
     {
         res.push_back(player.second);
     }
@@ -160,7 +161,7 @@ void GameEngine::defaultSetup()
     playerNames.push_back(petani);
     players[petani] = new Petani(petani, gameConfig.getInventoryRow(), gameConfig.getInventoryCol(), gameConfig.getLahanRow(), gameConfig.getLahanCol());
 
-    // sort playerNames 
+    // sort playerNames
     sort(playerNames.begin(), playerNames.end());
     currentTurn = 0;
 }
@@ -178,11 +179,52 @@ void GameEngine::run()
             switch (command)
             {
             case 0:
+                next();
+                break;
+            case 1:
+                cetak_penyimpanan();
+                break;
+            case 2:
+                pungut_pajak();
+                break;
+            case 3:
+                cetak_ladang();
+                break;
+            case 4:
+                cetak_peternakan();
+                break;
+            case 5:
+                tanam();
+                break;
+            case 6:
+                ternak();
+                break;
+            case 7:
+                bangun();
+                break;
+            case 8:
+                makan();
+                break;
+            case 9:
+                kasih_makan();
+                break;
+            case 10:
+                beli();
+                break;
+            case 11:
+                jual();
+                break;
+            case 12:
+                panen();
+                break;
+            case 13:
+                save();
+                break;
+            case 14:
+                tambah_pemain();
                 break;
             case 15:
                 stillRun = false;
-                break;
-            default:
                 break;
             }
         }
@@ -213,7 +255,7 @@ string GameEngine::readUsername(vector<string> prev, string placeholder)
             {
                 // TODO: throw containSpace
             }
-            for (auto username: prev)
+            for (auto username : prev)
             {
                 if (input == username)
                 {
@@ -229,4 +271,165 @@ string GameEngine::readUsername(vector<string> prev, string placeholder)
         }
     }
     return input;
+}
+
+void GameEngine::next()
+{
+    currentTurn = (currentTurn + 1) % (int)playerNames.size();
+    if (players[playerNames[currentTurn]]->getType() == "PETANI")
+    {
+        dynamic_cast<Petani *>(players[playerNames[currentTurn]])->tambahUmurTanaman();
+    }
+    /**
+     * @todo: handle if player win
+     */
+}
+
+void GameEngine::cetak_penyimpanan()
+{
+    players[playerNames[currentTurn]]->printInventory();
+}
+
+void GameEngine::pungut_pajak()
+{
+    /**
+     * @todo: kerjain pajak
+     */
+}
+
+void GameEngine::cetak_ladang()
+{
+    if (players[playerNames[currentTurn]]->getType() != "PETANI")
+    {
+        /**
+         * @todo: throw inaccessible command
+         */
+    }
+    dynamic_cast<Petani *>(players[playerNames[currentTurn]])->printLahan();
+}
+
+void GameEngine::cetak_peternakan()
+{
+    if (players[playerNames[currentTurn]]->getType() != "PETERNAK")
+    {
+        /**
+         * @todo: throw inaccessible command
+         */
+    }
+    dynamic_cast<Peternak *>(players[playerNames[currentTurn]])->printPeternakan();
+}
+
+void GameEngine::tanam()
+{
+    if (players[playerNames[currentTurn]]->getType() != "PETANI")
+    {
+        /**
+         * @todo: throw inaccessible command
+         */
+    }
+    dynamic_cast<Petani *>(players[playerNames[currentTurn]])->tanam();
+}
+
+void GameEngine::ternak()
+{
+    if (players[playerNames[currentTurn]]->getType() != "PETERNAK")
+    {
+        /**
+         * @todo: throw inaccessible command
+         */
+    }
+    dynamic_cast<Peternak *>(players[playerNames[currentTurn]])->letakTernak();
+}
+
+void GameEngine::bangun()
+{
+    /**
+     * @todo: kerjain bangun
+     */
+}
+
+void GameEngine::makan()
+{
+    players[playerNames[currentTurn]]->eat();
+}
+
+void GameEngine::kasih_makan()
+{
+    if (players[playerNames[currentTurn]]->getType() != "PETERNAK")
+    {
+        /**
+         * @todo: throw inaccessible command
+         */
+    }
+    dynamic_cast<Peternak *>(players[playerNames[currentTurn]])->kasihMakan();
+}
+
+void GameEngine::beli()
+{
+    players[playerNames[currentTurn]]->beli(shop);
+}
+
+void GameEngine::jual()
+{
+    players[playerNames[currentTurn]]->jual(shop);
+}
+
+void GameEngine::panen()
+{
+    if (players[playerNames[currentTurn]]->getType() == "PETERNAK")
+    {
+        dynamic_cast<Peternak *>(players[playerNames[currentTurn]])->panenTernak();
+    }
+    else if (players[playerNames[currentTurn]]->getType() == "PETANI")
+    {
+        dynamic_cast<Petani *>(players[playerNames[currentTurn]])->panenTanaman();
+    }
+    else
+    {
+        /**
+         * @todo: throw inaccessible command
+         */
+    }
+}
+
+void GameEngine::save()
+{
+    /**
+     * @todo: lengkapin save
+     */
+}
+
+void GameEngine::tambah_pemain()
+{
+    if (players[playerNames[currentTurn]]->getType() != "WALIKOTA")
+    {
+        /**
+         * @todo: throw inaccessible command
+         */
+    }
+    pair<string, string> res = dynamic_cast<Walikota *>(players[playerNames[currentTurn]])->tambahPemain(playerNames);
+    
+    // add new player
+    playerNames.push_back(res.first);
+    if (res.first < playerNames[currentTurn])
+    {
+        currentTurn = (currentTurn + 1) % (int)playerNames.size();
+    }
+    sort(playerNames.begin(), playerNames.end());
+
+    if (res.second == "petani")
+    {
+        players[res.first] = new Petani(res.first, gameConfig.getInventoryRow(), gameConfig.getInventoryCol(), gameConfig.getLahanRow(), gameConfig.getLahanCol());
+    }
+    else 
+    {
+        players[res.first] = new Peternak(res.first, gameConfig.getInventoryRow(), gameConfig.getInventoryCol(), gameConfig.getPeternakanRow(), gameConfig.getPeternakanCol());
+    }
+}
+
+void GameEngine::load()
+{
+    /**
+     * @todo: lengkapin load
+     */
 }

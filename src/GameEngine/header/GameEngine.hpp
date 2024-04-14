@@ -20,6 +20,24 @@ private:
     int currentTurn;
     static const vector<string> commands;
 
+    /* COMMANDS */
+    void next();
+    void cetak_penyimpanan();
+    void pungut_pajak();
+    void cetak_ladang();
+    void cetak_peternakan();
+    void tanam();
+    void ternak();
+    void bangun();
+    void makan();
+    void kasih_makan();
+    void beli();
+    void jual();
+    void panen();
+    void save();
+    void tambah_pemain();
+    void load();
+
 public:
     /**
      * Constructor
@@ -31,7 +49,7 @@ public:
     ~GameEngine();
 
     /* GETTER */
-    vector <Player*> getPlayerVector(); 
+    vector<Player *> getPlayerVector();
 
     /* ACTION */
     /**
@@ -72,9 +90,6 @@ public:
      * @return username: string
      */
     string readUsername(vector<string> prev, string placeholder);
-
-    // void readState();
-    // void saveState();
 };
 
 #endif
