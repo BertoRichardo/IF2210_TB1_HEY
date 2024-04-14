@@ -252,7 +252,7 @@ void Player::cekJual(Shop &toko)
         {
             for (int i = 0; i < (int)inSlot.size(); i++)
             {
-                vectorTemp.push_back(pair(inventory.getItem(slotS[i]), slotS[i]));
+                vectorTemp.push_back(make_pair(inventory.getItem(slotS[i]), slotS[i]));
 
                 // cek bangunan
                 if (dynamic_cast<Building *>(inventory.getItem(slotS[i])) != NULL)

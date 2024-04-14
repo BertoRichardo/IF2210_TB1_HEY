@@ -68,7 +68,7 @@ void Walikota::cekRecipe(const map<string, BuildingConfig> &buildings)
     {
         if (i->second > groupedItem[i->first])
         {
-            InsufficentMaterial.push_back(pair(i->first, i->second - groupedItem[i->first]));
+            InsufficentMaterial.push_back(make_pair(i->first, i->second - groupedItem[i->first]));
         }
     }
     // cek gulden
@@ -271,7 +271,7 @@ void Walikota::cekJual(Shop &toko)
         {
             for (int i = 0; i < (int)inSlot.size(); i++)
             {
-                vectorTemp.push_back(pair(inventory.getItem(slotS[i]), slotS[i]));
+                vectorTemp.push_back(make_pair(inventory.getItem(slotS[i]), slotS[i]));
 
                 // Kurangi stock jika barang yang dibeli finite
                 if (dynamic_cast<Plant *>(inventory.getItem(slotS[i])) == NULL && dynamic_cast<Animal *>(inventory.getItem(slotS[i])) == NULL)

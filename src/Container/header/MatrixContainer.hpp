@@ -44,7 +44,7 @@ public:
         buffer.resize(r);
         for (int i = 0; i < r; ++i)
         {
-            buffer[i].resize(c);
+            buffer[i].resize(c, NULL);
         }
     }
 
@@ -210,7 +210,7 @@ public:
         else
         {
             /**
-             * -TODO: throw CellEMpty
+             * -TODO: throw CellEmpty
              */
         }
     }
@@ -273,7 +273,6 @@ public:
      */
     bool isFoodEmpty()
     {
-        Product *temp = new Product();
         for (int i = 0; i < rowSize; i++)
         {
             for (int j = 0; j < colSize; j++)
@@ -282,17 +281,13 @@ public:
                 if (!isCellEmpty(i, j))
                 {
                     Product *obj = dynamic_cast<Product *>(getItem(i, j));
-                    if (typeid(obj) == typeid(temp) && obj->getAddedWeight() != 0)
+                    if (obj != NULL && obj->getAddedWeight() != 0)
                     {
-                        temp->~Product();
-                        obj->~Product();
                         return false;
                     }
-                    obj->~Product();
                 }
             }
         }
-        temp->~Product();
         return true;
     }
 
@@ -467,7 +462,7 @@ public:
         {
             for (int j = 0; j < getCol(); j++)
             {
-                groupedItem[getItem(i, j)->getName()] += 1;
+                groupedItem[getItem(i, j)->getName()] ++;
             }
         }
         return groupedItem;
