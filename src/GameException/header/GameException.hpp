@@ -2,6 +2,7 @@
 #define _GAMEEXCEPTION_HPP_
 
 #include <iostream>
+#include <vector>
 using namespace std;
 
 /**
@@ -55,13 +56,6 @@ public:
     FeedTypeInvalidException(const string &, const string &);
 
     void displayMessage() const;
-
-    /**
-     * Menciptakan GameException dengan pesan
-     * "Index Invalid"
-     * @param row
-     * @param col
-     */
 };
 
 class IndexInvalidException : public GameException
@@ -77,7 +71,39 @@ public:
     void displayMessage() const;
 };
 
+class ResourceInsufficientException : public GameException
+{
+private:
+    int insGulden;
+    vector<pair<string, int>> insufficientMaterial;
+
+public:
+    /**
+     * Menciptakan Exception ketika walikota tidak bisa membangun bangunan
+     * karena sumber daya tidak cukup
+     * @param 
+     */
+    ResourceInsufficientException(int insGulden_,
+                                  const vector<pair<string, int>> &insufficientMaterial_);
+
+    void displayMessage() const;
+};
+
 /**
  * TODO: implement all exception which this game need
  */
+
+class CustomException : public GameException
+{
+public:
+    /**
+     * Menciptakan GameException yang disesuaikan dengan
+     * kesalahan tertentu
+     * Hanya dapat dilakukan pada pesan sebuah kalimat saja
+     */
+    CustomException(const string &message_);
+    ~CustomException();
+    void displayMessage() const;
+};
+
 #endif

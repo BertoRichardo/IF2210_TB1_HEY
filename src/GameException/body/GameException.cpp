@@ -39,5 +39,52 @@ IndexInvalidException::IndexInvalidException() : GameException("Index Out Of Bou
 
 void IndexInvalidException::displayMessage() const
 {
+    cerr << message << endl;
+}
+
+/*ResourceInsufficientException*/
+ResourceInsufficientException::ResourceInsufficientException(
+    int insGulden_,
+    const vector<pair<string, int>> &insufficientMaterial_)
+    : GameException("Kamu tidak punya sumber daya yang cukup! Masih memerlukan ")
+{
+    insGulden = insGulden_;
+    insufficientMaterial = insufficientMaterial_;
+}
+
+void ResourceInsufficientException::displayMessage() const
+{
     cerr << message;
+    if (insGulden > 0)
+    {
+        cerr << insGulden << "gulden" << endl;
+    }
+
+    int i = 0;
+    for (auto material : insufficientMaterial)
+    {
+        if (i != 0)
+        {
+            cerr << ", ";
+        }
+        cerr << material.second << " " << material.first;
+    }
+    cerr << "!" << endl;
+}
+
+/**
+ * Custom Exception
+ */
+CustomException::CustomException(const string &message_) : GameException(message_)
+{
+}
+
+CustomException::~CustomException()
+{
+    message.clear();
+}
+
+void CustomException::displayMessage() const
+{
+    cerr << message << endl;
 }

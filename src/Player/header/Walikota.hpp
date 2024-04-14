@@ -6,6 +6,7 @@
 #include "../../GameContext/header/Config.hpp"
 #include "../../GameObject/header/Building.hpp"
 #include <set>
+#include <algorithm>
 #include <queue>
 using namespace std;
 
@@ -25,11 +26,6 @@ public:
     string getType() const;
 
     /**
-     * Menarik pajak dari pemain
-     */
-    void tarikPajak();
-
-    /**
      * Membuat bangunan dan menunjukkan IO nya
      */
     void buatBangunan(const map<string, BuildingConfig> &);
@@ -37,7 +33,7 @@ public:
     /**
      * Menthrow
      */
-    void cekRecipe(const map<string, BuildingConfig> &);
+    void cekRecipe(const map<string, BuildingConfig> &building, map<string, int> &materials);
 
     /**
      * Menjual bangunan atau product
@@ -63,7 +59,7 @@ public:
      * @param setNama : set<string>
      * @return pair<nama, jenis>
      */
-    pair<string, string> tambahPemain(set<string> &setNama);
+    pair<string, string> tambahPemain(vector<string> &setNama);
 
     /**
      * @param listOfPlayers
@@ -75,6 +71,22 @@ public:
      * tidak diimplementasikan untuk walikota
      */
     int getPajak() const;
+
+    /**
+     * @param material:
+     * @param recipe :
+     * @return InsufficientMaterial
+     */
+    vector<pair<string, int>> getInsufficientMaterial(
+        map<string, int> &materials,
+        const pair<vector<pair<string, int>>, int> &recipe);
+
+    /**
+     * @return true jika walikota dapat membangun berdasarkan minimal salah satu recipe
+     */
+    bool isBuildAvailable(
+        map<string, int> &materials,
+        const vector<pair<vector<pair<string, int>>, int>> &listOfRecipes);
 };
 
 #endif

@@ -71,7 +71,7 @@ void Player::eat()
 
     if (inventory.isFoodEmpty())
     {
-        // throw FoodEmptyException
+        throw CustomException("Tidak ada makanan di inventory.");
     }
 
     // Memilih dari inventory
@@ -99,9 +99,6 @@ void Player::eat()
             isDone = true;
         }
 
-        /**
-         * TODO: implement Exception
-         */
         catch (const GameException &e)
         {
             e.displayMessage();
@@ -140,7 +137,7 @@ void Player::cekBeli(Shop &toko)
     // validasi masukan
     if (masukan < 1 || masukan > toko.getSize())
     {
-        // throw inputInvalidException
+        throw CustomException("Input tidak valid.");
     }
 
     // validasi penyimpanan
@@ -148,25 +145,21 @@ void Player::cekBeli(Shop &toko)
     cout << "Kuantitas: ";
     cin >> quantity;
     cout << endl;
-    if (quantity == 0 || quantity > inventory.emptySpace())
+    if (quantity <= 0 || quantity > inventory.emptySpace())
     {
-        // throw inputInvalidException
+        throw CustomException("Kuantitas tidak valid atau melebihi kapasitas.");
     }
 
     // validasi gulden
     if (quantity * toko.getGameObject(masukan - 1)->getPrice() > getGulden())
     {
-        /**
-         * throw Gulden kurang (?)
-         */
+        throw CustomException("Gulden Anda tidak cukup.");
     }
 
     // validasi stock di toko
     if (toko.getStock(masukan - 1) != -1 && quantity > toko.getStock(masukan - 1))
     {
-        /**
-         * TODO: throw StockInsufficient
-         */
+        throw CustomException("Stok barang yang Anda pilih tidak cukup.");
     }
 
     // Berikan IO dan kurangi uang
@@ -251,7 +244,9 @@ void Player::cekJual(Shop &toko)
                 // cek bangunan
                 if (dynamic_cast<Building *>(inventory.getItem(slotS[i])) != NULL)
                 {
-                    // throw Invalid
+                    /**
+                     * TODO: throw
+                     */
                 }
 
                 // Kurangi stock jika barang yang dibeli finite
@@ -290,6 +285,7 @@ void Player::cekJual(Shop &toko)
                 setGulden(getGulden() - vectorTemp[vectorTemp.size() - 1].first->getPrice());
                 vectorTemp.pop_back();
             }
+            e.displayMessage();
         }
     }
 }
@@ -327,3 +323,8 @@ int Player::getPajak() const
 {
     return 0;
 };
+
+bool Player::isPlayerWin(int guldenToWin, int weigthToWin)
+{
+    return gulden >= guldenToWin && weigth >= weigthToWin;
+}

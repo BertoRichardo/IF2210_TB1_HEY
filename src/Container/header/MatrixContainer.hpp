@@ -152,8 +152,9 @@ public:
     {
         if (r >= rowSize || c >= colSize || r < 0 || r < 0)
         {
+
             /**
-             * -TODO: throw IndexOutOfBound
+             * TODO: throw IndexINvalidException
              */
         }
         else
@@ -483,7 +484,10 @@ public:
         {
             for (int j = 0; j < getCol(); j++)
             {
-                groupedItem[getItem(i, j)->getName()]++;
+                if (!isCellEmpty(i, j))
+                {
+                    groupedItem[getItem(i, j)->getKodeHuruf()]++;
+                }
             }
         }
         return groupedItem;
