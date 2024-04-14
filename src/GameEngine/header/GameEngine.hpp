@@ -16,13 +16,16 @@ private:
     vector<Player *> players;
     GameContext gameConfig;
     Shop shop;
+    int currentTurn;
+    static const vector<string> commands;
 
 public:
-    GameEngine(); 
+    GameEngine();
     ~GameEngine();
-    // void run();
-    // void setup();
-    // void getCommand();
+    void run();
+    void setup();
+    int checkCommand(string input);
+    int getCommand();
     // void readState();
     // void saveState();
 };

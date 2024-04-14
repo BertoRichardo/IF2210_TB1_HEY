@@ -4,5 +4,7 @@ using namespace std;
 
 int main()
 {
-    GameEngine ge;
+    GameEngine game;
+    game.setup();
+    game.run();
 }

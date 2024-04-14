@@ -24,7 +24,6 @@ private:
     int lahanCol;
     int peternakanRow;
     int peternakanCol;
-    int currentTurn;
 
 public:
     /** DEFAULT CONSTRUCTOR
