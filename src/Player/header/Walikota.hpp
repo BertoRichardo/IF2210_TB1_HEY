@@ -26,7 +26,7 @@ public:
     /**
      * Menarik pajak dari pemain
      */
-    void tarikPajak();
+    void tarikPajak(vector <Player *> &players);
 
     /**
      * Membuat bangunan dan menunjukkan IO nya
