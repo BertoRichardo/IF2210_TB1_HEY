@@ -121,6 +121,28 @@ public:
     }
 
     /**
+     * Menambahakan item pada matrix berdasarkan algoritma First Fit & Write
+     * @param T item
+     */
+    void addItem(const T &item)
+    {
+        for (int i = 0; i < rowSize; i++)
+        {
+            for (int j = 0; j < colSize; j++)
+            {
+                if (isCellEmpty(i + 1, j + 1))
+                {
+                    buffer[i][j] = item;
+                    return;
+                }
+            }
+        }
+        /**
+         * @todo: throw matrix full
+        */
+    }
+
+    /**
      Mendapatkan item dari matrix[r][c]
      * @param r row
      * @param c column
@@ -462,7 +484,7 @@ public:
         {
             for (int j = 0; j < getCol(); j++)
             {
-                groupedItem[getItem(i, j)->getName()] ++;
+                groupedItem[getItem(i, j)->getName()]++;
             }
         }
         return groupedItem;

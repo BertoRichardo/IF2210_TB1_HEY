@@ -20,21 +20,9 @@ string Peternak::getType() const
 int Peternak::getPajak() const
 {
     // inisialisasi
-    int wealth = getWealthFromInv();
+    int wealth = getWealthFromInv() + getWealthFromPeternakan() + getGulden();
 
-    // cari kekayaan dari peternakan
-    for (int i = 0; i < peternakan.getRow(); i++)
-    {
-        for (int j = 0; j < peternakan.getCol(); j++)
-        {
-            if (!peternakan.isCellEmpty(i, j))
-            {
-                wealth += peternakan.getItem(i, j)->getPrice();
-            }
-        }
-    }
-
-    // KTKP = 13
+    // KTKP = 11
     int kkp = wealth - 11;
 
     return kkp * Util::persenPajak(kkp);
@@ -47,52 +35,71 @@ MatrixContainer<Animal *> Peternak::getPeternakan() const
 
 void Peternak::kasihMakan()
 {
-    cout << "Pilih petak kandang yang akan ditinggali" << endl;
-    peternakan.printMatrix();
-    cout << "Petak kandang:";
+    // cek jika peternakan kosong
+    if (peternakan.isMatrixEmpty())
+    {
+        /**
+         * @todo: throw peternakanEmpty
+         */
+    }
+
+    // cukup beri pesan
+    if (peternakan.isFoodEmpty())
+    {
+        cout << "Tidak ada makanan pada inventory" << '\n';
+        return;
+    }
+
     string cell;
+
+    cout << "Pilih petak kandang yang akan ditinggali" << endl;
+    printPeternakan();
+    cout << "\nPetak kandang:";
     cin >> cell;
 
-    bool valid = false;
-    while (!valid)
+    Animal *animal = NULL;
+    string farmCoordinate;
+
+    while (animal == NULL)
     {
-        // Memilih Kotak untuk diberi makan
         try
         {
-            cout << "Kamu memilih " << peternakan.getItem(cell)->getName() << " untuk diberi makan." << endl;
-            cout << "Pilih pangan yang akan diberikan:" << endl;
-            cout << "[Penyimpanan]:" << endl;
-            inventory.printMatrix();
+            cout << "Petak kandang: ";
+            cin >> farmCoordinate;
+            cout << '\n';
 
-            // setIsDone
-            valid = true;
-            bool isDone = false;
-            while (!isDone)
-            {
-                // Memilih kotak sumber makanan
-                try
-                {
-
-                    string makanan;
-                    cout << "Slot: ";
-                    cin >> makanan;
-                    peternakan.getItem(cell)->feed(*dynamic_cast<Product *>(inventory.getMakanan(makanan)));
-                    cout << peternakan.getMakanan(cell)->getName() << " sudah diberi makan dan beratnya menjadi " << peternakan.getItem(cell)->getWeight() << endl;
-
-                    // Set isDone
-                    isDone = true;
-                }
-                catch (const GameException &e)
-                {
-                    e.displayMessage();
-                }
-            }
+            animal = peternakan.getItem(farmCoordinate);
+            cout << "Kamu memilih " << animal->getName() << " untuk diberi makan.\n";
         }
         catch (const GameException &e)
         {
             e.displayMessage();
         }
     }
+
+    cout << "Pilih pangan yang akan diberikan:\n\n";
+    printInventory();
+    cout << '\n';
+
+    Product *product = NULL;
+    string invCoordinate;
+    while (product == NULL)
+    {
+        try
+        {
+            cout << "Slot: ";
+            cin >> invCoordinate;
+            cout << '\n';
+
+            product = dynamic_cast<Product *>(inventory.getItem(invCoordinate));
+        }
+        catch (const GameException &e)
+        {
+            e.displayMessage();
+        }
+    }
+
+    animal->feed(*(product));
 }
 
 bool Peternak::isPanenableMatrix()
@@ -136,9 +143,8 @@ void Peternak::panenTernak()
     }
 
     // Cetak matrix
-    cout << "[Peternakan]:" << endl;
-    peternakan.printMatrix();
-    map<string, int> temp;
+    printPeternakan();
+    map<pair<string, int>, int> temp;
 
     // mapping sementara dari peternakan
     for (int i = 0; i < peternakan.getRow(); i++)
@@ -148,20 +154,19 @@ void Peternak::panenTernak()
             if (peternakan.getItem(i, j)->isReadyToHarvest())
             {
                 cout << "- " << Util::angkaToHuruf(j) << i << ": " << peternakan.getItem(i, j)->getName() << endl;
-                temp[peternakan.getItem(i, j)->getKodeHuruf()]++;
+                temp[{peternakan.getItem(i, j)->getKodeHuruf(), (int)peternakan.getItem(i, j)->getProduct().size()}]++;
             }
         }
     }
 
     // menampilkan hewan yang bisa dipanen
     cout << "Pilih hewan siap panen yang kamu miliki" << endl;
-    map<string, int>::iterator it = temp.begin();
+    map<pair<string, int>,int>::iterator it = temp.begin();
     int i = 1;
     while (it != temp.end())
     {
-        cout << i << " ." << it->first << " (" << it->second << "petak siap dipanen)" << endl;
+        cout << i++ << " ." << it->first.first << " (" << it->second << "petak siap dipanen)" << endl;
         ++it;
-        i++;
     }
 
     // Memilih hewan dari map yang sudah dibuat
@@ -176,25 +181,11 @@ void Peternak::panenTernak()
     }
 
     // mengambil hewan
-    map<string, int>::iterator item = temp.begin();
-    for (int i = 0; i < in; i++)
-    {
-        ++item;
-    }
+    map<pair<string, int>,int>::iterator item = temp.begin();
+    advance(item, in - 1);
 
     // memeriksa kapasitas inventory
-    int jumlahProduct;
-    for (int i = 0; i < peternakan.getRow(); i++)
-    {
-        for (int j = 0; j < peternakan.getCol(); j++)
-        {
-            if (peternakan.getItem(i, j)->getKodeHuruf() == item->first)
-            {
-                jumlahProduct = (int)peternakan.getItem(i, j)->getProduct().size();
-            }
-            break;
-        }
-    }
+    int jumlahProduct = item->first.second;
 
     // mengambil jumlah panen
     cout << "Berapa petak yang ingin dipanen: ";
@@ -216,10 +207,6 @@ void Peternak::panenTernak()
          */
     }
 
-    // cari koordinat available space
-    vector<pair<int, int>> avail = inventory.getEmptySpacePoints();
-    int row, col;
-
     // meminta masukan petak dan proses sesuai masukan
     int j = 1;
     while (j <= quantity)
@@ -233,18 +220,15 @@ void Peternak::panenTernak()
             // validasi cell masukan
             cekPanen(cell);
 
-            // Masukkan vector product ke item
-            for (int i = 0; i < jumlahProduct; i++)
-            {
-                row = avail[i + jumlahProduct * (j - 1)].first;
-                col = avail[i + jumlahProduct * (j - 1)].second;
-                Product prod = peternakan.getItem(cell)->getProduct()[i];
-                inventory.addItem(row, col, (&prod));
-            };
-
-            // destruct animal dan hilangkan dari peternakan
-            peternakan.getItem(cell)->~Animal();
+            Animal *animal = peternakan.getItem(cell);
             peternakan.removeItem(cell);
+            vector <Product> products = animal->harvest();
+            for (auto product: products)
+            {
+                inventory.addItem(new Product(product));
+            }
+
+            delete animal;
 
             j++;
         }
@@ -305,8 +289,7 @@ void Peternak::letakTernak()
     bool isDone = false;
     string peternakanKoor;
     cout << "Pilih petak tanah yang akan dijadikan kandang\n\n";
-    cout << "    ================[ Peternakan ]==================\n\n";
-    peternakan.printMatrix();
+    printPeternakan();
     cout << '\n';
 
     // mengambil ternak dari petak tanah
@@ -335,20 +318,41 @@ void Peternak::letakTernak()
 
 void Peternak::printPeternakan()
 {
-    printHeader("Peternakan");
+    cout << "    ================[ Peternakan ]==================\n\n";
 
     // Cetak matrix
     peternakan.printMatrix();
-
+    set<pair<string, string>> available;
     // mapping sementara dari peternakan
     for (int i = 0; i < peternakan.getRow(); i++)
     {
         for (int j = 0; j < peternakan.getCol(); j++)
         {
-            if (!peternakan.isCellEmpty(i, j) && peternakan.getItem(i, j)->isReadyToHarvest())
+            if (!peternakan.isCellEmpty(i, j))
             {
-                cout << "- " << Util::angkaToHuruf(j) << i << ": " << peternakan.getItem(i, j)->getName() << endl;
+                available.insert({peternakan.getItem(i, j)->getKodeHuruf(), peternakan.getItem(i, j)->getName()});
             }
         }
     }
+    for (auto st : available)
+    {
+        cout << "- " << st.first << ": " << st.second << '\n';
+    }
+}
+
+int Peternak::getWealthFromPeternakan() const
+{
+    int wealth = 0;
+    // cari kekayaan dari peternakan
+    for (int i = 0; i < peternakan.getRow(); i++)
+    {
+        for (int j = 0; j < peternakan.getCol(); j++)
+        {
+            if (!peternakan.isCellEmpty(i, j))
+            {
+                wealth += peternakan.getItem(i, j)->getPrice();
+            }
+        }
+    }
+    return wealth;
 }

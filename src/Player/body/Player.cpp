@@ -23,10 +23,7 @@ void Player::setUsername(string username_)
 int Player::getWealthFromInv() const
 {
     // inisialisasi
-    int pajak = 0;
-
-    // kekayaan dari gulden
-    pajak += getGulden();
+    int wealth = 0;
 
     // cari kekayaan dari inventory
     for (int i = 0; i < inventory.getRow(); i++)
@@ -35,11 +32,11 @@ int Player::getWealthFromInv() const
         {
             if (!inventory.isCellEmpty(i, j))
             {
-                pajak += inventory.getItem(i, j)->getPrice();
+                wealth += inventory.getItem(i, j)->getPrice();
             }
         }
     }
-    return pajak;
+    return wealth;
 }
 
 string Player::getType() const
@@ -70,9 +67,7 @@ void Player::setGulden(int gulden_)
 void Player::eat()
 {
     // Menampilkan Inventory
-    cout << "Pilih makanan dari penyimpanan" << endl;
-    cout << "[Penyimpanan]: " << endl;
-    inventory.printMatrix();
+    printInventory();
 
     if (inventory.isFoodEmpty())
     {
@@ -98,7 +93,7 @@ void Player::eat()
             cout << "Alhasil, berat badan kamu naik menjadi " << weigth << endl;
 
             inventory.removeItem(koordinat);
-            makanan->~Product();
+            delete makanan;
 
             // Makanan sudah dimakan
             isDone = true;
@@ -222,9 +217,8 @@ void Player::cekBeli(Shop &toko)
 
 void Player::jual(Shop &toko)
 {
-    cout << "Berikut merupakan penyimnpanan Anda" << endl;
-    cout << "[Penyimpanan]:";
-    inventory.printMatrix();
+    cout << "Berikut merupakan penyimpanan Anda" << endl;
+    printInventory();
 
     try
     {

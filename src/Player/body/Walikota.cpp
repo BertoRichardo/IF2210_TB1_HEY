@@ -30,12 +30,30 @@ void Walikota::buatBangunan(const map<string, BuildingConfig> &buildings)
         // throw MatrixPenuhException;
     }
 
+    int num = 1;
+    for (auto building: buildings)
+    {
+        cout << "   " << num++ << ". " << building.first << "(" << building.second.getPrice() << " gulden, ";
+
+        // print recipe
+        for (int i = 0; i < (int)building.second.getRecipe().size(); i++)
+        {
+            cout << building.second.getRecipe()[i].first << " " << building.second.getRecipe()[i].second;
+            if (i != (int) building.second.getRecipe().size() - 1)
+            {
+                cout << ", ";
+            }
+        }
+        cout << ")\n";
+    }
+
     bool isDone = false;
     while (!isDone)
     {
         try
         {
             cekRecipe(buildings);
+            isDone = true;
         }
         catch (const GameException &e)
         {

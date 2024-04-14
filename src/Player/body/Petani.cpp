@@ -25,20 +25,7 @@ string Petani::getType() const
 int Petani::getPajak() const
 {
     // inisialisasi
-    int wealth = getWealthFromInv();
-
-    // cari kekayaan dari lahan
-    for (int i = 0; i < lahan.getRow(); i++)
-    {
-        for (int j = 0; j < lahan.getCol(); j++)
-        {
-            if (!lahan.isCellEmpty(i, j))
-            {
-                wealth += lahan.getItem(i, j)->getPrice();
-            }
-        }
-    }
-
+    int wealth = getWealthFromInv() + getWealthFromLahan() + getGulden();
     // KTKP = 13
     int kkp = wealth - 13;
 
@@ -86,8 +73,7 @@ void Petani::panenTanaman()
     }
 
     // Cetak matrix
-    cout << "[Ladang]" << endl;
-    lahan.printMatrix();
+    printLahan();
 
     map<string, int> temp;
 
@@ -130,10 +116,7 @@ void Petani::panenTanaman()
 
     // mengambil tanaman
     map<string, int>::iterator item = temp.begin();
-    for (int i = 0; i < in; i++)
-    {
-        ++item;
-    }
+    advance(item, in - 1);
 
     // mengambil jumlah panen
     cout << "Berapa petak yang ingin dipanen: ";
@@ -154,12 +137,9 @@ void Petani::panenTanaman()
          */
     }
 
-    // cari available space
-    vector<pair<int, int>> avail = inventory.getEmptySpacePoints();
-    int row, col;
-
     // Mengambil tanaman dari lahan
     int j = 1;
+    vector<string> vec;
     while (j <= quantity)
     {
         try
@@ -171,28 +151,29 @@ void Petani::panenTanaman()
             // validasi cell masukanl;
             cekPanen(cell);
 
-            // adjust row and col
-            row = avail[j - 1].first;
-            col = avail[j - 1].second;
-
-            cout << "row:  " << row << "  col : " << col << endl;
-            // masukan product ke item
-            // EROR GOLAPPPPPPP
-            Product prod = lahan.getItem(cell)->getProduct();
-            inventory.addItem(row, col, (&prod));
-            inventory.printMatrix();
-
-            // hilangkan plant dari lahan
-            lahan.getItem(cell)->~Plant();
+            Plant *plant = lahan.getItem(cell);
+            inventory.addItem(new Product(plant->harvest()));
             lahan.removeItem(cell);
+            delete plant;
 
             j++;
+            vec.push_back(cell);
         }
         catch (const GameException &e)
         {
             e.displayMessage();
         }
     }
+    cout << vec.size() << " petak tanaman " << item->first << " pada petak";
+    for (int k = 0; k < (int)vec.size(); k++)
+    {
+        cout << vec[k];
+        if (k != (int)vec.size() - 1)
+        {
+            cout << ", ";
+        }
+    }
+    cout << " telah dipanen!\n";
 }
 
 void Petani::tanam()
@@ -242,12 +223,10 @@ void Petani::tanam()
     }
 
     // pilih petak lahan
+    // cetak lahan
+    printLahan();
     bool isDone = false;
     string lahanKoor;
-    cout << "Pilih petak tanah yang akan ditanami\n\n";
-    cout << "    ================[ lahan ]==================\n\n";
-    lahan.printMatrix();
-    cout << '\n';
 
     while (!isDone)
     {
@@ -288,27 +267,39 @@ void Petani::tambahUmurTanaman()
 
 void Petani::printLahan()
 {
-    printHeader("   Lahan   ");
-
+    cout << "    ================[ Lahan ]==================\n\n";
+    
     // Cetak matrix
     lahan.printMatrix();
-    map<string, string> temp;
+    set<pair<string, string>> availablePlant;
     for (int i = 0; i < lahan.getRow(); i++)
     {
         for (int j = 0; j < lahan.getCol(); j++)
         {
             if (!lahan.isCellEmpty(i, j))
             {
-                temp[lahan.getItem(i, j)->getKodeHuruf()] = lahan.getItem(i, j)->getName();
+                availablePlant.insert({lahan.getItem(i, j)->getKodeHuruf(), lahan.getItem(i, j)->getName()});
             }
         }
     }
-    map<string, string>::iterator item = temp.begin();
-    for (int i = 0; i < (int)temp.size(); i++)
+    for (auto st : availablePlant)
     {
-        cout << item->first << ": " << item->second << endl;
-        ++item;
+        cout << "- " << st.first << ": " << st.second << '\n';
     }
+}
 
-    // mappjng sementara darj lahan
+int Petani::getWealthFromLahan() const
+{
+    int wealth = 0;
+    for (int i = 0; i < lahan.getRow(); i++)
+    {
+        for (int j = 0; j < lahan.getCol(); j++)
+        {
+            if (!lahan.isCellEmpty(i, j))
+            {
+                wealth += lahan.getItem(i, j)->getPrice();
+            }
+        }
+    }
+    return wealth;
 }
