@@ -253,7 +253,7 @@ void Player::cekJual(Shop &toko)
                 }
 
                 // tambah stock jika barang yang dibeli finite
-                toko + (*inventory.getItem(slotS[i]));
+                toko+(*inventory.getItem(slotS[i]));
 
                 // setGulden
                 uangTambah += inventory.getItem(slotS[i])->getPrice();
