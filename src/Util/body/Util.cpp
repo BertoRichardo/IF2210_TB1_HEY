@@ -75,10 +75,6 @@ int Util::persenPajak(int kkp)
     }
     else if (kkp <= 50)
     {
-        return 15;
-    }
-    else if (kkp <= 75)
-    {
         return 25;
     }
     else if (kkp <= 500)
@@ -142,6 +138,18 @@ GameObject *Util::callCCtor(GameObject *obj)
     }
 
     return NULL;
+}
+
+bool Util::customComparator(const pair<int, pair<string, string>> &a, const pair<int, pair<string, string>> &b)
+{
+    // Priority int dengan urutan menurun
+    if (a.first != b.first)
+    {
+        return a.first < b.first; // urutan menurun
+    }
+
+    // Jika int sama, bandingkan string secara naik
+    return a.second.first > b.second.first;
 }
 
 void Util::clearScreen()

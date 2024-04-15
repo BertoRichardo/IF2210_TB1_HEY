@@ -130,7 +130,7 @@ public:
         {
             for (int j = 0; j < colSize; j++)
             {
-                if (isCellEmpty(i + 1, j + 1))
+                if (isCellEmpty(i, j))
                 {
                     buffer[i][j] = item;
                     return;
@@ -139,7 +139,7 @@ public:
         }
         /**
          * @todo: throw matrix full
-        */
+         */
     }
 
     /**
@@ -152,8 +152,9 @@ public:
     {
         if (r >= rowSize || c >= colSize || r < 0 || r < 0)
         {
+
             /**
-             * -TODO: throw IndexOutOfBound
+             * TODO: throw IndexINvalidException
              */
         }
         else
@@ -299,7 +300,6 @@ public:
         {
             for (int j = 0; j < colSize; j++)
             {
-
                 if (!isCellEmpty(i, j))
                 {
                     Product *obj = dynamic_cast<Product *>(getItem(i, j));
@@ -484,7 +484,10 @@ public:
         {
             for (int j = 0; j < getCol(); j++)
             {
-                groupedItem[getItem(i, j)->getName()]++;
+                if (!isCellEmpty(i, j))
+                {
+                    groupedItem[getItem(i, j)->getKodeHuruf()]++;
+                }
             }
         }
         return groupedItem;

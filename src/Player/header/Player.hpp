@@ -5,6 +5,7 @@ using namespace std;
 #include <iostream>
 #include <string>
 #include <map>
+#include <cmath>
 #include "../../Container/header/MatrixContainer.hpp"
 #include "../../Shop/header/Shop.hpp"
 #include "../../GameObject/header/GameObject.hpp"
@@ -89,13 +90,15 @@ public:
 
     /**
      * jual : virtual function
+     * @param toko : Shop
      */
     virtual void jual(Shop &toko);
 
     /**
      * beli : sama untuk petani dan peternak, override untuk walikota
+     * @param toko: reference dari Shop
      */
-    virtual void beli(Shop &toko);
+    virtual void beli(Shop &toko );
 
     /**
      * Melakukan proses pembelian atau throw erro
@@ -104,6 +107,7 @@ public:
 
     /**
      * Melakukan proses penjualan atau throw erro
+     * @param toko : Shop
      */
     virtual void cekJual(Shop &toko);
     /**
@@ -112,6 +116,7 @@ public:
 
     /**
      * Mencetak Header untuk matrix
+     * @param judul : string judul header
      */
     void printHeader(string judul);
 
@@ -119,6 +124,18 @@ public:
      * Mencetak header inventory, isinya, dan total slot kosong
      */
     void printInventory();
+
+    /**
+     * Mendapatkan nominal pajak yang perlu dibayar oleh player
+     */
+    virtual int getPajak() const;
+
+    /**
+     * @param guldenToWin : int
+     * @param weigthToWin : int
+     * @return apakah pemain menang atau tidak
+     */
+    bool isPlayerWin(int guldenToWin, int weigthToWin);
 };
 
 #endif
