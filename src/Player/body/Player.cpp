@@ -245,7 +245,7 @@ void Player::cekJual(Shop &toko)
                 if (dynamic_cast<Building *>(inventory.getItem(slotS[i])) != NULL)
                 {
                     /**
-                     * TODO: throw
+                     * TODO: throw apa?
                      */
                 }
 

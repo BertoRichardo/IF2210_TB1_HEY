@@ -335,6 +335,7 @@ pair<string, string> Walikota::tambahPemain(vector<string> &names)
         /**
          * TODO: throw NameIsNotUnique
          */
+        throw InputInvalidException();
     }
     cout << "Pemain baru ditambahkan!" << endl;
     cout << "Selamat datang \"" << name << "\" di kota ini!" << endl;

@@ -111,9 +111,7 @@ void Petani::panenTanaman()
     cin >> in;
     if (in < 0 || in > (int)temp.size())
     {
-        /**
-         * @TODO: throw InvalidInput
-         */
+        throw InputInvalidException();
     }
 
     // mengambil tanaman

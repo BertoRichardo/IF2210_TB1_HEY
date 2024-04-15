@@ -296,9 +296,6 @@ void GameEngine::pungut_pajak()
 {
     if (players[playerNames[currentTurn]]->getType() != "WALIKOTA")
     {
-        /**
-         * @todo: throw inaccessible command
-         */
         throw CommandInvalidException();
     }
     vector<Player *> vecPlayer = getPlayerVector();
@@ -309,9 +306,6 @@ void GameEngine::cetak_ladang()
 {
     if (players[playerNames[currentTurn]]->getType() != "PETANI")
     {
-        /**
-         * @todo: throw inaccessible command
-         */
         throw CommandInvalidException();
     }
     dynamic_cast<Petani *>(players[playerNames[currentTurn]])->printLahan();
@@ -321,9 +315,6 @@ void GameEngine::cetak_peternakan()
 {
     if (players[playerNames[currentTurn]]->getType() != "PETERNAK")
     {
-        /**
-         * @todo: throw inaccessible command
-         */
         throw CommandInvalidException();
     }
     dynamic_cast<Peternak *>(players[playerNames[currentTurn]])->printPeternakan();
@@ -333,9 +324,6 @@ void GameEngine::tanam()
 {
     if (players[playerNames[currentTurn]]->getType() != "PETANI")
     {
-        /**
-         * @todo: throw inaccessible command
-         */
         throw CommandInvalidException();
     }
     dynamic_cast<Petani *>(players[playerNames[currentTurn]])->tanam();
@@ -345,9 +333,6 @@ void GameEngine::ternak()
 {
     if (players[playerNames[currentTurn]]->getType() != "PETERNAK")
     {
-        /**
-         * @todo: throw inaccessible command
-         */
         throw CommandInvalidException();
     }
     dynamic_cast<Peternak *>(players[playerNames[currentTurn]])->letakTernak();
@@ -357,9 +342,6 @@ void GameEngine::bangun()
 {
     if (players[playerNames[currentTurn]]->getType() != "WALIKOTA")
     {
-        /**
-         * @todo: throw inaccessible command
-         */
         throw CommandInvalidException();
     }
     dynamic_cast<Walikota *>(players[playerNames[currentTurn]])->buatBangunan(gameConfig.getBuildings());
@@ -374,9 +356,6 @@ void GameEngine::kasih_makan()
 {
     if (players[playerNames[currentTurn]]->getType() != "PETERNAK")
     {
-        /**
-         * @todo: throw inaccessible command
-         */
         throw CommandInvalidException();
     }
     dynamic_cast<Peternak *>(players[playerNames[currentTurn]])->kasihMakan();
@@ -404,9 +383,6 @@ void GameEngine::panen()
     }
     else
     {
-        /**
-         * @todo: throw inaccessible command
-         */
         throw CommandInvalidException();
     }
 }
@@ -422,9 +398,6 @@ void GameEngine::tambah_pemain()
 {
     if (players[playerNames[currentTurn]]->getType() != "WALIKOTA")
     {
-        /**
-         * @todo: throw inaccessible command
-         */
         throw CommandInvalidException();
     }
     pair<string, string> res = dynamic_cast<Walikota *>(players[playerNames[currentTurn]])->tambahPemain(playerNames);

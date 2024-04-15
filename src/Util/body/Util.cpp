@@ -7,9 +7,7 @@ pair<int, int> Util::strToRowCol(string koordinat)
     int col = 0;
     if (koordinat[i] < 'A' || koordinat[i] > 'Z')
     {
-        /**
-         * TODO: Throw invalidInput
-         */
+        throw InputInvalidException();
     }
     else
     {
@@ -33,9 +31,7 @@ pair<int, int> Util::strToRowCol(string koordinat)
         }
         else
         {
-            /**
-             * TODO: throw invalidInput
-             */
+            throw InputInvalidException();
         }
     }
     row--;

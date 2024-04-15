@@ -89,9 +89,7 @@ public:
         // handle out of idx
         if (r >= rowSize || c >= colSize || r < 0 || c < 0)
         {
-            /**
-             * -TODO: throw IndexOutOfBound
-             */
+            throw IndexInvalidException();
         }
         else
         {
@@ -152,10 +150,7 @@ public:
     {
         if (r >= rowSize || c >= colSize || r < 0 || r < 0)
         {
-
-            /**
-             * TODO: throw IndexINvalidException
-             */
+            throw IndexInvalidException();
         }
         else
         {
