@@ -43,6 +43,11 @@ public:
     vector<pair<string, pair<string, string>>> getLahanPlant();
 
     /**
+     * add plant to lahan
+    */
+    void addPlantToLahan(Plant *plant, string coordinate);
+
+    /**
      * @return true jika ada kotak lahan yang siap dipanen
      */
     bool isPanenableMatrix();

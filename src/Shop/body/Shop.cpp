@@ -39,6 +39,22 @@ pair<GameObject *, int> Shop::getGoods(int idx) const
     return content[idx];
 }
 
+vector<pair<string, string>> Shop::getGoodsItem()
+{
+    vector<pair<string, string>> res;
+    for (int i = 0; i < (int)content.size(); i++)
+    {
+        Plant *plant = dynamic_cast<Plant *>(getGameObject(i));
+        Animal *animal = dynamic_cast<Animal *>(getGameObject(i));
+
+        if (plant == NULL && animal == NULL && content.at(i).second)
+        {
+            res.push_back({content.at(i).first->getName(), to_string(content.at(i).second)});
+        }
+    }
+    return res;
+}
+
 void Shop::setGoods(pair<GameObject *, int> element, string nama)
 {
     for (int i = 0; i < (int)content.size(); i++)

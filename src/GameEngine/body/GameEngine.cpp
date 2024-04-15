@@ -20,6 +20,51 @@ GameEngine::GameEngine() : gameConfig(), shop()
 {
     // read game config from file
     gameConfig.readConfig();
+
+    // initialize default shop setup
+    map<string, BuildingConfig> buildings = gameConfig.getBuildings();
+    map<string, ProductConfig> products = gameConfig.getProducts();
+    map<string, AnimalConfig> animals = gameConfig.getAnimals();
+    map<string, PlantConfig> plants = gameConfig.getPlants();
+
+    map<string, vector<Product>> productMap;
+
+    // iterate over buildings
+    for (auto building : buildings)
+    {
+        shop.addGoods({new Building(building.second.getKodeHuruf(), building.second.getNama(), building.second.getPrice(), building.second.getRecipe()), 0});
+    }
+
+    // iterate over products
+    for (auto product : products)
+    {
+        Product temp(product.second.getKodeHuruf(), product.second.getNama(), product.second.getPrice(), product.second.getType(), product.second.getOrigin(), product.second.getAddedWeight());
+        productMap[product.second.getOrigin()].push_back(temp);
+        shop.addGoods({new Product(temp), 0});
+    }
+
+    // iterate over animals
+    for (auto animal : animals)
+    {
+        if (animal.second.getType() == "HERBIVORE")
+        {
+            shop.addGoods({new Herbivore(animal.second.getKodeHuruf(), animal.second.getNama(), animal.second.getPrice(), animal.second.getType(), animal.second.getWeightToHarvest(), 0, productMap[animal.second.getNama()]), -1});
+        }
+        else if (animal.second.getType() == "OMNIVORE")
+        {
+            shop.addGoods({new Omnivore(animal.second.getKodeHuruf(), animal.second.getNama(), animal.second.getPrice(), animal.second.getType(), animal.second.getWeightToHarvest(), 0, productMap[animal.second.getNama()]), -1});
+        }
+        else
+        {
+            shop.addGoods({new Carnivore(animal.second.getKodeHuruf(), animal.second.getNama(), animal.second.getPrice(), animal.second.getType(), animal.second.getWeightToHarvest(), 0, productMap[animal.second.getNama()]), -1});
+        }
+    }
+
+    // iterate over plants
+    for (auto plant : plants)
+    {
+        shop.addGoods({new Plant(plant.second.getKodeHuruf(), plant.second.getNama(), plant.second.getPrice(), plant.second.getType(), plant.second.getDurationToHarvest(), 0, productMap[plant.second.getNama()].front()), -1});
+    }
 }
 
 GameEngine::~GameEngine()
@@ -101,53 +146,7 @@ void GameEngine::setup()
 
 void GameEngine::defaultSetup()
 {
-    // initialize default shop setup
-    map<string, BuildingConfig> buildings = gameConfig.getBuildings();
-    map<string, ProductConfig> products = gameConfig.getProducts();
-    map<string, AnimalConfig> animals = gameConfig.getAnimals();
-    map<string, PlantConfig> plants = gameConfig.getPlants();
-
-    map<string, vector<Product>> productMap;
-
-    // iterate over buildings
-    for (auto building : buildings)
-    {
-        shop.addGoods({new Building(building.second.getKodeHuruf(), building.second.getNama(), building.second.getPrice(), building.second.getRecipe()), 0});
-    }
-
-    // iterate over products
-    for (auto product : products)
-    {
-        Product temp(product.second.getKodeHuruf(), product.second.getNama(), product.second.getPrice(), product.second.getType(), product.second.getOrigin(), product.second.getAddedWeight());
-        productMap[product.second.getOrigin()].push_back(temp);
-        shop.addGoods({new Product(temp), 0});
-    }
-
-    // iterate over animals
-    for (auto animal : animals)
-    {
-        if (animal.second.getType() == "HERBIVORE")
-        {
-            shop.addGoods({new Herbivore(animal.second.getKodeHuruf(), animal.second.getNama(), animal.second.getPrice(), animal.second.getType(), animal.second.getWeightToHarvest(), 0, productMap[animal.second.getNama()]), -1});
-        }
-        else if (animal.second.getType() == "OMNIVORE")
-        {
-            shop.addGoods({new Omnivore(animal.second.getKodeHuruf(), animal.second.getNama(), animal.second.getPrice(), animal.second.getType(), animal.second.getWeightToHarvest(), 0, productMap[animal.second.getNama()]), -1});
-        }
-        else
-        {
-            shop.addGoods({new Carnivore(animal.second.getKodeHuruf(), animal.second.getNama(), animal.second.getPrice(), animal.second.getType(), animal.second.getWeightToHarvest(), 0, productMap[animal.second.getNama()]), -1});
-        }
-    }
-
-    // iterate over plants
-    for (auto plant : plants)
-    {
-        shop.addGoods({new Plant(plant.second.getKodeHuruf(), plant.second.getNama(), plant.second.getPrice(), plant.second.getType(), plant.second.getDurationToHarvest(), 0, productMap[plant.second.getNama()].front()), -1});
-    }
-
     // read players username
-
     // create walikota
     string walikota = readUsername(playerNames, "walikota");
     playerNames.push_back(walikota);
@@ -167,7 +166,19 @@ void GameEngine::defaultSetup()
     sort(playerNames.begin(), playerNames.end());
     currentTurn = 0;
 }
-void GameEngine::stateSetup() {}
+void GameEngine::stateSetup()
+{
+    string file;
+    cout << "Masukkan lokasi berkas state : ";
+    cin >> file;
+
+    vector<vector<string>> data = FileController::readFile(file);
+
+    load(data);
+
+    sort(playerNames.begin(), playerNames.end());
+    currentTurn = 0;
+}
 
 void GameEngine::run()
 {
@@ -412,19 +423,62 @@ void GameEngine::save()
         {
             content.push_back(vector<string>{player, "Petani", to_string(players[player]->getWeight()), to_string(players[player]->getGulden())});
 
-            // get number of item inventory
-            // int numOfItem = players[player]
+            // get inventory
+            vector<string> invs = players[player]->getInventoryItem();
+            content.push_back(vector<string>{to_string((int)invs.size())});
 
+            for (string inv : invs)
+                content.push_back(vector<string>{inv});
+
+            // get lahan
+            vector<pair<string, pair<string, string>>> lahan = dynamic_cast<Petani *>(players[player])->getLahanPlant();
+            content.push_back(vector<string>{to_string((int)lahan.size())});
+
+            for (auto plant : lahan)
+            {
+                content.push_back(vector<string>{plant.first, plant.second.first, plant.second.second});
+            }
         }
         else if (players[player]->getType() == "PETERNAK")
         {
             content.push_back(vector<string>{player, "Peternak", to_string(players[player]->getWeight()), to_string(players[player]->getGulden())});
+            // get inventory
+            vector<string> invs = players[player]->getInventoryItem();
+            content.push_back(vector<string>{to_string((int)invs.size())});
+
+            for (string inv : invs)
+                content.push_back(vector<string>{inv});
+
+            // get peternakan
+            vector<pair<string, pair<string, string>>> peternakan = dynamic_cast<Peternak *>(players[player])->getPeternakanAnimal();
+            content.push_back(vector<string>{to_string((int)peternakan.size())});
+
+            for (auto animal : peternakan)
+            {
+                content.push_back(vector<string>{animal.first, animal.second.first, animal.second.second});
+            }
         }
         else
         {
             content.push_back(vector<string>{player, "Walikota", to_string(players[player]->getWeight()), to_string(players[player]->getGulden())});
+            // get inventory
+            vector<string> invs = players[player]->getInventoryItem();
+            content.push_back(vector<string>{to_string((int)invs.size())});
+
+            for (string inv : invs)
+                content.push_back(vector<string>{inv});
         }
     }
+
+    // simpan state toko
+    vector<pair<string, string>> toko = shop.getGoodsItem();
+    content.push_back(vector<string>{toko.size()});
+    for (auto barang : toko)
+    {
+        content.push_back(vector<string>{barang.first, barang.second});
+    }
+
+    FileController::write(content, file);
 }
 
 void GameEngine::tambah_pemain()
@@ -453,11 +507,144 @@ void GameEngine::tambah_pemain()
     }
 }
 
-void GameEngine::load()
+void GameEngine::load(vector<vector<string>> data)
 {
-    /**
-     * @todo: lengkapin load
-     */
+    int index = 0;
+    int numPlayer = stoi(data.at(index).at(index));
+    index++;
+
+    // input player data
+    while (numPlayer--)
+    {
+        // assign username, tipe, weight, and gulden
+        string username = data.at(index).at(0);
+        string tipe = data.at(index).at(1);
+        int weight = stoi(data.at(index).at(2));
+        int gulden = stoi(data.at(index).at(3));
+
+        index++;
+
+        playerNames.push_back(username);
+
+        if (tipe == "Petani")
+        {
+            players[username] = new Petani(username, weight, gameConfig.getInventoryRow(), gameConfig.getInventoryCol(), gameConfig.getLahanRow(), gameConfig.getLahanCol());
+        }
+        else if (tipe == "Peternak")
+        {
+            players[username] = new Peternak(username, weight, gameConfig.getInventoryRow(), gameConfig.getInventoryCol(), gameConfig.getPeternakanRow(), gameConfig.getPeternakanCol());
+        }
+        else
+        {
+            players[username] = new Walikota(username, weight, gameConfig.getInventoryRow(), gameConfig.getInventoryCol());
+        }
+
+        // get inventory data
+        int numOfInventoryItem = stoi(data.at(index).at(0));
+        index++;
+
+        map<string, ProductConfig> products = gameConfig.getProducts();
+        map<string, PlantConfig> plants = gameConfig.getPlants();
+        map<string, AnimalConfig> animals = gameConfig.getAnimals();
+        map<string, BuildingConfig> buildings = gameConfig.getBuildings();
+        map<string, vector<Product>> productMap;
+
+        for (auto product : products)
+        {
+            Product temp(product.second.getKodeHuruf(), product.second.getNama(), product.second.getPrice(), product.second.getType(), product.second.getOrigin(), product.second.getAddedWeight());
+            productMap[product.second.getOrigin()].push_back(temp);
+        }
+
+        for (int i = 0; i < numOfInventoryItem; i++)
+        {
+            string itemName = data.at(index).at(0);
+            index++;
+
+            if (plants.find(itemName) != plants.end())
+            {
+                players[username]->addItemToInventory(new Plant(plants[itemName].getKodeHuruf(), plants[itemName].getNama(), plants[itemName].getPrice(), plants[itemName].getType(), plants[itemName].getDurationToHarvest(), 0, productMap[itemName].front()));
+                continue;
+            }
+            if (animals.find(itemName) != animals.end())
+            {
+                if (animals[itemName].getType() == "HERBIVORE")
+                    players[username]->addItemToInventory(new Herbivore(animals[itemName].getKodeHuruf(), animals[itemName].getNama(), animals[itemName].getPrice(), animals[itemName].getType(), animals[itemName].getWeightToHarvest(), 0, productMap[itemName]));
+                else if (animals[itemName].getType() == "CARNIVORE")
+                    players[username]->addItemToInventory(new Carnivore(animals[itemName].getKodeHuruf(), animals[itemName].getNama(), animals[itemName].getPrice(), animals[itemName].getType(), animals[itemName].getWeightToHarvest(), 0, productMap[itemName]));
+                else
+                    players[username]->addItemToInventory(new Omnivore(animals[itemName].getKodeHuruf(), animals[itemName].getNama(), animals[itemName].getPrice(), animals[itemName].getType(), animals[itemName].getWeightToHarvest(), 0, productMap[itemName]));
+                continue;
+            }
+            if (products.find(itemName) != products.end())
+            {
+                players[username]->addItemToInventory(new Product(products[itemName].getKodeHuruf(), products[itemName].getNama(), products[itemName].getPrice(), products[itemName].getType(), products[itemName].getOrigin(), products[itemName].getAddedWeight()));
+                continue;
+            }
+            if (buildings.find(itemName) != buildings.end())
+            {
+                players[username]->addItemToInventory(new Building(buildings[itemName].getKodeHuruf(), buildings[itemName].getNama(), buildings[itemName].getPrice(), buildings[itemName].getRecipe()));
+                continue;
+            }
+        }
+
+        // if player is petani, check ladang
+        if (tipe == "Petani")
+        {
+            int numOfPlants = stoi(data.at(index).at(0));
+            index++;
+
+            for (int i = 0; i < numOfPlants; i++)
+            {
+                string coordinate = data.at(index).at(0);
+                string plantName = data.at(index).at(1);
+                int umur = stoi(data.at(index).at(2));
+                index++;
+
+                dynamic_cast<Petani *>(players[username])->addPlantToLahan(new Plant(plants[plantName].getKodeHuruf(), plantName, plants[plantName].getPrice(), plants[plantName].getType(), plants[plantName].getDurationToHarvest(), umur, productMap[plantName].front()), coordinate);
+            }
+        }
+
+        // if player is peternak, check peternakan
+        if (tipe == "Peternak")
+        {
+            int numOfAnimals = stoi(data.at(index).at(0));
+            index++;
+
+            for (int i = 0; i < numOfAnimals; i++)
+            {
+                string coordinate = data.at(index).at(0);
+                string animalName = data.at(index).at(1);
+                int w = stoi(data.at(index).at(2));
+                index++;
+
+                if (animals[animalName].getType() == "HERBIVORE")
+                {
+                    dynamic_cast<Peternak *>(players[username])->addAnimalToPeternakan(new Herbivore(animals[animalName].getKodeHuruf(), animalName, animals[animalName].getPrice(), animals[animalName].getType(), animals[animalName].getWeightToHarvest(), w, productMap[animalName]), coordinate);
+                }
+                else if (animals[animalName].getType() == "CARNIVORE")
+                {
+                    dynamic_cast<Peternak *>(players[username])->addAnimalToPeternakan(new Carnivore(animals[animalName].getKodeHuruf(), animalName, animals[animalName].getPrice(), animals[animalName].getType(), animals[animalName].getWeightToHarvest(), w, productMap[animalName]), coordinate);
+                }
+                else
+                {
+                    dynamic_cast<Peternak *>(players[username])->addAnimalToPeternakan(new Omnivore(animals[animalName].getKodeHuruf(), animalName, animals[animalName].getPrice(), animals[animalName].getType(), animals[animalName].getWeightToHarvest(), w, productMap[animalName]), coordinate);
+                }
+            }
+        }
+    }
+
+    // input shop data
+    int numOfShopItem = stoi(data.at(index).at(0));
+    index++;
+
+    for (int i = 0; i < numOfShopItem; i++)
+    {
+        string name = data.at(index).at(0);
+        int quantity = stoi(data.at(index).at(1));
+        index++;
+
+        shop.setStock(name, quantity);
+    }
 }
 
 bool GameEngine::check_win()

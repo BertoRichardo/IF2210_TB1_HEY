@@ -321,3 +321,8 @@ vector<pair<string, pair<string, string>>> Petani::getLahanPlant()
     }
     return res;
 }
+
+void Petani::addPlantToLahan(Plant *plant, string coordinate)
+{
+    lahan.addItem(coordinate, plant);
+}

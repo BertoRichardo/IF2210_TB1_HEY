@@ -50,6 +50,11 @@ public:
      */
     pair<GameObject *, int> getGoods(int) const;
 
+    /** SHOP ITEM ELEMENTS GETTER
+     * @return vector of pair of game object's name and its quantity
+     */
+    vector<pair<string, string>> getGoodsItem();
+
     /** SHOP ITEM ELEMENTS SETTER
      * @param element the replacer element
      * @param nama name of the object program wanted to find
@@ -104,15 +109,15 @@ public:
     void addGoods(pair<GameObject *, int>);
 
     /**
-    * Menambahkan stock objek yang ditambahkan
-    * @param obj : objek yang ditambahkan
-    */
+     * Menambahkan stock objek yang ditambahkan
+     * @param obj : objek yang ditambahkan
+     */
     void operator+(const GameObject &obj);
 
     /**
-    * Menambahkan stock objek yang ditambahkan
-    * @param obj : objek yang ditambahkan
-    */
+     * Menambahkan stock objek yang ditambahkan
+     * @param obj : objek yang ditambahkan
+     */
     void operator-(const GameObject &obj);
 
     /**

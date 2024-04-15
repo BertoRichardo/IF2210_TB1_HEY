@@ -344,3 +344,8 @@ vector<string> Player::getInventoryItem()
     }
     return res;
 }
+
+void Player::addItemToInventory(GameObject *obj)
+{
+    inventory.addItem(obj);
+}

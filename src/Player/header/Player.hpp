@@ -86,6 +86,12 @@ public:
 
     vector <string> getInventoryItem();
 
+
+    /**
+     * add item to inventory with first fit algorithm
+    */
+    void addItemToInventory(GameObject * obj);
+
     /*COMMAND*/
 
     /**

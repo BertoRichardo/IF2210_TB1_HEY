@@ -36,7 +36,7 @@ private:
     void panen();
     void save();
     void tambah_pemain();
-    void load();
+    void load(vector<vector<string>>);
     bool check_win();
 
 public:

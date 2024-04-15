@@ -38,6 +38,11 @@ public:
     int getPajak() const override;
 
     /**
+     * add animal to peternakan
+    */
+    void addAnimalToPeternakan(Animal *animal, string coordinate);
+
+    /**
      * Memilih ternak yang ingin diberi makan,
      * lalu memilih item dari inventory
      * lakukan validasi
@@ -73,6 +78,11 @@ public:
      * @return kekayaan dari peternakan : int
      */
     int getWealthFromPeternakan() const;
+
+    /**
+     * @return vector of animals' data in peternakan
+    */
+    vector<pair<string, pair<string, string>>> getPeternakanAnimal();
 };
 
 #endif

@@ -235,7 +235,7 @@ void Peternak::panenTernak()
             vector<Product> products = animal->harvest();
             for (auto product : products)
             {
-                inventory+(new Product(product));
+                inventory + (new Product(product));
                 cout << product.getKodeHuruf() << endl;
                 cout << endl;
                 cout << endl;
@@ -376,4 +376,26 @@ int Peternak::getWealthFromPeternakan() const
         }
     }
     return wealth;
+}
+
+vector<pair<string, pair<string, string>>> Peternak::getPeternakanAnimal()
+{
+    vector<pair<string, pair<string, string>>> res;
+    for (int i = 0; i < peternakan.getRow(); i++)
+    {
+        for (int j = 0; j < peternakan.getCol(); j++)
+        {
+            if (!peternakan.isCellEmpty(i, j))
+            {
+                Animal *animal = peternakan.getItem(i, j);
+                res.push_back({Util::rowColToStr(i, j), {animal->getName(), to_string(animal->getWeight())}});
+            }
+        }
+    }
+    return res;
+}
+
+void Peternak::addAnimalToPeternakan(Animal *animal, string coordinate)
+{
+    peternakan.addItem(coordinate, animal);
 }
