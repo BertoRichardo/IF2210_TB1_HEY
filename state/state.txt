@@ -1,0 +1,17 @@
+3
+a Petani 40 41
+4
+APPLE
+APPLE
+APPLE
+APPLE
+0
+b Peternak 40 34
+0
+2
+A1 CHICKEN 0
+A2 CHICKEN 0
+c Walikota 40 69
+0
+1
+APPLE 4

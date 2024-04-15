@@ -29,8 +29,12 @@ vector<vector<string>> FileController::readFile(string path)
             this_line = split(line, ' ');
             elements.push_back(this_line);
         }
+        file.close();
     }
-    file.close();
+    else
+    {
+        throw CustomException("Lokasi berkas tidak valid >//<");
+    }
     return elements;
 }
 

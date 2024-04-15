@@ -79,6 +79,7 @@ void Player::eat()
         {
             cout << "Slot: ";
             cin >> koordinat;
+            cin.ignore();
             cout << endl;
 
             Product *makanan = dynamic_cast<Product *>(inventory.getMakanan(koordinat));
@@ -123,6 +124,7 @@ void Player::cekBeli(Shop &toko)
         cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard input
         cout << "Input invalid (bukan integer), mohon masukkan input kembali.\n";
     }
+    cin.ignore();
 
     cout << endl;
 
@@ -141,6 +143,7 @@ void Player::cekBeli(Shop &toko)
         cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard input
         cout << "Input invalid (bukan integer), mohon masukkan input kembali.\n";
     }
+    cin.ignore();
 
     cout << endl;
     if (quantity <= 0 || quantity > inventory.emptySpace())
@@ -169,7 +172,6 @@ void Player::cekBeli(Shop &toko)
     cout << "Pilih slot untuk menyimpan barang yang Anda beli!" << endl;
     printInventory();
 
-    cin.ignore(1000, '\n');
     // Pilih slot
     bool isDone = false;
     while (!isDone)
@@ -229,7 +231,6 @@ void Player::jual(Shop &toko)
 void Player::cekJual(Shop &toko)
 {
     bool isDone = false;
-    cin.ignore(1000, '\n');
     while (!isDone)
     {
         cout << "Silahkan pilih petak yang ingin Anda jual!\n";

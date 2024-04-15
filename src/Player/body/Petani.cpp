@@ -108,6 +108,7 @@ void Petani::panenTanaman()
         cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard input
         cout << "Input invalid (bukan integer), mohon masukkan input kembali.\n";
     }
+    cin.ignore();
 
     if (in < 0 || in > (int)temp.size())
     {
@@ -127,6 +128,7 @@ void Petani::panenTanaman()
         cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard input
         cout << "Input invalid (bukan integer), mohon masukkan input kembali.\n";
     }
+    cin.ignore();
 
     cout << endl;
     // cek error
@@ -149,6 +151,7 @@ void Petani::panenTanaman()
             cout << "Petak ke-" << j << ": ";
             string cell;
             cin >> cell;
+            cin.ignore();
 
             // validasi cell masukanl;
             cekPanen(cell);
@@ -207,6 +210,7 @@ void Petani::tanam()
         {
             cout << "Slot: ";
             cin >> inventoryKoor;
+            cin.ignore();
             cout << '\n';
             plant = dynamic_cast<Plant *>(inventory.getItem(inventoryKoor));
             if (plant == NULL)
@@ -234,6 +238,7 @@ void Petani::tanam()
         {
             cout << "Petak tanah: ";
             cin >> lahanKoor;
+            cin.ignore();
             cout << '\n';
 
             lahan.addItem(lahanKoor, plant);
