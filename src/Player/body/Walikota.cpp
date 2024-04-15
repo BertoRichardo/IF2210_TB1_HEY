@@ -15,8 +15,8 @@ string Walikota::getType() const
 void Walikota::buatBangunan(const map<string, BuildingConfig> &buildings)
 {
     map<string, int> groupedItem = inventory.getGroupedItem();
-
     vector<pair<vector<pair<string, int>>, int>> listOfRecipes;
+
     for (auto building : buildings)
     {
         listOfRecipes.push_back(make_pair(building.second.getRecipe(), building.second.getPrice()));
@@ -78,29 +78,13 @@ void Walikota::cekRecipe(const map<string, BuildingConfig> &buildings, map<strin
 
     vector<pair<string, int>> insufficientMaterial = getInsufficientMaterial(materials, make_pair(recipe, buildings.at(input).getPrice()));
 
-    // cek gulden and material
-    int harga = buildings.at(input).getPrice();
-
-    if (getGulden() < harga || insufficientMaterial.size() != 0)
+    // cek material
+    if (insufficientMaterial.size() != 0)
     {
-        // cout << "throw insufficient" << endl;
-        if (getGulden() < harga)
-        {
-            throw ResourceInsufficientException(harga - getGulden(), insufficientMaterial);
-        }
-        else
-        {
-            throw ResourceInsufficientException(0, insufficientMaterial);
-        }
+        throw ResourceInsufficientException(insufficientMaterial);
     }
 
-    // Set GUlden
-    int newGulden = getGulden() - harga;
-    setGulden(newGulden);
-
     // hilangkan material yang dipakai
-    // int cnt = 0;
-
     for (auto &ingredient : recipe)
     {
         int materialNeeded = ingredient.second;
@@ -129,7 +113,8 @@ void Walikota::cekRecipe(const map<string, BuildingConfig> &buildings, map<strin
     BuildingConfig config = buildings.at(input);
     Building *bangunan = new Building(config.getKodeHuruf(), config.getNama(), config.getPrice(), config.getRecipe());
 
-    inventory.addItem(bangunan);
+    inventory + bangunan;
+
     cout << input << " berhasil dibangun dan telah menjadi hak milik walikota!" << endl;
 }
 
@@ -140,23 +125,14 @@ void Walikota::beli(Shop &toko)
     cout << endl
          << "Uang Anda : " << gulden << endl
          << "Slot penyimpanan tersedia : " << inventory.emptySpace() << endl;
-
-    cout << "Barang yang ingin dibeli: ";
-
-    try
-    {
-        cekBeli(toko);
-    }
-    catch (const GameException &e)
-    {
-        e.displayMessage();
-    }
+    cekBeli(toko);
 }
 
 void Walikota::cekBeli(Shop &toko)
 {
     // Minta masukan dari user
     int masukan;
+
     while (cout << "Barang yang ingin dibeli : " && !(cin >> masukan))
     {
         cin.clear();                                         // clear bad input flag
@@ -172,7 +148,7 @@ void Walikota::cekBeli(Shop &toko)
         throw InputInvalidException();
     }
 
-    if (dynamic_cast<Building *>(toko.getGameObject(masukan)) != NULL)
+    if (dynamic_cast<Building *>(toko.getGameObject(masukan - 1)) != NULL)
     {
         throw CustomException("Walikota tidak bisa beli bangunan");
     }
@@ -193,16 +169,16 @@ void Walikota::cekBeli(Shop &toko)
         throw InputInvalidException();
     }
 
-    // validasi gulden
-    if (quantity * toko.getGameObject(masukan)->getPrice() > getGulden())
-    {
-        throw CustomException("Gulden Anda kurang!");
-    }
-
     // Validasi stock
     if (toko.getStock(masukan - 1) != -1 && quantity > toko.getStock(masukan - 1))
     {
         throw CustomException("Stock tidak mencukup");
+    }
+
+    // validasi gulden
+    if (quantity * toko.getGameObject(masukan - 1)->getPrice() > getGulden())
+    {
+        throw CustomException("Gulden Anda kurang!");
     }
 
     // Berikan IO dan kurangi uang
@@ -212,8 +188,7 @@ void Walikota::cekBeli(Shop &toko)
 
     // IO pemilihan slot
     cout << "Pilih slot untuk menyimpan barang yang Anda beli!" << endl;
-    cout << "[Penyimpanan]:" << endl;
-    inventory.printMatrix();
+    printInventory();
 
     // Pilih slot
     bool isDone = false;
@@ -226,17 +201,24 @@ void Walikota::cekBeli(Shop &toko)
         int cnt = 0;
         try
         {
+            // validasi jumlah slot
+            if ((int)slotS.size() != quantity)
+            {
+                throw CustomException("Jumlah Slot tidak valid");
+            }
+
             // eksekusi
             for (int i = 0; i < (int)slotS.size(); i++)
             {
                 GameObject *item = Util::callCCtor(toko.getGameObject(masukan - 1));
                 inventory.addItem(slotS[i], item);
             }
-            isDone = true;
+
             if (dynamic_cast<Plant *>(toko.getGameObject(masukan - 1)) == NULL && dynamic_cast<Animal *>(toko.getGameObject(masukan - 1)) == NULL)
             {
                 toko.setStock(toko.getGameObject(masukan - 1)->getName(), toko.getStock(masukan - 1) - quantity);
             }
+            isDone = true;
         }
         catch (const GameException &e)
         {
@@ -251,16 +233,14 @@ void Walikota::cekBeli(Shop &toko)
 
 void Walikota::jual(Shop &toko)
 {
-    cout << "Berikut merupakan penyimnpanan Anda" << endl;
+    if (inventory.isMatrixEmpty())
+    {
+        throw CustomException("Penyimpanan kosong");
+    }
+    cout << "Berikut merupakan penyimpanan Anda" << endl
+         << endl;
     printInventory();
-    try
-    {
-        cekJual(toko);
-    }
-    catch (const GameException &e)
-    {
-        e.displayMessage();
-    }
+    cekJual(toko);
 }
 
 void Walikota::cekJual(Shop &toko)
@@ -279,12 +259,15 @@ void Walikota::cekJual(Shop &toko)
         {
             for (int i = 0; i < (int)slotS.size(); i++)
             {
-                // Kurangi stock jika barang yang dibeli finite
-                if (dynamic_cast<Plant *>(inventory.getItem(slotS[i])) == NULL && dynamic_cast<Animal *>(inventory.getItem(slotS[i])) == NULL)
+                // cek bangunan
+                if (dynamic_cast<Building *>(inventory.getItem(slotS[i])) != NULL)
                 {
-                    toko.setStock(inventory.getItem(slotS[i])->getName(), toko.getStock(inventory.getItem(slotS[i])->getName()) + 1);
+                    throw CustomException("Tidak bisa menjual bangunan");
                 }
-                
+
+                // Kurangi stock jika barang yang dibeli finite
+                toko + (*inventory.getItem(slotS[i]));
+
                 // setGulden
                 setGulden(getGulden() + inventory.getItem(slotS[i])->getPrice());
 
@@ -309,10 +292,8 @@ void Walikota::cekJual(Shop &toko)
             while (!vectorTemp.empty())
             {
                 inventory.addItem(vectorTemp[vectorTemp.size() - 1].second, (vectorTemp[vectorTemp.size() - 1].first));
-                if (dynamic_cast<Plant *>(vectorTemp[vectorTemp.size() - 1].first) == NULL && dynamic_cast<Animal *>(vectorTemp[vectorTemp.size() - 1].first) == NULL)
-                {
-                    toko.setStock(vectorTemp[vectorTemp.size() - 1].first->getName(), toko.getStock(vectorTemp[vectorTemp.size() - 1].first->getName()) + 1);
-                }
+                toko - *vectorTemp[vectorTemp.size() - 1].first;
+
                 setGulden(getGulden() - vectorTemp[vectorTemp.size() - 1].first->getPrice());
                 vectorTemp.pop_back();
             }
@@ -367,6 +348,7 @@ void Walikota::tarikPajak(vector<Player *> &listOfPlayers)
             int pajak = player->getPajak();
             int currGulden = player->getGulden();
             int pajakActual;
+
             // Player dapat membayar full
             if (pajak < currGulden)
             {
@@ -378,6 +360,7 @@ void Walikota::tarikPajak(vector<Player *> &listOfPlayers)
             {
                 pajakActual = currGulden;
             }
+            sumPajak += pajakActual;
             player->setGulden(currGulden - pajakActual);
             wajibPajak.push_back(make_pair(pajakActual, make_pair(player->getUsername(), player->getType())));
         }

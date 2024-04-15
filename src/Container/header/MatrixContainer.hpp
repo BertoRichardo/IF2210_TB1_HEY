@@ -136,7 +136,8 @@ public:
         throw CustomException("Matrix sudah penuh");
     }
 
-    void operator+(const T &item){
+    void operator+(const T &item)
+    {
         addItem(item);
     }
 
@@ -241,6 +242,10 @@ public:
      */
     bool isCellEmpty(int r, int c) const
     {
+        if (r >= rowSize || c >= colSize || r < 0 || c < 0)
+        {
+            throw IndexInvalidException();
+        }
         return buffer[r][c] == NULL;
     }
 
@@ -488,7 +493,7 @@ public:
         {
             for (int j = 0; j < colSize; j++)
             {
-                if (!isCellEmpty(i, j) && dynamic_cast<T>(buffer[i][j]) != NULL)
+                if (!isCellEmpty(i, j) && dynamic_cast<U>(buffer[i][j]) != NULL)
                 {
                     return false;
                 }

@@ -197,11 +197,11 @@ void Player::cekBeli(Shop &toko)
                 cnt++;
             }
 
-            // // kurangi stock jika barang finite
-            // if (dynamic_cast<Plant *>(toko.getGameObject(masukan - 1)) == NULL && dynamic_cast<Animal *>(toko.getGameObject(masukan - 1)) == NULL)
-            // {
-            //     toko.setStock(toko.getGameObject(masukan - 1)->getName(), toko.getStock(masukan - 1) - quantity);
-            // }
+            // kurangi stock jika barang finite
+            if (dynamic_cast<Plant *>(toko.getGameObject(masukan - 1)) == NULL && dynamic_cast<Animal *>(toko.getGameObject(masukan - 1)) == NULL)
+            {
+                toko.setStock(toko.getGameObject(masukan - 1)->getName(), toko.getStock(masukan - 1) - quantity);
+            }
             isDone = true;
         }
         catch (const GameException &e)
@@ -252,7 +252,7 @@ void Player::cekJual(Shop &toko)
                 }
 
                 // tambah stock jika barang yang dibeli finite
-                toko+(*inventory.getItem(slotS[i]));
+                toko + (*inventory.getItem(slotS[i]));
                 // if (dynamic_cast<Plant *>(inventory.getItem(slotS[i])) == NULL && dynamic_cast<Animal *>(inventory.getItem(slotS[i])) == NULL)
                 // {
                 //     // toko.setStock(inventory.getItem(slotS[i])->getName(), toko.getStock(inventory.getItem(slotS[i])->getName()) + 1);
@@ -275,14 +275,12 @@ void Player::cekJual(Shop &toko)
         }
         catch (const GameException &e)
         {
-            // Pop vector (saat throw pertama kali ditemukan)
-
             // Masukkan kembali barang dan uangnya ke inventory
             // dan keluarkan dari vector temp serta shop
             while (!vectorTemp.empty())
             {
                 inventory.addItem(vectorTemp[vectorTemp.size() - 1].second, (vectorTemp[vectorTemp.size() - 1].first));
-                toko - *vectorTemp[vectorTemp.size() - 1].first; 
+                toko - *vectorTemp[vectorTemp.size() - 1].first;
 
                 // if (dynamic_cast<Plant *>(vectorTemp[vectorTemp.size() - 1].first) == NULL && dynamic_cast<Animal *>(vectorTemp[vectorTemp.size() - 1].first) == NULL)
                 // {
@@ -332,7 +330,7 @@ bool Player::isPlayerWin(int guldenToWin, int weigthToWin)
 
 vector<string> Player::getInventoryItem()
 {
-    vector <string> res;
+    vector<string> res;
     for (int i = 0; i < inventory.getRow(); i++)
     {
         for (int j = 0; j < inventory.getCol(); j++)

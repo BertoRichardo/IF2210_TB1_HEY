@@ -74,7 +74,6 @@ public:
 class ResourceInsufficientException : public GameException
 {
 private:
-    int insGulden;
     vector<pair<string, int>> insufficientMaterial;
 
 public:
@@ -83,8 +82,7 @@ public:
      * karena sumber daya tidak cukup
      * @param
      */
-    ResourceInsufficientException(int insGulden_,
-                                  const vector<pair<string, int>> &insufficientMaterial_);
+    ResourceInsufficientException(const vector<pair<string, int>> &insufficientMaterial_);
 
     void displayMessage() const;
 };
