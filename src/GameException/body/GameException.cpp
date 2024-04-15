@@ -72,6 +72,22 @@ void ResourceInsufficientException::displayMessage() const
     cerr << "!" << endl;
 }
 
+InputInvalidException::InputInvalidException(): GameException("Maaf, input Anda tidak valid T__T")
+{}
+
+void InputInvalidException::displayMessage() const
+{
+    cerr << message << endl;
+}
+
+CommandInvalidException::CommandInvalidException(): GameException("Maaf, command Anda tidak tersedia >//<")
+{}
+
+void CommandInvalidException::displayMessage() const 
+{
+    cerr << message << endl;
+}
+
 /**
  * Custom Exception
  */

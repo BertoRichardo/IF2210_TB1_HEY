@@ -45,7 +45,7 @@ int GameEngine::checkCommand(string input)
             return i;
         }
     }
-    throw IndexInvalidException();
+    throw CommandInvalidException();;
 }
 
 int GameEngine::readCommand()
@@ -53,6 +53,7 @@ int GameEngine::readCommand()
     cout << ">> ";
     string input;
     cin >> input;
+    cout << endl;
     return checkCommand(input);
 }
 
@@ -61,6 +62,8 @@ void GameEngine::setup()
     Util::displayStartingScreen();
 
     bool isValid = false;
+
+    cout << "Selamat datang di permainan Kelola Kerajaan" << "\n\n";
 
     while (!isValid)
     {
@@ -81,7 +84,7 @@ void GameEngine::setup()
             }
             else
             {
-                // TODO: throw invalidInput
+                throw InputInvalidException();
             }
 
             isValid = true;
@@ -90,7 +93,10 @@ void GameEngine::setup()
         {
             e.displayMessage();
         }
+
+        cout << "Giliran saat ini adalah pemain dengan username " << playerNames[currentTurn] << " dan role " << players[playerNames[currentTurn]]->getType() << "\n\n";
     }
+
 }
 
 void GameEngine::defaultSetup()
@@ -171,7 +177,6 @@ void GameEngine::run()
         try
         {
             int command = readCommand();
-            cout << endl;
 
             switch (command)
             {
@@ -246,18 +251,17 @@ string GameEngine::readUsername(vector<string> prev, string placeholder)
             cout << endl;
             if (input == "")
             {
-                // TODO: throw emptystring
+                throw InputInvalidException();
             }
             if (Util::containSpace(input))
             {
-                // TODO: throw containSpace
+                throw InputInvalidException();
             }
             for (auto username : prev)
             {
                 if (input == username)
                 {
-                    // TODO: throw usernameAlreadyExist
-                    throw IndexInvalidException();
+                    throw InputInvalidException();
                 }
             }
             isDone = true;
@@ -272,7 +276,6 @@ string GameEngine::readUsername(vector<string> prev, string placeholder)
 
 void GameEngine::next()
 {
-    currentTurn = (currentTurn + 1) % (int)playerNames.size();
     if (players[playerNames[currentTurn]]->getType() == "PETANI")
     {
         dynamic_cast<Petani *>(players[playerNames[currentTurn]])->tambahUmurTanaman();
@@ -280,6 +283,8 @@ void GameEngine::next()
     /**
      * @todo: handle if player win
      */
+    currentTurn = (currentTurn + 1) % (int)playerNames.size();
+    cout << "Giliran saat ini adalah pemain dengan username " << playerNames[currentTurn] << " dan role " << players[playerNames[currentTurn]]->getType() << "\n\n";
 }
 
 void GameEngine::cetak_penyimpanan()
@@ -294,6 +299,7 @@ void GameEngine::pungut_pajak()
         /**
          * @todo: throw inaccessible command
          */
+        throw CommandInvalidException();
     }
     vector<Player *> vecPlayer = getPlayerVector();
     dynamic_cast<Walikota *>(players[playerNames[currentTurn]])->tarikPajak(vecPlayer);
@@ -306,6 +312,7 @@ void GameEngine::cetak_ladang()
         /**
          * @todo: throw inaccessible command
          */
+        throw CommandInvalidException();
     }
     dynamic_cast<Petani *>(players[playerNames[currentTurn]])->printLahan();
 }
@@ -317,6 +324,7 @@ void GameEngine::cetak_peternakan()
         /**
          * @todo: throw inaccessible command
          */
+        throw CommandInvalidException();
     }
     dynamic_cast<Peternak *>(players[playerNames[currentTurn]])->printPeternakan();
 }
@@ -328,6 +336,7 @@ void GameEngine::tanam()
         /**
          * @todo: throw inaccessible command
          */
+        throw CommandInvalidException();
     }
     dynamic_cast<Petani *>(players[playerNames[currentTurn]])->tanam();
 }
@@ -339,20 +348,19 @@ void GameEngine::ternak()
         /**
          * @todo: throw inaccessible command
          */
+        throw CommandInvalidException();
     }
     dynamic_cast<Peternak *>(players[playerNames[currentTurn]])->letakTernak();
 }
 
 void GameEngine::bangun()
 {
-    /**
-     * @todo: kerjain bangun
-     */
     if (players[playerNames[currentTurn]]->getType() != "WALIKOTA")
     {
         /**
          * @todo: throw inaccessible command
          */
+        throw CommandInvalidException();
     }
     dynamic_cast<Walikota *>(players[playerNames[currentTurn]])->buatBangunan(gameConfig.getBuildings());
 }
@@ -369,6 +377,7 @@ void GameEngine::kasih_makan()
         /**
          * @todo: throw inaccessible command
          */
+        throw CommandInvalidException();
     }
     dynamic_cast<Peternak *>(players[playerNames[currentTurn]])->kasihMakan();
 }
@@ -398,6 +407,7 @@ void GameEngine::panen()
         /**
          * @todo: throw inaccessible command
          */
+        throw CommandInvalidException();
     }
 }
 
@@ -415,6 +425,7 @@ void GameEngine::tambah_pemain()
         /**
          * @todo: throw inaccessible command
          */
+        throw CommandInvalidException();
     }
     pair<string, string> res = dynamic_cast<Walikota *>(players[playerNames[currentTurn]])->tambahPemain(playerNames);
 

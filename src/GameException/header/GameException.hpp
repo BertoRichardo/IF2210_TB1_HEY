@@ -81,10 +81,34 @@ public:
     /**
      * Menciptakan Exception ketika walikota tidak bisa membangun bangunan
      * karena sumber daya tidak cukup
-     * @param 
+     * @param
      */
     ResourceInsufficientException(int insGulden_,
                                   const vector<pair<string, int>> &insufficientMaterial_);
+
+    void displayMessage() const;
+};
+
+class InputInvalidException : public GameException
+{
+public:
+    /**
+     * Exception saat input invalid
+     * @param
+     */
+    InputInvalidException();
+
+    void displayMessage() const;
+};
+
+class CommandInvalidException : public GameException
+{
+public:
+    /**
+     * Exception saat command invalid atau tidak tersedia
+     * @param
+     */
+    CommandInvalidException();
 
     void displayMessage() const;
 };
