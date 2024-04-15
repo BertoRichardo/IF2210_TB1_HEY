@@ -137,6 +137,7 @@ void GameContext::readConfig()
         temp_id = stoi(product_list.at(i).at(0));
         temp_kode_huruf = product_list.at(i).at(1);
         temp_nama = product_list.at(i).at(2);
+        temp_type = product_list.at(i).at(3);
         temp_origin = product_list.at(i).at(4);
         temp_added_weight = stoi(product_list.at(i).at(5));
         temp_price = stoi(product_list.at(i).at(6));
