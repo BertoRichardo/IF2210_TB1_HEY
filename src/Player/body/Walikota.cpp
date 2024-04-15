@@ -67,6 +67,7 @@ void Walikota::cekRecipe(const map<string, BuildingConfig> &buildings, map<strin
     cout << endl
          << "Bangunan yang ingin dibangun: ";
     cin >> input;
+    cin.ignore();
 
     if (buildings.find(input) == buildings.end())
     {
@@ -138,6 +139,7 @@ void Walikota::cekBeli(Shop &toko)
         cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard input
         cout << "Input invalid (bukan integer), mohon masukkan input kembali.\n";
     }
+    cin.ignore();
     cout << endl;
 
     // validasi masukan
@@ -159,6 +161,7 @@ void Walikota::cekBeli(Shop &toko)
         cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard input
         cout << "Input invalid (bukan integer), mohon masukkan input kembali.\n";
     }
+    cin.ignore();
     cout << endl;
 
     if (quantity == 0 || quantity > inventory.emptySpace())
@@ -188,7 +191,6 @@ void Walikota::cekBeli(Shop &toko)
     printInventory();
 
     // Pilih slot
-    cin.ignore(1000, '\n');
     bool isDone = false;
     while (!isDone)
     {
@@ -244,7 +246,6 @@ void Walikota::jual(Shop &toko)
 void Walikota::cekJual(Shop &toko)
 {
     bool isDone = false;
-    cin.ignore(1000, '\n');
     while (!isDone)
     {
         cout << "Silahkan pilih petak yang ingin Anda jual!" << endl;
@@ -314,6 +315,7 @@ pair<string, string> Walikota::tambahPemain(vector<string> &names)
     string name, jenis;
     cout << "Masukkan jenis pemain: ";
     cin >> jenis;
+    cin.ignore();
     if (jenis != "peternak" && jenis != "petani")
     {
         throw CustomException("Jenis player salah");
@@ -322,6 +324,7 @@ pair<string, string> Walikota::tambahPemain(vector<string> &names)
     // nama pemain
     cout << "Masukkan nama pemain: ";
     cin >> name;
+    cin.ignore();
     cout << endl;
     if (binary_search(names.begin(), names.end(), name))
     {

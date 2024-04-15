@@ -63,6 +63,7 @@ void Peternak::kasihMakan()
             cout << endl;
             cout << "Petak kandang: ";
             cin >> farmCoordinate;
+            cin.ignore();
             cout << '\n';
 
             animal = peternakan.getItem(farmCoordinate);
@@ -86,6 +87,7 @@ void Peternak::kasihMakan()
         {
             cout << "Slot: ";
             cin >> invCoordinate;
+            cin.ignore();
             cout << '\n';
 
             product = dynamic_cast<Product *>(inventory.getItem(invCoordinate));
@@ -173,6 +175,7 @@ void Peternak::panenTernak()
         cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard input
         cout << "Input invalid (bukan integer), mohon masukkan input kembali.\n";
     }
+    cin.ignore();
 
     if (in < 0 || in > (int)temp.size())
     {
@@ -195,6 +198,7 @@ void Peternak::panenTernak()
         cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard input
         cout << "Input invalid (bukan integer), mohon masukkan input kembali.\n";
     }
+    cin.ignore();
 
     cout << endl;
 
@@ -219,6 +223,7 @@ void Peternak::panenTernak()
             cout << "Petak ke-" << j << ": ";
             string cell;
             cin >> cell;
+            cin.ignore();
 
             // validasi cell masukan
             cekPanen(cell);
@@ -287,6 +292,7 @@ void Peternak::letakTernak()
         {
             cout << "Slot: ";
             cin >> inventoryKoor;
+            cin.ignore();
             cout << '\n';
             animal = dynamic_cast<Animal *>(inventory.getItem(inventoryKoor));
             if (animal == NULL)
@@ -316,6 +322,7 @@ void Peternak::letakTernak()
         {
             cout << "Petak tanah: ";
             cin >> peternakanKoor;
+            cin.ignore();
             cout << '\n';
 
             peternakan.addItem(peternakanKoor, animal);

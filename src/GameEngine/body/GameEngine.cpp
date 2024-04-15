@@ -97,15 +97,14 @@ int GameEngine::readCommand()
 {
     cout << ">> ";
     string input;
-    cin >> input;
+    getline(cin, input);
     cout << endl;
     return checkCommand(input);
 }
 
 void GameEngine::setup()
 {
-    // TODO: jangan lupa ganti
-    // Util::displayStartingScreen();
+    Util::displayStartingScreen();
 
     bool isValid = false;
 
@@ -118,7 +117,8 @@ void GameEngine::setup()
         {
             string input;
             cout << "Apakah Anda ingin memuat state? (y/n): ";
-            getline(cin, input);
+            cin >> input;
+            cin.ignore();
             cout << endl;
 
             if (input == "y" || input == "Y")
@@ -171,6 +171,7 @@ void GameEngine::stateSetup()
     string file;
     cout << "Masukkan lokasi berkas state : ";
     cin >> file;
+    cin.ignore();
 
     vector<vector<string>> data = FileController::readFile(file);
 
@@ -409,6 +410,7 @@ void GameEngine::save()
     string file;
     cout << "Masukkan lokasi berkas state : ";
     cin >> file;
+    cin.ignore();
 
     // simpan state saat ini
     vector<vector<string>> content;
@@ -538,9 +540,8 @@ void GameEngine::load(vector<vector<string>> data)
         {
             players[username] = new Walikota(username, weight, gameConfig.getInventoryRow(), gameConfig.getInventoryCol());
         }
-
+        
         players[username]->setGulden(gulden);
-
         // get inventory data
         int numOfInventoryItem = stoi(data.at(index).at(0));
         index++;
