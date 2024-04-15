@@ -27,11 +27,6 @@ public:
     string getType() const;
 
     /**
-     * Menarik pajak dari pemain
-     */
-    void tarikPajak(vector <Player *> &players);
-
-    /**
      * Membuat bangunan dan menunjukkan IO nya
      */
     void buatBangunan(const map<string, BuildingConfig> &);
@@ -94,7 +89,6 @@ public:
         map<string, int> &materials,
         const vector<pair<vector<pair<string, int>>, int>> &listOfRecipes);
 
-    pair<string, string> tambahPemain(vector<string> &setNama);
 };
 
 #endif

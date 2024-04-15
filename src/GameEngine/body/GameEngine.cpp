@@ -24,10 +24,6 @@ GameEngine::GameEngine() : gameConfig(), shop()
 
 GameEngine::~GameEngine()
 {
-    for (auto player : players)
-    {
-        delete player.second;
-    }
 }
 
 vector<Player *> GameEngine::getPlayerVector()
@@ -175,6 +171,7 @@ void GameEngine::run()
         try
         {
             int command = readCommand();
+            cout << endl;
 
             switch (command)
             {
@@ -292,9 +289,14 @@ void GameEngine::cetak_penyimpanan()
 
 void GameEngine::pungut_pajak()
 {
-    /**
-     * @todo: kerjain pajak
-     */
+    if (players[playerNames[currentTurn]]->getType() != "WALIKOTA")
+    {
+        /**
+         * @todo: throw inaccessible command
+         */
+    }
+    vector<Player *> vecPlayer = getPlayerVector();
+    dynamic_cast<Walikota *>(players[playerNames[currentTurn]])->tarikPajak(vecPlayer);
 }
 
 void GameEngine::cetak_ladang()
@@ -346,6 +348,13 @@ void GameEngine::bangun()
     /**
      * @todo: kerjain bangun
      */
+    if (players[playerNames[currentTurn]]->getType() != "WALIKOTA")
+    {
+        /**
+         * @todo: throw inaccessible command
+         */
+    }
+    dynamic_cast<Walikota *>(players[playerNames[currentTurn]])->buatBangunan(gameConfig.getBuildings());
 }
 
 void GameEngine::makan()
@@ -408,7 +417,7 @@ void GameEngine::tambah_pemain()
          */
     }
     pair<string, string> res = dynamic_cast<Walikota *>(players[playerNames[currentTurn]])->tambahPemain(playerNames);
-    
+
     // add new player
     playerNames.push_back(res.first);
     if (res.first < playerNames[currentTurn])
@@ -421,7 +430,7 @@ void GameEngine::tambah_pemain()
     {
         players[res.first] = new Petani(res.first, gameConfig.getInventoryRow(), gameConfig.getInventoryCol(), gameConfig.getLahanRow(), gameConfig.getLahanCol());
     }
-    else 
+    else
     {
         players[res.first] = new Peternak(res.first, gameConfig.getInventoryRow(), gameConfig.getInventoryCol(), gameConfig.getPeternakanRow(), gameConfig.getPeternakanCol());
     }

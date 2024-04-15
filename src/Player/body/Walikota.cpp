@@ -12,17 +12,6 @@ string Walikota::getType() const
     return "WALIKOTA";
 }
 
-void Walikota::tarikPajak(vector<Player *> &players)
-{
-    /**
-     * TODO: traverse through all the player -> at the game context vector
-     */
-    for (auto player: players)
-    {
-        cout << player->getGulden() << '\n';
-    }
-}
-
 void Walikota::buatBangunan(const map<string, BuildingConfig> &buildings)
 {
     map<string, int> groupedItem = inventory.getGroupedItem();
