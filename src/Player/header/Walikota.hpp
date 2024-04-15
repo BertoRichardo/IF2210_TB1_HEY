@@ -5,6 +5,7 @@
 #include "../../GameContext/header/BuildingConfig.hpp"
 #include "../../GameContext/header/Config.hpp"
 #include "../../GameObject/header/Building.hpp"
+#include <algorithm>
 #include <set>
 #include <algorithm>
 #include <queue>
@@ -24,6 +25,11 @@ public:
      * @return type : string
      */
     string getType() const;
+
+    /**
+     * Menarik pajak dari pemain
+     */
+    void tarikPajak(vector <Player *> &players);
 
     /**
      * Membuat bangunan dan menunjukkan IO nya
@@ -71,8 +77,8 @@ public:
      * tidak diimplementasikan untuk walikota
      */
     int getPajak() const;
-
-    /**
+    
+     /**
      * @param material:
      * @param recipe :
      * @return InsufficientMaterial
@@ -87,6 +93,8 @@ public:
     bool isBuildAvailable(
         map<string, int> &materials,
         const vector<pair<vector<pair<string, int>>, int>> &listOfRecipes);
+
+    pair<string, string> tambahPemain(vector<string> &setNama);
 };
 
 #endif

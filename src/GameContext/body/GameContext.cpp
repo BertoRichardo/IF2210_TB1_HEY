@@ -62,11 +62,13 @@ void GameContext::readConfig()
     vector<vector<string>> plant_list;
     vector<vector<string>> building_list;
     vector<vector<string>> product_list;
+    vector<vector<string>> misc;
 
-    animal_list = FileController::readFile("../../../config/animal.txt");
-    plant_list = FileController::readFile("../../../config/plant.txt");
-    building_list = FileController::readFile("../../../config/recipe.txt");
-    product_list = FileController::readFile("../../../product.txt");
+    animal_list = FileController::readFile("config/animal.txt");
+    plant_list = FileController::readFile("config/plant.txt");
+    building_list = FileController::readFile("config/recipe.txt");
+    product_list = FileController::readFile("config/product.txt");
+    misc = FileController::readFile("config/misc.txt");
 
     int temp_id;
     string temp_kode_huruf;
@@ -135,11 +137,60 @@ void GameContext::readConfig()
         temp_id = stoi(product_list.at(i).at(0));
         temp_kode_huruf = product_list.at(i).at(1);
         temp_nama = product_list.at(i).at(2);
-        temp_type = product_list.at(i).at(3);
         temp_origin = product_list.at(i).at(4);
         temp_added_weight = stoi(product_list.at(i).at(5));
         temp_price = stoi(product_list.at(i).at(6));
         temp_product.setAll(temp_id, temp_kode_huruf, temp_nama, temp_price, temp_type, temp_origin, temp_added_weight);
         this->products.insert({temp_nama, temp_product});
     }
+
+    // Assign misc to the corresponding variables
+    guldenWin = stoi(misc[0][0]);
+    weightWin = stoi(misc[1][0]);
+    inventoryRow = stoi(misc[2][0]);
+    inventoryCol = stoi(misc[2][1]);
+    lahanRow = stoi(misc[3][0]);
+    lahanCol = stoi(misc[3][1]);
+    peternakanRow = stoi(misc[4][0]);
+    peternakanCol = stoi(misc[4][1]);
+}
+
+int GameContext::getGuldenWin() const
+{
+    return guldenWin;
+}
+
+int GameContext::getWeightWin() const
+{
+    return weightWin;
+}
+
+int GameContext::getInventoryRow() const
+{
+    return inventoryRow;
+}
+
+int GameContext::getInventoryCol() const
+{
+    return inventoryCol;
+}
+
+int GameContext::getLahanRow() const
+{
+    return lahanRow;
+}
+
+int GameContext::getLahanCol() const
+{
+    return lahanCol;
+}
+
+int GameContext::getPeternakanRow() const
+{
+    return peternakanRow;
+}
+
+int GameContext::getPeternakanCol() const
+{
+    return peternakanCol;
 }
