@@ -141,8 +141,8 @@ void Player::cekBeli(Shop &toko)
         cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard input
         cout << "Input invalid (bukan integer), mohon masukkan input kembali.\n";
     }
-
     cout << endl;
+
     if (quantity <= 0 || quantity > inventory.emptySpace())
     {
         throw CustomException("Kuantitas tidak valid atau melebihi kapasitas.");
@@ -239,9 +239,9 @@ void Player::cekJual(Shop &toko)
         getline(cin, inSlot);
         vector<string> slotS = Util::parserSlots(inSlot);
         vector<pair<GameObject *, string>> vectorTemp;
-
         try
         {
+            int uangTambah = 0;
             for (int i = 0; i < (int)slotS.size(); i++)
             {
                 // cek bangunan
@@ -252,12 +252,9 @@ void Player::cekJual(Shop &toko)
 
                 // tambah stock jika barang yang dibeli finite
                 toko + (*inventory.getItem(slotS[i]));
-                // if (dynamic_cast<Plant *>(inventory.getItem(slotS[i])) == NULL && dynamic_cast<Animal *>(inventory.getItem(slotS[i])) == NULL)
-                // {
-                //     // toko.setStock(inventory.getItem(slotS[i])->getName(), toko.getStock(inventory.getItem(slotS[i])->getName()) + 1);
-                // }
 
                 // setGulden
+                uangTambah += inventory.getItem(slotS[i])->getPrice();
                 setGulden(getGulden() + inventory.getItem(slotS[i])->getPrice());
 
                 vectorTemp.push_back({inventory.getItem(slotS[i]), slotS[i]});
@@ -271,6 +268,7 @@ void Player::cekJual(Shop &toko)
                 delete obj.first;
             }
             isDone = true;
+            cout << "Barang Anda berhasil dijual! Uang Anda bertambah " << uangTambah << " gulden!" << endl;
         }
         catch (const GameException &e)
         {
@@ -281,10 +279,6 @@ void Player::cekJual(Shop &toko)
                 inventory.addItem(vectorTemp[vectorTemp.size() - 1].second, (vectorTemp[vectorTemp.size() - 1].first));
                 toko - *vectorTemp[vectorTemp.size() - 1].first;
 
-                // if (dynamic_cast<Plant *>(vectorTemp[vectorTemp.size() - 1].first) == NULL && dynamic_cast<Animal *>(vectorTemp[vectorTemp.size() - 1].first) == NULL)
-                // {
-                //     // toko.setStock(vectorTemp[vectorTemp.size() - 1].first->getName(), toko.getStock(vectorTemp[vectorTemp.size() - 1].first->getName()) - 1);
-                // }
                 setGulden(getGulden() - vectorTemp[vectorTemp.size() - 1].first->getPrice());
                 vectorTemp.pop_back();
             }

@@ -152,9 +152,7 @@ void Petani::panenTanaman()
             cin >> cell;
 
             // validasi cell masukanl
-            cout << "masuk cek panen" << endl;
             cekPanen(cell);
-            cout << "keluar cek panen" << endl;
 
             Plant *plant = lahan.getItem(cell);
             inventory + (new Product(plant->harvest()));

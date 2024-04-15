@@ -99,7 +99,7 @@ void Peternak::kasihMakan()
     (*animal) += (*product);
     inventory.removeItem(invCoordinate);
     product->~Product();
-    cout << animal->getName() << " sudah diberi makan dan beratnya menjadi" << animal->getWeight() << endl;
+    cout << animal->getName() << " sudah diberi makan dan beratnya menjadi " << animal->getWeight() << endl;
 }
 
 bool Peternak::isPanenableMatrix()
@@ -187,7 +187,6 @@ void Peternak::panenTernak()
     int jumlahProduct = item->first.second;
 
     // mengambil jumlah panen
-    cout << "Berapa petak yang ingin dipanen: ";
     int quantity;
 
     while (cout << "Berapa petak yang ingin dipanen: " && !(cin >> quantity))
@@ -237,13 +236,6 @@ void Peternak::panenTernak()
             {
                 inventory + (new Product(product));
                 cout << product.getKodeHuruf() << endl;
-                cout << endl;
-                cout << endl;
-                cout << endl;
-                printInventory();
-                cout << endl;
-                cout << endl;
-                cout << endl;
             }
 
             delete animal;

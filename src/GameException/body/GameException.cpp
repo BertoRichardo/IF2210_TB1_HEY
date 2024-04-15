@@ -44,46 +44,44 @@ void IndexInvalidException::displayMessage() const
 
 /*ResourceInsufficientException*/
 ResourceInsufficientException::ResourceInsufficientException(
-    int insGulden_,
     const vector<pair<string, int>> &insufficientMaterial_)
     : GameException("Kamu tidak punya sumber daya yang cukup! Masih memerlukan ")
 {
-    insGulden = insGulden_;
     insufficientMaterial = insufficientMaterial_;
 }
 
 void ResourceInsufficientException::displayMessage() const
 {
     cerr << message;
-    if (insGulden > 0)
-    {
-        cerr << insGulden << "gulden" << endl;
-    }
 
     int i = 0;
     for (auto material : insufficientMaterial)
     {
-        if (i != 0)
+        cerr << material.second << " " << material.first;
+        if (i != (int)insufficientMaterial.size() - 1)
         {
             cerr << ", ";
         }
-        cerr << material.second << " " << material.first;
+        i++;
     }
-    cerr << "!" << "\n\n";
+    cerr << "!"
+         << "\n";
 }
 
-InputInvalidException::InputInvalidException(): GameException("Maaf, input Anda tidak valid T__T")
-{}
+InputInvalidException::InputInvalidException() : GameException("Maaf, input Anda tidak valid T__T")
+{
+}
 
 void InputInvalidException::displayMessage() const
 {
     cerr << message << "\n\n";
 }
 
-CommandInvalidException::CommandInvalidException(): GameException("Maaf, command Anda tidak tersedia >//<")
-{}
+CommandInvalidException::CommandInvalidException() : GameException("Maaf, command Anda tidak tersedia >//<")
+{
+}
 
-void CommandInvalidException::displayMessage() const 
+void CommandInvalidException::displayMessage() const
 {
     cerr << message << "\n\n";
 }

@@ -15,18 +15,18 @@ string Walikota::getType() const
 void Walikota::buatBangunan(const map<string, BuildingConfig> &buildings)
 {
     map<string, int> groupedItem = inventory.getGroupedItem();
-    vector<pair<vector<pair<string, int>>, int>> listOfRecipes;
+    vector<vector<pair<string, int>>> listOfRecipes;
 
     for (auto building : buildings)
     {
-        listOfRecipes.push_back(make_pair(building.second.getRecipe(), building.second.getPrice()));
+        listOfRecipes.push_back(building.second.getRecipe());
     }
 
     int num = 1;
     cout << "Resep bangunan yang ada adalah sebagai berikut: " << endl;
     for (auto building : buildings)
     {
-        cout << "   " << num++ << ". " << building.first << " (" << building.second.getPrice() << " gulden, ";
+        cout << "   " << num++ << ". " << building.first << " ";
 
         // print recipe
         for (int i = 0; i < (int)building.second.getRecipe().size(); i++)
@@ -75,7 +75,7 @@ void Walikota::cekRecipe(const map<string, BuildingConfig> &buildings, map<strin
 
     vector<pair<string, int>> recipe = buildings.at(input).getRecipe();
 
-    vector<pair<string, int>> insufficientMaterial = getInsufficientMaterial(materials, make_pair(recipe, buildings.at(input).getPrice()));
+    vector<pair<string, int>> insufficientMaterial = getInsufficientMaterial(materials, recipe);
 
     // cek material
     if (insufficientMaterial.size() != 0)
@@ -188,8 +188,8 @@ void Walikota::cekBeli(Shop &toko)
     printInventory();
 
     // Pilih slot
-    bool isDone = false;
     cin.ignore(1000, '\n');
+    bool isDone = false;
     while (!isDone)
     {
         string inSlot;
@@ -256,6 +256,7 @@ void Walikota::cekJual(Shop &toko)
 
         try
         {
+            int uangTambah = 0;
             for (int i = 0; i < (int)slotS.size(); i++)
             {
                 // cek bangunan
@@ -268,6 +269,7 @@ void Walikota::cekJual(Shop &toko)
                 toko + (*inventory.getItem(slotS[i]));
 
                 // setGulden
+                uangTambah += inventory.getItem(slotS[i])->getPrice();
                 setGulden(getGulden() + inventory.getItem(slotS[i])->getPrice());
 
                 vectorTemp.push_back(make_pair(inventory.getItem(slotS[i]), slotS[i]));
@@ -281,6 +283,7 @@ void Walikota::cekJual(Shop &toko)
                 delete obj.first;
             }
             isDone = true;
+            cout << "Barang Anda berhasil dijual! Uang Anda bertambah " << uangTambah << " gulden!" << endl;
         }
         catch (const GameException &e)
         {
@@ -309,7 +312,7 @@ pair<string, string> Walikota::tambahPemain(vector<string> &names)
 
     // Input Jenis pemain
     string name, jenis;
-    cout << "Masukkan jenis pemain:";
+    cout << "Masukkan jenis pemain: ";
     cin >> jenis;
     if (jenis != "peternak" && jenis != "petani")
     {
@@ -317,7 +320,7 @@ pair<string, string> Walikota::tambahPemain(vector<string> &names)
     }
 
     // nama pemain
-    cout << "Masukkan nama pemain:";
+    cout << "Masukkan nama pemain: ";
     cin >> name;
     cout << endl;
     if (binary_search(names.begin(), names.end(), name))
@@ -389,14 +392,14 @@ int Walikota::getPajak() const
 
 vector<pair<string, int>> Walikota::getInsufficientMaterial(
     map<string, int> &materials,
-    const pair<vector<pair<string, int>>, int> &recipe)
+    const vector<pair<string, int>> &recipe)
 {
     vector<pair<string, int>> insufficentMaterial;
-    for (auto const &i : recipe.first)
+    for (auto const &i : recipe)
     {
         if (i.second > materials[i.first])
         {
-            insufficentMaterial.push_back(make_pair(i.first, i.second - materials[i.first]));
+            insufficentMaterial.push_back({i.first, i.second - materials[i.first]});
         }
     }
 
@@ -405,13 +408,13 @@ vector<pair<string, int>> Walikota::getInsufficientMaterial(
 
 bool Walikota::isBuildAvailable(
     map<string, int> &materials,
-    const vector<pair<vector<pair<string, int>>, int>> &listOfRecipes)
+    const vector<vector<pair<string, int>>> &listOfRecipes)
 {
     for (auto const &recipe : listOfRecipes)
     {
-        if ((int)getInsufficientMaterial(materials, recipe).size() == 0 &&
-            gulden >= recipe.second)
+        if ((int)getInsufficientMaterial(materials, recipe).size() == 0)
         {
+
             return true;
         }
     }

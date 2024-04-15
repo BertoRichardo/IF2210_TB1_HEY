@@ -472,7 +472,7 @@ void GameEngine::save()
 
     // simpan state toko
     vector<pair<string, string>> toko = shop.getGoodsItem();
-    content.push_back(vector<string>{toko.size()});
+    content.push_back(vector<string>{to_string(toko.size())});
     for (auto barang : toko)
     {
         content.push_back(vector<string>{barang.first, barang.second});
@@ -538,6 +538,8 @@ void GameEngine::load(vector<vector<string>> data)
         {
             players[username] = new Walikota(username, weight, gameConfig.getInventoryRow(), gameConfig.getInventoryCol());
         }
+
+        players[username]->setGulden(gulden);
 
         // get inventory data
         int numOfInventoryItem = stoi(data.at(index).at(0));
