@@ -51,6 +51,7 @@ bool Petani::isPanenableMatrix()
 
 void Petani::cekPanen(string cell)
 {
+
     if (lahan.isCellEmpty(cell))
     {
         throw CustomException("Cell/petak kosong");
@@ -150,11 +151,13 @@ void Petani::panenTanaman()
             string cell;
             cin >> cell;
 
-            // validasi cell masukanl;
+            // validasi cell masukanl
+            cout << "masuk cek panen" << endl;
             cekPanen(cell);
+            cout << "keluar cek panen" << endl;
 
             Plant *plant = lahan.getItem(cell);
-            inventory+(new Product(plant->harvest()));
+            inventory + (new Product(plant->harvest()));
             lahan.removeItem(cell);
             delete plant;
 
@@ -254,7 +257,7 @@ void Petani::tambahUmurTanaman()
 {
     for (int i = 0; i < lahan.getRow(); i++)
     {
-        for (int j = 0; j < lahan.getRow(); j++)
+        for (int j = 0; j < lahan.getCol(); j++)
         {
             if (!lahan.isCellEmpty(i, j))
             {
