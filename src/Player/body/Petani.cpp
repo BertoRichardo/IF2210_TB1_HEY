@@ -1,9 +1,9 @@
 #include "../header/Petani.hpp"
 
-Petani::Petani(string username_,
+Petani::Petani(string username_, int weight_,
                int invRow, int invCol,
                int lahanRow, int lahanCol)
-    : Player::Player(username_, invRow, invCol), lahan(lahanRow, lahanCol)
+    : Player::Player(username_, weight_, invRow, invCol), lahan(lahanRow, lahanCol)
 {
 }
 
@@ -40,7 +40,7 @@ bool Petani::isPanenableMatrix()
     {
         for (int j = 0; j < lahan.getCol(); j++)
         {
-            if (lahan.getItem(i, j)->isReadyToHarvest())
+            if (!lahan.isCellEmpty(i, j) && lahan.getItem(i, j)->isReadyToHarvest())
             {
                 return true;
             }
@@ -53,25 +53,19 @@ void Petani::cekPanen(string cell)
 {
     if (lahan.isCellEmpty(cell))
     {
-        /**
-         * @TODO: throw EmptyCell
-         */
+        throw CustomException("Cell/petak kosong");
     }
     if (!lahan.getItem(cell)->isReadyToHarvest())
     {
-        /**
-         * @TODO: throw NotReadyToHarvest
-         */
+        throw CustomException("Belum siap dipanen");
     }
 }
 
 void Petani::panenTanaman()
 {
-    if (isPanenableMatrix())
+    if (!isPanenableMatrix())
     {
-        /**
-         * @TODO: throw NotPanenable
-         */
+        throw CustomException("Belum ada tanaman siap dipanen");
     }
 
     // Cetak matrix
@@ -106,9 +100,15 @@ void Petani::panenTanaman()
     cout << endl;
 
     // Memilih tanaman dari map yang sudah dibuat
-    cout << "Nomor tanaman yang ingin dipanen: ";
     int in;
-    cin >> in;
+
+    while (cout << "Nomor tanaman yang ingin dipanen: " && !(cin >> in))
+    {
+        cin.clear();                                         // clear bad input flag
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard input
+        cout << "Input invalid (bukan integer), mohon masukkan input kembali.\n";
+    }
+
     if (in < 0 || in > (int)temp.size())
     {
         throw InputInvalidException();
@@ -119,22 +119,24 @@ void Petani::panenTanaman()
     advance(item, in - 1);
 
     // mengambil jumlah panen
-    cout << "Berapa petak yang ingin dipanen: ";
     int quantity;
-    cin >> quantity;
+
+    while (cout << "Berapa petak yang ingin dipanen: " && !(cin >> quantity))
+    {
+        cin.clear();                                         // clear bad input flag
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard input
+        cout << "Input invalid (bukan integer), mohon masukkan input kembali.\n";
+    }
+
     cout << endl;
     // cek error
     if (quantity > item->second)
     {
-        /**
-         * @TODO: throw NotEnoughPetakPanen
-         */
+        throw CustomException("Jumlah petak yang ingin dipanen kebanyakan");
     }
     if (quantity > inventory.emptySpace())
     {
-        /**
-         * @TODO: throw NotEnoughSpace
-         */
+        throw CustomException("Penyimpanan tidak cukup untuk menyimpan hasil panen");
     }
 
     // Mengambil tanaman dari lahan
@@ -152,7 +154,7 @@ void Petani::panenTanaman()
             cekPanen(cell);
 
             Plant *plant = lahan.getItem(cell);
-            inventory.addItem(new Product(plant->harvest()));
+            inventory+(new Product(plant->harvest()));
             lahan.removeItem(cell);
             delete plant;
 
@@ -166,7 +168,7 @@ void Petani::panenTanaman()
     }
 
     // Beri pesan
-    cout << validCell.size() << " petak tanaman " << item->first << " pada petak";
+    cout << validCell.size() << " petak tanaman " << item->first << " pada petak ";
     for (int k = 0; k < (int)validCell.size(); k++)
     {
         cout << validCell[k];
@@ -182,18 +184,12 @@ void Petani::tanam()
 {
     if (lahan.isMatrixFull())
     {
-        /**
-         * TODO: Throw MatrixFullException
-         */
-        return;
+        throw CustomException("Ladang sudah penuh");
     }
 
     if (inventory.isObjectEmpty<Plant *>())
     {
-        /**
-         * TODO: Throw MatrixEmptyException
-         */
-        return;
+        throw CustomException("Tidak ada tanaman di penyimpanan");
     }
 
     // pilih dari inventory
@@ -201,7 +197,8 @@ void Petani::tanam()
     string inventoryKoor;
 
     // print inventory
-    cout << "Pilih tanaman dari penyimpanan" << endl;
+    cout << "Pilih tanaman dari penyimpanan" << endl
+         << endl;
     printInventory();
 
     while (plant == NULL)
@@ -214,9 +211,7 @@ void Petani::tanam()
             plant = dynamic_cast<Plant *>(inventory.getItem(inventoryKoor));
             if (plant == NULL)
             {
-                /**
-                 * TODO: NotplantException
-                 */
+                throw CustomException("Itu bukan tanaman");
             }
             cout << "Kamu memilih: " << plant->getName() << ".\n\n";
             inventory.removeItem(inventoryKoor);
@@ -246,8 +241,7 @@ void Petani::tanam()
 
             cout << "Cangkul, cangkul, cangkul yang dalam~!" << endl
                  << endl;
-            cout << plant->getName() << " berhasil ditanam!" << endl
-                 << endl;
+            cout << plant->getName() << " berhasil ditanam!" << endl;
         }
         catch (const GameException &e)
         {
@@ -264,7 +258,7 @@ void Petani::tambahUmurTanaman()
         {
             if (!lahan.isCellEmpty(i, j))
             {
-                lahan.getItem(i, j)->setDuration(lahan.getItem(i, j)->getDuration() + 1);
+                (*lahan.getItem(i, j))++;
             }
         }
     }
@@ -309,4 +303,21 @@ int Petani::getWealthFromLahan() const
         }
     }
     return wealth;
+}
+
+vector<pair<string, pair<string, string>>> Petani::getLahanPlant()
+{
+    vector<pair<string, pair<string, string>>> res;
+    for (int i = 0; i < lahan.getRow(); i++)
+    {
+        for (int j = 0; j < lahan.getCol(); j++)
+        {
+            if (!lahan.isCellEmpty(i, j))
+            {
+                Plant *plant = lahan.getItem(i, j);
+                res.push_back({Util::rowColToStr(i, j), {plant->getName(), to_string(plant->getDuration())}});
+            }
+        }
+    }
+    return res;
 }

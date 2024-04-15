@@ -1,9 +1,9 @@
 #include "../header/Peternak.hpp"
 
-Peternak::Peternak(string username_,
+Peternak::Peternak(string username_, int weight_,
                    int invRow, int invCol,
                    int peternakanRow, int peternakanCol)
-    : Player::Player(username_, invRow, invCol), peternakan(peternakanRow, peternakanCol)
+    : Player::Player(username_, weight_, invRow, invCol), peternakan(peternakanRow, peternakanCol)
 {
 }
 
@@ -38,9 +38,7 @@ void Peternak::kasihMakan()
     // cek jika peternakan kosong
     if (peternakan.isMatrixEmpty())
     {
-        /**
-         * @todo: throw peternakanEmpty
-         */
+        throw CustomException("Peternakan kosong");
     }
 
     // cukup beri pesan
@@ -76,19 +74,6 @@ void Peternak::kasihMakan()
         }
     }
 
-    // //Cek makanan
-    // if (animal->getType() == "OMNIVORE")
-    // {
-
-    // }
-    // else if (animal->getType() == "CARNIVORE")
-    // {
-    // }
-    // else // animal->getType() == "HERBIVORE"
-    // {
-
-    // }
-
     cout << "Pilih pangan yang akan diberikan:\n\n";
     printInventory();
     cout << '\n';
@@ -111,7 +96,7 @@ void Peternak::kasihMakan()
         }
     }
 
-    animal->feed(*(product));
+    (*animal) += (*product);
     inventory.removeItem(invCoordinate);
     product->~Product();
     cout << animal->getName() << " sudah diberi makan dan beratnya menjadi" << animal->getWeight() << endl;
@@ -123,7 +108,7 @@ bool Peternak::isPanenableMatrix()
     {
         for (int j = 0; j < peternakan.getCol(); j++)
         {
-            if (peternakan.getItem(i, j)->isReadyToHarvest())
+            if (!peternakan.isCellEmpty(i, j) && peternakan.getItem(i, j)->isReadyToHarvest())
             {
                 return true;
             }
@@ -136,25 +121,19 @@ void Peternak::cekPanen(string cell)
 {
     if (peternakan.isCellEmpty(cell))
     {
-        /**
-         * @TODO: throw EmptyCell
-         */
+        throw CustomException("Peternakan kosong");
     }
     if (!peternakan.getItem(cell)->isReadyToHarvest())
     {
-        /**
-         * @TODO: throw NotReadyToHarvest
-         */
+        throw CustomException("Hewan belum siap dipanen");
     }
 }
 
 void Peternak::panenTernak()
 {
-    if (isPanenableMatrix())
+    if (!isPanenableMatrix())
     {
-        /**
-         * @TODO: throw NotPanenable
-         */
+        throw CustomException("Belum ada hewan yang siap dipanen");
     }
 
     // Cetak matrix
@@ -187,9 +166,14 @@ void Peternak::panenTernak()
     }
 
     // Memilih hewan dari map yang sudah dibuat
-    cout << "Nomor hewan yang ingin dipanen: ";
     int in;
-    cin >> in;
+    while (cout << "Nomor hewan yang ingin dipanen: " && !(cin >> in))
+    {
+        cin.clear();                                         // clear bad input flag
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard input
+        cout << "Input invalid (bukan integer), mohon masukkan input kembali.\n";
+    }
+
     if (in < 0 || in > (int)temp.size())
     {
         throw InputInvalidException();
@@ -205,22 +189,25 @@ void Peternak::panenTernak()
     // mengambil jumlah panen
     cout << "Berapa petak yang ingin dipanen: ";
     int quantity;
-    cin >> quantity;
+
+    while (cout << "Berapa petak yang ingin dipanen: " && !(cin >> quantity))
+    {
+        cin.clear();                                         // clear bad input flag
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard input
+        cout << "Input invalid (bukan integer), mohon masukkan input kembali.\n";
+    }
+
     cout << endl;
 
     // proses dan cek error
     if (quantity > item->second)
     {
-        /**
-         * @TODO: throw NotEnoughPetakPanen
-         */
+        throw CustomException("Jumlah petak yang ingin dipanen kebanyakan");
     }
 
     if (quantity * jumlahProduct > inventory.emptySpace())
     {
-        /**
-         * @TODO: throw NotEnoughSpace
-         */
+        throw CustomException("Penyimpanan tidak cukup untuk menyimpan hasil panen");
     }
 
     // meminta masukan petak dan proses sesuai masukan
@@ -248,7 +235,7 @@ void Peternak::panenTernak()
             vector<Product> products = animal->harvest();
             for (auto product : products)
             {
-                inventory.addItem(new Product(product));
+                inventory+(new Product(product));
                 cout << product.getKodeHuruf() << endl;
                 cout << endl;
                 cout << endl;
@@ -286,16 +273,12 @@ void Peternak::letakTernak()
 {
     if (peternakan.isMatrixFull())
     {
-        /**
-         * TODO: Throw MatrixFullException
-         */
+        throw CustomException("Peternakan penuh");
     }
 
     if (inventory.isObjectEmpty<Animal *>())
     {
-        /**
-         * TODO: Throw MatrixEmptyException
-         */
+        throw CustomException("Tidak ada hewan di penyimpanan");
     }
 
     // print inventory
@@ -316,9 +299,7 @@ void Peternak::letakTernak()
             animal = dynamic_cast<Animal *>(inventory.getItem(inventoryKoor));
             if (animal == NULL)
             {
-                /**
-                 * TODO: NotAnimalException
-                 */
+                throw CustomException("Itu bukan hewan");
             }
             cout << "Kamu memilih: " << animal->getName() << ".\n\n";
             inventory.removeItem(inventoryKoor);

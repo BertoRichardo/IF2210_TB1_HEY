@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include "../../GameException/header/GameException.hpp"
 using namespace std;
 
 class FileController

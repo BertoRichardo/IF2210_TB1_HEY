@@ -7,12 +7,18 @@
 class Petani : public Player
 {
 private:
-public:
     MatrixContainer<Plant *> lahan;
+
+public:
     /**
      * User Defined Constructor
      */
-    Petani(string username_, int invRow, int invCol, int lahanRow, int lahanCol);
+    Petani(string username_,
+           int weight_,
+           int invRow,
+           int invCol,
+           int lahanRow,
+           int lahanCol);
 
     /**
      * Destructor
@@ -29,7 +35,12 @@ public:
     /**
      * @return pajak : int
      */
-    int getPajak() const;
+    int getPajak() const override;
+
+    /**
+     * @return plants in lahan : vector<pair<string, pair<string, string>>>
+     */
+    vector<pair<string, pair<string, string>>> getLahanPlant();
 
     /**
      * @return true jika ada kotak lahan yang siap dipanen
@@ -58,7 +69,7 @@ public:
 
     /**
      * @return kekayaan dari lahan : int
-    */
+     */
     int getWealthFromLahan() const;
 
     /**

@@ -1,11 +1,11 @@
 #include "../header/Player.hpp"
 
-Player::Player(string username_, int invRow, int invCol)
+Player::Player(string username_, int weight_, int invRow, int invCol)
     : inventory(invRow, invCol)
 {
     username = username_;
     gulden = 50;
-    weigth = 40;
+    weigth = weight_;
 }
 
 Player::~Player() {}
@@ -37,11 +37,6 @@ int Player::getWealthFromInv() const
         }
     }
     return wealth;
-}
-
-string Player::getType() const
-{
-    return "PLAYER";
 }
 
 int Player::getWeight() const
@@ -113,25 +108,22 @@ void Player::beli(Shop &toko)
     cout << endl
          << "Uang Anda : " << gulden << endl
          << "Slot penyimpanan tersedia : " << inventory.emptySpace() << endl;
-
-    cout << "Barang yang ingin dibeli: ";
-
-    try
-    {
-        cekBeli(toko);
-    }
-    catch (const GameException &e)
-    {
-        e.displayMessage();
-    }
+    cekBeli(toko);
 }
 
 void Player::cekBeli(Shop &toko)
 {
     // Minta masukan dari user
+
     int masukan;
-    cout << "Barang yang ingin dibeli :";
-    cin >> masukan;
+
+    while (cout << "Barang yang ingin dibeli : " && !(cin >> masukan))
+    {
+        cin.clear();                                         // clear bad input flag
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard input
+        cout << "Input invalid (bukan integer), mohon masukkan input kembali.\n";
+    }
+
     cout << endl;
 
     // validasi masukan
@@ -142,18 +134,18 @@ void Player::cekBeli(Shop &toko)
 
     // validasi penyimpanan
     int quantity;
-    cout << "Kuantitas: ";
-    cin >> quantity;
+
+    while (cout << "Kuantitas : " && !(cin >> quantity))
+    {
+        cin.clear();                                         // clear bad input flag
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard input
+        cout << "Input invalid (bukan integer), mohon masukkan input kembali.\n";
+    }
+
     cout << endl;
     if (quantity <= 0 || quantity > inventory.emptySpace())
     {
         throw CustomException("Kuantitas tidak valid atau melebihi kapasitas.");
-    }
-
-    // validasi gulden
-    if (quantity * toko.getGameObject(masukan - 1)->getPrice() > getGulden())
-    {
-        throw CustomException("Gulden Anda tidak cukup.");
     }
 
     // validasi stock di toko
@@ -162,39 +154,53 @@ void Player::cekBeli(Shop &toko)
         throw CustomException("Stok barang yang Anda pilih tidak cukup.");
     }
 
+    // validasi gulden
+    if (quantity * toko.getGameObject(masukan - 1)->getPrice() > getGulden())
+    {
+        throw CustomException("Gulden Anda tidak cukup.");
+    }
+
     // Berikan IO dan kurangi uang
     setGulden(getGulden() - quantity * toko.getGameObject(masukan - 1)->getPrice());
-    cout << "Selamat Anda berhasil membeli " << quantity << " " << toko.getGameObject(masukan)->getName() << ".";
-    cout << "Uang Anda tersisa " << getGulden();
+    cout << "Selamat Anda berhasil membeli " << quantity << " " << toko.getGameObject(masukan - 1)->getName() << ".\n";
+    cout << "Uang Anda tersisa " << getGulden() << endl;
 
     // IO pemilihan slot
     cout << "Pilih slot untuk menyimpan barang yang Anda beli!" << endl;
-    cout << "[Penyimpanan]:" << endl;
-    inventory.printMatrix();
+    printInventory();
 
+    cin.ignore(1000, '\n');
     // Pilih slot
     bool isDone = false;
     while (!isDone)
     {
         string inSlot;
         cout << "Petak slot: ";
-        cin >> inSlot;
+        getline(cin, inSlot);
         vector<string> slotS = Util::parserSlots(inSlot);
         int cnt = 0;
         try
         {
+            // validasi jumlah slot
+            if ((int)slotS.size() != quantity)
+            {
+                throw CustomException("Jumlah Slot tidak valid");
+            }
+
             // eksekusi
             for (int i = 0; i < (int)slotS.size(); i++)
             {
                 GameObject *item = Util::callCCtor(toko.getGameObject(masukan - 1));
                 inventory.addItem(slotS[i], item);
+                cnt++;
             }
 
+            // // kurangi stock jika barang finite
+            // if (dynamic_cast<Plant *>(toko.getGameObject(masukan - 1)) == NULL && dynamic_cast<Animal *>(toko.getGameObject(masukan - 1)) == NULL)
+            // {
+            //     toko.setStock(toko.getGameObject(masukan - 1)->getName(), toko.getStock(masukan - 1) - quantity);
+            // }
             isDone = true;
-            if (dynamic_cast<Plant *>(toko.getGameObject(masukan - 1)) == NULL && dynamic_cast<Animal *>(toko.getGameObject(masukan - 1)) == NULL)
-            {
-                toko.setStock(toko.getGameObject(masukan - 1)->getName(), toko.getStock(masukan - 1) - quantity);
-            }
         }
         catch (const GameException &e)
         {
@@ -210,78 +216,77 @@ void Player::cekBeli(Shop &toko)
 
 void Player::jual(Shop &toko)
 {
-    cout << "Berikut merupakan penyimpanan Anda" << endl;
+    if (inventory.isMatrixEmpty())
+    {
+        throw CustomException("Penyimpanan kosong");
+    }
+    cout << "Berikut merupakan penyimpanan Anda" << endl
+         << endl;
     printInventory();
-
-    try
-    {
-        cekJual(toko);
-    }
-    catch (const GameException &e)
-    {
-        e.displayMessage();
-    }
+    cekJual(toko);
 }
 
 void Player::cekJual(Shop &toko)
 {
     bool isDone = false;
+    cin.ignore(1000, '\n');
     while (!isDone)
     {
-        cout << "Silahkan pilih petak yang ingin Anda jual!" << endl;
+        cout << "Silahkan pilih petak yang ingin Anda jual!\n";
         cout << "Petak: ";
+
         string inSlot;
-        cin >> inSlot;
+        getline(cin, inSlot);
         vector<string> slotS = Util::parserSlots(inSlot);
         vector<pair<GameObject *, string>> vectorTemp;
 
         try
         {
-            for (int i = 0; i < (int)inSlot.size(); i++)
+            for (int i = 0; i < (int)slotS.size(); i++)
             {
-                vectorTemp.push_back(make_pair(inventory.getItem(slotS[i]), slotS[i]));
-
                 // cek bangunan
                 if (dynamic_cast<Building *>(inventory.getItem(slotS[i])) != NULL)
                 {
-                    /**
-                     * TODO: throw apa?
-                     */
+                    throw CustomException("Tidak bisa menjual bangunan");
                 }
 
-                // Kurangi stock jika barang yang dibeli finite
-                if (dynamic_cast<Plant *>(inventory.getItem(slotS[i])) == NULL && dynamic_cast<Animal *>(inventory.getItem(slotS[i])) == NULL)
-                {
-                    toko.setStock(inventory.getItem(slotS[i])->getName(), toko.getStock(inventory.getItem(slotS[i])->getName()) - 1);
-                }
+                // tambah stock jika barang yang dibeli finite
+                toko+(*inventory.getItem(slotS[i]));
+                // if (dynamic_cast<Plant *>(inventory.getItem(slotS[i])) == NULL && dynamic_cast<Animal *>(inventory.getItem(slotS[i])) == NULL)
+                // {
+                //     // toko.setStock(inventory.getItem(slotS[i])->getName(), toko.getStock(inventory.getItem(slotS[i])->getName()) + 1);
+                // }
 
                 // setGulden
                 setGulden(getGulden() + inventory.getItem(slotS[i])->getPrice());
 
+                vectorTemp.push_back({inventory.getItem(slotS[i]), slotS[i]});
+
                 // remove dari inventory
                 inventory.removeItem(slotS[i]);
             }
-
-            // delete vectorTemp
+            // delete temp
             for (auto &obj : vectorTemp)
             {
                 delete obj.first;
             }
+            isDone = true;
         }
         catch (const GameException &e)
         {
             // Pop vector (saat throw pertama kali ditemukan)
-            vectorTemp.pop_back();
 
             // Masukkan kembali barang dan uangnya ke inventory
             // dan keluarkan dari vector temp serta shop
             while (!vectorTemp.empty())
             {
                 inventory.addItem(vectorTemp[vectorTemp.size() - 1].second, (vectorTemp[vectorTemp.size() - 1].first));
-                if (dynamic_cast<Plant *>(vectorTemp[vectorTemp.size() - 1].first) == NULL && dynamic_cast<Animal *>(vectorTemp[vectorTemp.size() - 1].first) == NULL)
-                {
-                    toko.setStock(vectorTemp[vectorTemp.size() - 1].first->getName(), toko.getStock(vectorTemp[vectorTemp.size() - 1].first->getName()) + 1);
-                }
+                toko - *vectorTemp[vectorTemp.size() - 1].first; 
+
+                // if (dynamic_cast<Plant *>(vectorTemp[vectorTemp.size() - 1].first) == NULL && dynamic_cast<Animal *>(vectorTemp[vectorTemp.size() - 1].first) == NULL)
+                // {
+                //     // toko.setStock(vectorTemp[vectorTemp.size() - 1].first->getName(), toko.getStock(vectorTemp[vectorTemp.size() - 1].first->getName()) - 1);
+                // }
                 setGulden(getGulden() - vectorTemp[vectorTemp.size() - 1].first->getPrice());
                 vectorTemp.pop_back();
             }
@@ -292,9 +297,9 @@ void Player::cekJual(Shop &toko)
 
 void Player::printInventory()
 {
-    printHeader("Penyimpanan");
+    printHeader("[Penyimpanan]");
     inventory.printMatrix();
-    cout << "Total slot kosong: " << inventory.emptySpace() << endl;
+    cout << "\nTotal slot kosong: " << inventory.emptySpace() << "\n";
 }
 
 void Player::printHeader(string judul)
@@ -316,15 +321,26 @@ void Player::printHeader(string judul)
     {
         cout << judul;
     }
-    cout << endl;
+    cout << "\n\n";
 }
-
-int Player::getPajak() const
-{
-    return 0;
-};
 
 bool Player::isPlayerWin(int guldenToWin, int weigthToWin)
 {
     return gulden >= guldenToWin && weigth >= weigthToWin;
+}
+
+vector<string> Player::getInventoryItem()
+{
+    vector <string> res;
+    for (int i = 0; i < inventory.getRow(); i++)
+    {
+        for (int j = 0; j < inventory.getCol(); j++)
+        {
+            if (!inventory.isCellEmpty(i, j))
+            {
+                res.push_back(inventory.getItem(i, j)->getName());
+            }
+        }
+    }
+    return res;
 }

@@ -141,11 +141,11 @@ bool Util::customComparator(const pair<int, pair<string, string>> &a, const pair
     // Priority int dengan urutan menurun
     if (a.first != b.first)
     {
-        return a.first < b.first; // urutan menurun
+        return a.first > b.first; // urutan menurun
     }
 
     // Jika int sama, bandingkan string secara naik
-    return a.second.first > b.second.first;
+    return a.second.first < b.second.first;
 }
 
 void Util::clearScreen()
@@ -240,4 +240,9 @@ bool Util::containSpace(string s)
             return true;
     }
     return false;
+}
+
+string Util::rowColToStr(int row, int col)
+{
+    return angkaToHuruf(col) + to_string(row + 1);
 }

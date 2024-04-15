@@ -37,6 +37,7 @@ private:
     void save();
     void tambah_pemain();
     void load();
+    bool check_win();
 
 public:
     /**

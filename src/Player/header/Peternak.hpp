@@ -7,12 +7,13 @@
 class Peternak : public Player
 {
 private:
-public:
     MatrixContainer<Animal *> peternakan;
+
+public:
     /**
      * User Defined Constructor
      */
-    Peternak(string username_,
+    Peternak(string username_, int weight_,
              int invRow, int invCol,
              int peternakanRow, int peternakanCol);
 
@@ -34,7 +35,7 @@ public:
     /**
      * @return pajak : int
      */
-    int getPajak() const;
+    int getPajak() const override;
 
     /**
      * Memilih ternak yang ingin diberi makan,

@@ -31,11 +31,7 @@ pair<GameObject *, int> Shop::getGoods(string nama) const
             return content.at(i);
         }
     }
-
-    /**
-     * TODO: throwEmpty
-     */
-    return {NULL, -1};
+    throw CustomException("Barang tidak ada");
 }
 
 pair<GameObject *, int> Shop::getGoods(int idx) const
@@ -68,10 +64,7 @@ GameObject *Shop::getGameObject(string nama) const
             return content[i].first;
         }
     }
-    /**
-     * @TODO: throw error
-     */
-    return NULL;
+    throw CustomException("Barang tidak ada");
 }
 
 GameObject *Shop::getGameObject(int idx) const
@@ -89,10 +82,7 @@ int Shop::getStock(string nama) const
             return content[i].second;
         }
     }
-    /**
-     * @TODO: throw error
-     */
-    return -1;
+    throw CustomException("Barang tidak ada");
 }
 
 int Shop::getStock(int idx) const
@@ -118,8 +108,48 @@ void Shop::setStock(int idx, int quantity)
 
 void Shop::addGoods(pair<GameObject *, int> goods)
 {
+    for (int i = 0; i < (int)content.size(); i++)
+    {
+        if (content[i].first == goods.first)
+        {
+            setStock(goods.first->getName(), getStock(goods.first->getName()) + goods.second);
+            break;
+        }
+    }
     size++;
     content.push_back(goods);
+}
+
+void Shop::operator+(const GameObject &obj)
+{
+    for (int i = 0; i < size; i++)
+    {
+        // Avoid add stock for unlimited object
+        Plant *plant = dynamic_cast<Plant *>(getGameObject(i));
+        Animal *animal = dynamic_cast<Animal *>(getGameObject(i));
+
+        // add for limited object
+        if (plant == NULL && animal == NULL && (*getGameObject(i)) == obj)
+        {
+            content[i].second = getStock(i) + 1;
+        }
+    }
+}
+
+void Shop::operator-(const GameObject &obj)
+{
+    for (int i = 0; i < size; i++)
+    {
+        // Avoid substract stock for unlimited object
+        Plant *plant = dynamic_cast<Plant *>(getGameObject(i));
+        Animal *animal = dynamic_cast<Animal *>(getGameObject(i));
+
+        // substract for limited object
+        if (plant == NULL && animal == NULL && *(getGameObject(i)) == obj)
+        {
+            content[i].second = getStock(i) - 1;
+        }
+    }
 }
 
 void Shop::printToko()

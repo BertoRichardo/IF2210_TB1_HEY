@@ -99,9 +99,7 @@ public:
             }
             else
             {
-                /**
-                 * TODO: throw cellterisi ?
-                 */
+                throw CustomException("Cell/petak sudah terisi");
             }
         }
     }
@@ -135,9 +133,11 @@ public:
                 }
             }
         }
-        /**
-         * @todo: throw matrix full
-         */
+        throw CustomException("Matrix sudah penuh");
+    }
+
+    void operator+(const T &item){
+        addItem(item);
     }
 
     /**
@@ -148,18 +148,13 @@ public:
      */
     T getItem(int r, int c) const
     {
-        if (r >= rowSize || c >= colSize || r < 0 || r < 0)
+        if (r >= rowSize || c >= colSize || r < 0 || c < 0)
         {
             throw IndexInvalidException();
         }
-        else
+        else if (isCellEmpty(r, c))
         {
-            if (isCellEmpty(r, c))
-            {
-                /**
-                 * TODO: throuw CellEmptyException
-                 */
-            }
+            throw CustomException("Cell/petak kosong");
         }
         return buffer[r][c];
     }
@@ -190,16 +185,12 @@ public:
             }
             else
             {
-                /**
-                 * -TODO: throw NotEdible
-                 */
+                throw CustomException("Apa yang kamu lakukan??\0!! Kamu mencoba untuk memakan itu?!!");
             }
         }
         else
         {
-            /**
-             * -TODO: throw NotProduct
-             */
+            throw CustomException("Apa yang kamu lakukan??\0!! Kamu mencoba untuk memakan itu?!!");
         }
         return NULL;
     }
@@ -227,9 +218,7 @@ public:
         }
         else
         {
-            /**
-             * -TODO: throw CellEmpty
-             */
+            throw CustomException("Matriks tersebut kosong");
         }
     }
 

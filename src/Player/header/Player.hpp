@@ -22,15 +22,14 @@ protected:
     string username;
     int weigth;
     int gulden;
+    MatrixContainer<GameObject *> inventory;
 
 public:
-    MatrixContainer<GameObject *> inventory;
     /**
      * User defined Constructor
      * @param username_ nama player
-     * -TODO: handle username tidak unik
      */
-    Player(string username_, int invRow, int invCol);
+    Player(string username_, int weight_, int invRow, int invCol);
 
     /**
      * Destructor
@@ -57,7 +56,7 @@ public:
     /**
      * @return type : string
      */
-    virtual string getType() const;
+    virtual string getType() const = 0;
 
     /**
      * @return weight : int
@@ -81,6 +80,12 @@ public:
      */
     void setGulden(int gulden_);
 
+    /**
+     * @return inventory items' name
+     */
+
+    vector <string> getInventoryItem();
+
     /*COMMAND*/
 
     /**
@@ -98,7 +103,7 @@ public:
      * beli : sama untuk petani dan peternak, override untuk walikota
      * @param toko: reference dari Shop
      */
-    virtual void beli(Shop &toko );
+    virtual void beli(Shop &toko);
 
     /**
      * Melakukan proses pembelian atau throw erro
@@ -127,8 +132,9 @@ public:
 
     /**
      * Mendapatkan nominal pajak yang perlu dibayar oleh player
+     * pure virtual
      */
-    virtual int getPajak() const;
+    virtual int getPajak() const = 0;
 
     /**
      * @param guldenToWin : int

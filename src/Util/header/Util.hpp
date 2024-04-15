@@ -48,12 +48,12 @@ public:
      * @return item as one of the child of gameObject
      */
     static GameObject *callCCtor(GameObject *obj);
-  
-     /**
+
+    /**
      * @return true jika urutan int naik. Jika sama, return true jika urutan pair string turun
      */
     static bool customComparator(const pair<int, pair<string, string>> &a, const pair<int, pair<string, string>> &b);
-  
+
     static void clearScreen();
 
     static void waitScreen(int ms);
@@ -61,6 +61,15 @@ public:
     static void displayStartingScreen();
 
     static bool containSpace(string s);
+
+    /**
+     * Meng-convert row col menjadi string coordinate
+     * Indexing string dimulai dari 1
+     * @param row: int
+     * @param col: int
+     * @return coordinate: string
+     */
+    static string rowColToStr(int row, int col);
 };
 
 #endif

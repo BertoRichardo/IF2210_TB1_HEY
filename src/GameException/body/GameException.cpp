@@ -29,7 +29,7 @@ FeedTypeInvalidException::FeedTypeInvalidException(const string &animalType_, co
 void FeedTypeInvalidException::displayMessage() const
 {
     cerr << message << endl;
-    cerr << "Hewan bertipe " << animalType << " tidak dapat memakan product bertipe " << productType << endl;
+    cerr << "Hewan bertipe " << animalType << " tidak dapat memakan product bertipe " << productType << "\n\n";
 }
 
 /*IndexInvalidException*/
@@ -39,7 +39,7 @@ IndexInvalidException::IndexInvalidException() : GameException("Index Out Of Bou
 
 void IndexInvalidException::displayMessage() const
 {
-    cerr << message << endl;
+    cerr << message << "\n\n";
 }
 
 /*ResourceInsufficientException*/
@@ -69,7 +69,7 @@ void ResourceInsufficientException::displayMessage() const
         }
         cerr << material.second << " " << material.first;
     }
-    cerr << "!" << endl;
+    cerr << "!" << "\n\n";
 }
 
 InputInvalidException::InputInvalidException(): GameException("Maaf, input Anda tidak valid T__T")
@@ -77,7 +77,7 @@ InputInvalidException::InputInvalidException(): GameException("Maaf, input Anda 
 
 void InputInvalidException::displayMessage() const
 {
-    cerr << message << endl;
+    cerr << message << "\n\n";
 }
 
 CommandInvalidException::CommandInvalidException(): GameException("Maaf, command Anda tidak tersedia >//<")
@@ -85,7 +85,7 @@ CommandInvalidException::CommandInvalidException(): GameException("Maaf, command
 
 void CommandInvalidException::displayMessage() const 
 {
-    cerr << message << endl;
+    cerr << message << "\n\n";
 }
 
 /**
@@ -102,5 +102,5 @@ CustomException::~CustomException()
 
 void CustomException::displayMessage() const
 {
-    cerr << message << endl;
+    cerr << message << "\n\n";
 }

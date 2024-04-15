@@ -79,3 +79,8 @@ void GameObject::clearData()
     name = "";
     price = 0;
 }
+
+bool GameObject::operator==(const GameObject& other) 
+{
+    return kodeHuruf == other.kodeHuruf && name == other.name && price == other.price;
+}

@@ -104,6 +104,18 @@ public:
     void addGoods(pair<GameObject *, int>);
 
     /**
+    * Menambahkan stock objek yang ditambahkan
+    * @param obj : objek yang ditambahkan
+    */
+    void operator+(const GameObject &obj);
+
+    /**
+    * Menambahkan stock objek yang ditambahkan
+    * @param obj : objek yang ditambahkan
+    */
+    void operator-(const GameObject &obj);
+
+    /**
      * Mencetak barang yang ada di tokko
      */
     void printToko();

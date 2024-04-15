@@ -19,7 +19,7 @@ public:
      * User defined constructor
      * @param username_ : string
      */
-    Walikota(string username_, int invRow, int invCol);
+    Walikota(string username_, int weight_, int invRow, int invCol);
 
     /**
      * @return type : string
@@ -71,7 +71,7 @@ public:
     /**
      * tidak diimplementasikan untuk walikota
      */
-    int getPajak() const;
+    int getPajak() const override;
     
      /**
      * @param material:

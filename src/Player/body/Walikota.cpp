@@ -1,9 +1,9 @@
 #include "../header/Walikota.hpp"
 
-Walikota::Walikota(string username_,
+Walikota::Walikota(string username_, int weight_,
                    int invRow,
                    int invCol)
-    : Player(username_, invRow, invCol)
+    : Player(username_, weight_, invRow, invCol)
 {
 }
 
@@ -156,47 +156,50 @@ void Walikota::cekBeli(Shop &toko)
 {
     // Minta masukan dari user
     int masukan;
-    cout << "Barang yang ingin dibeli :";
-    cin >> masukan;
+    while (cout << "Barang yang ingin dibeli : " && !(cin >> masukan))
+    {
+        cin.clear();                                         // clear bad input flag
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard input
+        cout << "Input invalid (bukan integer), mohon masukkan input kembali.\n";
+    }
     cout << endl;
 
     // validasi masukan
     if (masukan <= 0 || masukan > toko.getSize())
     {
-        // throw InputInvalidException
+        throw InputInvalidException();
     }
 
     if (dynamic_cast<Building *>(toko.getGameObject(masukan)) != NULL)
     {
-        // throw CantBuyBuilding
+        throw CustomException("Walikota tidak bisa beli bangunan");
     }
 
     // validasi inventory
     int quantity;
-    cout << "Kuantitas: ";
-    cin >> quantity;
+    while (cout << "Kuantitas : " && !(cin >> quantity))
+    {
+        cin.clear();                                         // clear bad input flag
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard input
+        cout << "Input invalid (bukan integer), mohon masukkan input kembali.\n";
+    }
     cout << endl;
 
     if (quantity == 0 || quantity > inventory.emptySpace())
     {
-        // throw inputInvalidException
+        throw InputInvalidException();
     }
 
     // validasi gulden
     if (quantity * toko.getGameObject(masukan)->getPrice() > getGulden())
     {
-
-        /**
-         * throw Gulden kurang (?)
-         */
+        throw CustomException("Gulden Anda kurang!");
     }
 
     // Validasi stock
     if (toko.getStock(masukan - 1) != -1 && quantity > toko.getStock(masukan - 1))
     {
-        /**
-         * TODO: throw StockKurang Exception
-         */
+        throw CustomException("Stock tidak mencukup");
     }
 
     // Berikan IO dan kurangi uang
@@ -211,11 +214,12 @@ void Walikota::cekBeli(Shop &toko)
 
     // Pilih slot
     bool isDone = false;
+    cin.ignore(1000, '\n');
     while (!isDone)
     {
         string inSlot;
         cout << "Petak slot: ";
-        cin >> inSlot;
+        getline(cin, inSlot);
         vector<string> slotS = Util::parserSlots(inSlot);
         int cnt = 0;
         try
@@ -260,28 +264,30 @@ void Walikota::jual(Shop &toko)
 void Walikota::cekJual(Shop &toko)
 {
     bool isDone = false;
+    cin.ignore(1000, '\n');
     while (!isDone)
     {
         cout << "Silahkan pilih petak yang ingin Anda jual!" << endl;
         cout << "Petak: ";
         string inSlot;
-        cin >> inSlot;
+        getline(cin, inSlot);
         vector<string> slotS = Util::parserSlots(inSlot);
         vector<pair<GameObject *, string>> vectorTemp;
 
         try
         {
-            for (int i = 0; i < (int)inSlot.size(); i++)
+            for (int i = 0; i < (int)slotS.size(); i++)
             {
-                vectorTemp.push_back(make_pair(inventory.getItem(slotS[i]), slotS[i]));
-
                 // Kurangi stock jika barang yang dibeli finite
                 if (dynamic_cast<Plant *>(inventory.getItem(slotS[i])) == NULL && dynamic_cast<Animal *>(inventory.getItem(slotS[i])) == NULL)
                 {
-                    toko.setStock(inventory.getItem(slotS[i])->getName(), toko.getStock(inventory.getItem(slotS[i])->getName()) - 1);
+                    toko.setStock(inventory.getItem(slotS[i])->getName(), toko.getStock(inventory.getItem(slotS[i])->getName()) + 1);
                 }
+                
                 // setGulden
                 setGulden(getGulden() + inventory.getItem(slotS[i])->getPrice());
+
+                vectorTemp.push_back(make_pair(inventory.getItem(slotS[i]), slotS[i]));
 
                 // remove dari inventory
                 inventory.removeItem(slotS[i]);
@@ -291,11 +297,11 @@ void Walikota::cekJual(Shop &toko)
             {
                 delete obj.first;
             }
+            isDone = true;
         }
         catch (const GameException &e)
         {
             // Pop vector (saat throw pertama kali ditemukan)
-            vectorTemp.pop_back();
 
             // Masukkan kembali barang dan uangnya ke inventory
             // dan keluarkan dari vector temp serta shop
@@ -315,15 +321,18 @@ void Walikota::cekJual(Shop &toko)
 
 pair<string, string> Walikota::tambahPemain(vector<string> &names)
 {
+    if (getGulden() < 50)
+    {
+        throw CustomException("Gulden Anda tidak cukup");
+    }
+
     // Input Jenis pemain
     string name, jenis;
     cout << "Masukkan jenis pemain:";
     cin >> jenis;
     if (jenis != "peternak" && jenis != "petani")
     {
-        /**
-         * TODO: throw InvalidJenisPlayer
-         */
+        throw CustomException("Jenis player salah");
     }
 
     // nama pemain
@@ -332,11 +341,12 @@ pair<string, string> Walikota::tambahPemain(vector<string> &names)
     cout << endl;
     if (binary_search(names.begin(), names.end(), name))
     {
-        /**
-         * TODO: throw NameIsNotUnique
-         */
         throw InputInvalidException();
     }
+
+    // set Gulden walikota
+    setGulden(getGulden() - 50);
+
     cout << "Pemain baru ditambahkan!" << endl;
     cout << "Selamat datang \"" << name << "\" di kota ini!" << endl;
     return {name, jenis};
@@ -376,15 +386,17 @@ void Walikota::tarikPajak(vector<Player *> &listOfPlayers)
     int i = 0;
     for (auto &data : wajibPajak)
     {
-        cout << i + 1 << ". " << data.second.first << " - " << data.second.second << ": " << data.first << "gulden";
+        cout << i + 1 << ". " << data.second.first << " - " << data.second.second << ": " << data.first << " gulden" << endl;
         i++;
     }
+    cout << endl;
 
     // setGulden Walikota
     setGulden(getGulden() + sumPajak);
 
-    cout << "Negara mendapatkan pemasukan sebesar " << sumPajak << "gulden." << endl;
-    cout << "Gunakan dengan baik dan jangan dikorupsi ya!" << endl;
+    cout << "Negara mendapatkan pemasukan sebesar " << sumPajak << " gulden." << endl;
+    cout << "Gunakan dengan baik dan jangan dikorupsi ya!"
+         << "\n\n";
 }
 
 int Walikota::getPajak() const

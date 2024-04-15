@@ -45,7 +45,7 @@ int GameEngine::checkCommand(string input)
             return i;
         }
     }
-    throw CommandInvalidException();;
+    throw CommandInvalidException();
 }
 
 int GameEngine::readCommand()
@@ -59,11 +59,13 @@ int GameEngine::readCommand()
 
 void GameEngine::setup()
 {
-    Util::displayStartingScreen();
+    // TODO: jangan lupa ganti
+    // Util::displayStartingScreen();
 
     bool isValid = false;
 
-    cout << "Selamat datang di permainan Kelola Kerajaan" << "\n\n";
+    cout << "Selamat Datang di Permainan Kelola Kerajaan"
+         << "\n\n";
 
     while (!isValid)
     {
@@ -71,7 +73,7 @@ void GameEngine::setup()
         {
             string input;
             cout << "Apakah Anda ingin memuat state? (y/n): ";
-            cin >> input;
+            getline(cin, input);
             cout << endl;
 
             if (input == "y" || input == "Y")
@@ -86,17 +88,15 @@ void GameEngine::setup()
             {
                 throw InputInvalidException();
             }
-
             isValid = true;
         }
         catch (const GameException &e)
         {
             e.displayMessage();
         }
-
-        cout << "Giliran saat ini adalah pemain dengan username " << playerNames[currentTurn] << " dan role " << players[playerNames[currentTurn]]->getType() << "\n\n";
     }
 
+    cout << "Giliran saat ini adalah pemain dengan username " << playerNames[currentTurn] << " dan role " << players[playerNames[currentTurn]]->getType() << "\n\n";
 }
 
 void GameEngine::defaultSetup()
@@ -151,17 +151,17 @@ void GameEngine::defaultSetup()
     // create walikota
     string walikota = readUsername(playerNames, "walikota");
     playerNames.push_back(walikota);
-    players[walikota] = new Walikota(walikota, gameConfig.getInventoryRow(), gameConfig.getInventoryCol());
+    players[walikota] = new Walikota(walikota, 40, gameConfig.getInventoryRow(), gameConfig.getInventoryCol());
 
     // create peternak
     string peternak = readUsername(playerNames, "peternak1");
     playerNames.push_back(peternak);
-    players[peternak] = new Peternak(peternak, gameConfig.getInventoryRow(), gameConfig.getInventoryCol(), gameConfig.getPeternakanRow(), gameConfig.getPeternakanCol());
+    players[peternak] = new Peternak(peternak, 40, gameConfig.getInventoryRow(), gameConfig.getInventoryCol(), gameConfig.getPeternakanRow(), gameConfig.getPeternakanCol());
 
     // create petani
     string petani = readUsername(playerNames, "petani1");
     playerNames.push_back(petani);
-    players[petani] = new Petani(petani, gameConfig.getInventoryRow(), gameConfig.getInventoryCol(), gameConfig.getLahanRow(), gameConfig.getLahanCol());
+    players[petani] = new Petani(petani, 40, gameConfig.getInventoryRow(), gameConfig.getInventoryCol(), gameConfig.getLahanRow(), gameConfig.getLahanCol());
 
     // sort playerNames
     sort(playerNames.begin(), playerNames.end());
@@ -229,11 +229,16 @@ void GameEngine::run()
                 stillRun = false;
                 break;
             }
+            stillRun = check_win();
+            cout << "\n";
         }
         catch (const GameException &e)
         {
             e.displayMessage();
-            cout << '\n';
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << e.what() << '\n';
         }
     }
 }
@@ -247,7 +252,8 @@ string GameEngine::readUsername(vector<string> prev, string placeholder)
         try
         {
             cout << "Masukkan username " << placeholder << ": ";
-            cin >> input;
+            // cin.ignore();
+            getline(cin, input);
             cout << endl;
             if (input == "")
             {
@@ -273,18 +279,18 @@ string GameEngine::readUsername(vector<string> prev, string placeholder)
     }
     return input;
 }
-
 void GameEngine::next()
 {
-    if (players[playerNames[currentTurn]]->getType() == "PETANI")
+    for (string player : playerNames)
     {
-        dynamic_cast<Petani *>(players[playerNames[currentTurn]])->tambahUmurTanaman();
+        if (players[player]->getType() == "PETANI")
+        {
+            dynamic_cast<Petani *>(players[player])->tambahUmurTanaman();
+        }
     }
-    /**
-     * @todo: handle if player win
-     */
+
     currentTurn = (currentTurn + 1) % (int)playerNames.size();
-    cout << "Giliran saat ini adalah pemain dengan username " << playerNames[currentTurn] << " dan role " << players[playerNames[currentTurn]]->getType() << "\n\n";
+    cout << "Giliran saat ini adalah pemain dengan username " << playerNames[currentTurn] << " dan role " << players[playerNames[currentTurn]]->getType() << "\n";
 }
 
 void GameEngine::cetak_penyimpanan()
@@ -389,9 +395,36 @@ void GameEngine::panen()
 
 void GameEngine::save()
 {
-    /**
-     * @todo: lengkapin save
-     */
+    string file;
+    cout << "Masukkan lokasi berkas state : ";
+    cin >> file;
+
+    // simpan state saat ini
+    vector<vector<string>> content;
+
+    // simpan banyak player
+    content.push_back(vector<string>{to_string((int)playerNames.size())});
+
+    // simpan state tiap player
+    for (string player : playerNames)
+    {
+        if (players[player]->getType() == "PETANI")
+        {
+            content.push_back(vector<string>{player, "Petani", to_string(players[player]->getWeight()), to_string(players[player]->getGulden())});
+
+            // get number of item inventory
+            // int numOfItem = players[player]
+
+        }
+        else if (players[player]->getType() == "PETERNAK")
+        {
+            content.push_back(vector<string>{player, "Peternak", to_string(players[player]->getWeight()), to_string(players[player]->getGulden())});
+        }
+        else
+        {
+            content.push_back(vector<string>{player, "Walikota", to_string(players[player]->getWeight()), to_string(players[player]->getGulden())});
+        }
+    }
 }
 
 void GameEngine::tambah_pemain()
@@ -412,11 +445,11 @@ void GameEngine::tambah_pemain()
 
     if (res.second == "petani")
     {
-        players[res.first] = new Petani(res.first, gameConfig.getInventoryRow(), gameConfig.getInventoryCol(), gameConfig.getLahanRow(), gameConfig.getLahanCol());
+        players[res.first] = new Petani(res.first, 0, gameConfig.getInventoryRow(), gameConfig.getInventoryCol(), gameConfig.getLahanRow(), gameConfig.getLahanCol());
     }
     else
     {
-        players[res.first] = new Peternak(res.first, gameConfig.getInventoryRow(), gameConfig.getInventoryCol(), gameConfig.getPeternakanRow(), gameConfig.getPeternakanCol());
+        players[res.first] = new Peternak(res.first, 0, gameConfig.getInventoryRow(), gameConfig.getInventoryCol(), gameConfig.getPeternakanRow(), gameConfig.getPeternakanCol());
     }
 }
 
@@ -425,4 +458,14 @@ void GameEngine::load()
     /**
      * @todo: lengkapin load
      */
+}
+
+bool GameEngine::check_win()
+{
+    if (players[playerNames[currentTurn]]->isPlayerWin(gameConfig.getGuldenWin(), gameConfig.getWeightWin()))
+    {
+        cout << "Selamat kepada pemain dengan username " << playerNames[currentTurn] << " dan role " << players[playerNames[currentTurn]]->getType() << "\n";
+        return false;
+    }
+    return true;
 }
