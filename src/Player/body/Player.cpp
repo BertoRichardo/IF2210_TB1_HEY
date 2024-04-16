@@ -159,14 +159,14 @@ void Player::cekBeli(Shop &toko)
     }
 
     // validasi gulden
-    if (quantity * toko.getGameObject(masukan - 1)->getPrice() > getGulden())
+    if (quantity * toko[masukan - 1]->getPrice() > getGulden())
     {
         throw CustomException("Gulden Anda tidak cukup.");
     }
 
     // Berikan IO dan kurangi uang
-    setGulden(getGulden() - quantity * toko.getGameObject(masukan - 1)->getPrice());
-    cout << "Selamat Anda berhasil membeli " << quantity << " " << toko.getGameObject(masukan - 1)->getName() << ".\n";
+    setGulden(getGulden() - quantity * toko[masukan - 1]->getPrice());
+    cout << "Selamat Anda berhasil membeli " << quantity << " " << toko[masukan - 1]->getName() << ".\n";
     cout << "Uang Anda tersisa " << getGulden() << endl;
 
     // IO pemilihan slot
@@ -193,15 +193,15 @@ void Player::cekBeli(Shop &toko)
             // eksekusi
             for (int i = 0; i < (int)slotS.size(); i++)
             {
-                GameObject *item = Util::callCCtor(toko.getGameObject(masukan - 1));
+                GameObject *item = Util::callCCtor(toko[masukan - 1]);
                 inventory.addItem(slotS[i], item);
                 cnt++;
             }
 
             // kurangi stock jika barang finite
-            if (dynamic_cast<Plant *>(toko.getGameObject(masukan - 1)) == NULL && dynamic_cast<Animal *>(toko.getGameObject(masukan - 1)) == NULL)
+            if (dynamic_cast<Plant *>(toko[masukan - 1]) == NULL && dynamic_cast<Animal *>(toko[masukan - 1]) == NULL)
             {
-                toko.setStock(toko.getGameObject(masukan - 1)->getName(), toko.getStock(masukan - 1) - quantity);
+                toko.setStock(toko[masukan - 1]->getName(), toko.getStock(masukan - 1) - quantity);
             }
             isDone = true;
         }
