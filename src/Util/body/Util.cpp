@@ -246,3 +246,40 @@ string Util::rowColToStr(int row, int col)
 {
     return angkaToHuruf(col) + to_string(row + 1);
 }
+
+string Util::readUsername(vector<string> prev, string placeholder)
+{
+    bool isDone = false;
+    string input;
+    while (!isDone)
+    {
+        try
+        {
+            cout << "Masukkan username " << placeholder << ": ";
+            // cin.ignore();
+            getline(cin, input);
+            cout << endl;
+            if (input == "")
+            {
+                throw InputInvalidException();
+            }
+            if (Util::containSpace(input))
+            {
+                throw InputInvalidException();
+            }
+            for (auto username : prev)
+            {
+                if (input == username)
+                {
+                    throw InputInvalidException();
+                }
+            }
+            isDone = true;
+        }
+        catch (const GameException &e)
+        {
+            e.displayMessage();
+        }
+    }
+    return input;
+}

@@ -85,12 +85,6 @@ public:
      * @return command index in vector of commands: int
      */
     int readCommand();
-
-    /**
-     * read username from user's input
-     * @return username: string
-     */
-    string readUsername(vector<string> prev, string placeholder);
 };
 
 #endif

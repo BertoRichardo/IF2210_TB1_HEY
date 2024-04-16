@@ -153,17 +153,17 @@ void GameEngine::defaultSetup()
 {
     // read players username
     // create walikota
-    string walikota = readUsername(playerNames, "walikota");
+    string walikota = Util::readUsername(playerNames, "walikota");
     playerNames.push_back(walikota);
     players[walikota] = new Walikota(walikota, 40, gameConfig.getInventoryRow(), gameConfig.getInventoryCol());
 
     // create peternak
-    string peternak = readUsername(playerNames, "peternak1");
+    string peternak = Util::readUsername(playerNames, "peternak1");
     playerNames.push_back(peternak);
     players[peternak] = new Peternak(peternak, 40, gameConfig.getInventoryRow(), gameConfig.getInventoryCol(), gameConfig.getPeternakanRow(), gameConfig.getPeternakanCol());
 
     // create petani
-    string petani = readUsername(playerNames, "petani1");
+    string petani = Util::readUsername(playerNames, "petani1");
     playerNames.push_back(petani);
     players[petani] = new Petani(petani, 40, gameConfig.getInventoryRow(), gameConfig.getInventoryCol(), gameConfig.getLahanRow(), gameConfig.getLahanCol());
 
@@ -275,42 +275,6 @@ void GameEngine::run()
     }
 }
 
-string GameEngine::readUsername(vector<string> prev, string placeholder)
-{
-    bool isDone = false;
-    string input;
-    while (!isDone)
-    {
-        try
-        {
-            cout << "Masukkan username " << placeholder << ": ";
-            // cin.ignore();
-            getline(cin, input);
-            cout << endl;
-            if (input == "")
-            {
-                throw InputInvalidException();
-            }
-            if (Util::containSpace(input))
-            {
-                throw InputInvalidException();
-            }
-            for (auto username : prev)
-            {
-                if (input == username)
-                {
-                    throw InputInvalidException();
-                }
-            }
-            isDone = true;
-        }
-        catch (const GameException &e)
-        {
-            e.displayMessage();
-        }
-    }
-    return input;
-}
 void GameEngine::next()
 {
     for (string player : playerNames)

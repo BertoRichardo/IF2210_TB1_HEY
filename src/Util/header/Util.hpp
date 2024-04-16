@@ -70,6 +70,12 @@ public:
      * @return coordinate: string
      */
     static string rowColToStr(int row, int col);
+
+    /**
+     * read username from user's input
+     * @return username: string
+     */
+    static string readUsername(vector<string> prev, string placeholder);
 };
 
 #endif
