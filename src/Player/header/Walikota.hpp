@@ -72,23 +72,22 @@ public:
      * tidak diimplementasikan untuk walikota
      */
     int getPajak() const override;
-    
-     /**
+
+    /**
      * @param material:
      * @param recipe :
      * @return InsufficientMaterial
      */
     vector<pair<string, int>> getInsufficientMaterial(
         map<string, int> &materials,
-        const pair<vector<pair<string, int>>, int> &recipe);
+        const vector<pair<string, int>> &recipe);
 
     /**
      * @return true jika walikota dapat membangun berdasarkan minimal salah satu recipe
      */
     bool isBuildAvailable(
         map<string, int> &materials,
-        const vector<pair<vector<pair<string, int>>, int>> &listOfRecipes);
-
+        const vector<vector<pair<string, int>>> &listOfRecipes);
 };
 
 #endif

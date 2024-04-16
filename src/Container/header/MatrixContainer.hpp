@@ -475,7 +475,7 @@ public:
             {
                 if (!isCellEmpty(i, j))
                 {
-                    groupedItem[getItem(i, j)->getKodeHuruf()]++;
+                    groupedItem[getItem(i, j)->getName()]++;
                 }
             }
         }
