@@ -89,6 +89,8 @@ make clean
 | MUAT | Memuat state pada file masukan pengguna |
 | SIMPAN | Menyimpan state saat ini ke file masukan pengguna |
 | TAMBAH_PEMAIN | Perintah yang dapat digunakan walikota untuk menambah pemain dengan role Petani atau Peternak |
+| INFO | Menampilkan informasi yang dimiliki oleh pemain saat ini |
+| EXIT | Perintah untuk keluar dari permainan |
 
 
 <h2 id="structure">📁 Struktur Folder</h2>
