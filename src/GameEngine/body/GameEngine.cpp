@@ -540,8 +540,7 @@ void GameEngine::load(vector<vector<string>> data)
         {
             players[username] = new Walikota(username, weight, gameConfig.getInventoryRow(), gameConfig.getInventoryCol());
         }
-        
-        players[username]->setGulden(gulden);
+
         // get inventory data
         int numOfInventoryItem = stoi(data.at(index).at(0));
         index++;
