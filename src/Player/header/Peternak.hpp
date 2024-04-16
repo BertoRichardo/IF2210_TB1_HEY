@@ -1,7 +1,6 @@
 #ifndef _PETERNAK_HPP_
 #define _PETERNAK_HPP_
 
-#include <set>
 #include "Player.hpp"
 #include "../../GameObject/header/Animal.hpp"
 class Peternak : public Player
