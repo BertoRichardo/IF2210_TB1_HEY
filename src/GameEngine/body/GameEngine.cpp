@@ -194,54 +194,69 @@ void GameEngine::run()
             {
             case 0:
                 next();
+                stillRun = check_win();
                 break;
             case 1:
                 cetak_penyimpanan();
+                stillRun = check_win();
                 break;
             case 2:
                 pungut_pajak();
+                stillRun = check_win();
                 break;
             case 3:
                 cetak_ladang();
+                stillRun = check_win();
                 break;
             case 4:
                 cetak_peternakan();
+                stillRun = check_win();
                 break;
             case 5:
                 tanam();
+                stillRun = check_win();
                 break;
             case 6:
                 ternak();
+                stillRun = check_win();
                 break;
             case 7:
                 bangun();
+                stillRun = check_win();
                 break;
             case 8:
                 makan();
+                stillRun = check_win();
                 break;
             case 9:
                 kasih_makan();
+                stillRun = check_win();
                 break;
             case 10:
                 beli();
+                stillRun = check_win();
                 break;
             case 11:
                 jual();
+                stillRun = check_win();
                 break;
             case 12:
                 panen();
+                stillRun = check_win();
                 break;
             case 13:
                 save();
+                stillRun = check_win();
                 break;
             case 14:
                 tambah_pemain();
+                stillRun = check_win();
                 break;
             case 15:
                 stillRun = false;
+                cout << "Sampai Jumpa Lagi di Permainan Kelola Kerajaan (o^ ^o)/";
                 break;
             }
-            stillRun = check_win();
             cout << "\n";
         }
         catch (const GameException &e)

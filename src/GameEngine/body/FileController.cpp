@@ -33,7 +33,7 @@ vector<vector<string>> FileController::readFile(string path)
     }
     else
     {
-        throw CustomException("Lokasi berkas tidak valid >//<");
+        throw CustomException("Lokasi berkas tidak valid T__T");
     }
     return elements;
 }
