@@ -6,7 +6,6 @@
 #include "../../GameContext/header/Config.hpp"
 #include "../../GameObject/header/Building.hpp"
 #include <algorithm>
-#include <queue>
 using namespace std;
 
 class Walikota : public Player
