@@ -92,7 +92,7 @@ void Walikota::cekRecipe(const map<string, BuildingConfig> &buildings, map<strin
         {
             for (int col = 0; col < inventory.getCol(); col++)
             {
-                if (!inventory.isCellEmpty(row, col) && inventory.getItem(row, col)->getKodeHuruf() == ingredient.first)
+                if (!inventory.isCellEmpty(row, col) && inventory.getItem(row, col)->getName() == ingredient.first)
                 {
                     delete inventory.getItem(row, col);
                     inventory.removeItem(row, col);
@@ -260,12 +260,6 @@ void Walikota::cekJual(Shop &toko)
             int uangTambah = 0;
             for (int i = 0; i < (int)slotS.size(); i++)
             {
-                // cek bangunan
-                if (dynamic_cast<Building *>(inventory.getItem(slotS[i])) != NULL)
-                {
-                    throw CustomException("Tidak bisa menjual bangunan");
-                }
-
                 // Kurangi stock jika barang yang dibeli finite
                 toko + (*inventory.getItem(slotS[i]));
 
@@ -300,6 +294,7 @@ void Walikota::cekJual(Shop &toko)
                 setGulden(getGulden() - vectorTemp[vectorTemp.size() - 1].first->getPrice());
                 vectorTemp.pop_back();
             }
+            e.displayMessage();
         }
     }
 }
