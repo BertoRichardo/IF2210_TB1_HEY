@@ -79,6 +79,14 @@ public:
      */
     GameObject *getGameObject(int) const;
 
+    /** GAMEOBJECT GETTER
+     * @param idx index of the object program wanted to find
+     * @return GameObject of object
+     */
+    GameObject* operator[](int) const;
+
+    GameObject* operator[](string) const;
+
     /** STOCK GETTER
      * @param nama name of the object program wanted to find
      * @return stock of object

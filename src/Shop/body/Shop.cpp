@@ -193,3 +193,13 @@ void Shop::printToko()
         }
     }
 }
+
+GameObject *Shop::operator[](int idx) const
+{
+    return getGameObject(idx);
+}
+
+GameObject *Shop::operator[](string str) const
+{
+    return getGameObject(str);
+}

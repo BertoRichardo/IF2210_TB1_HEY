@@ -148,7 +148,7 @@ void Walikota::cekBeli(Shop &toko)
         throw InputInvalidException();
     }
 
-    if (dynamic_cast<Building *>(toko.getGameObject(masukan - 1)) != NULL)
+    if (dynamic_cast<Building *>(toko[masukan - 1]) != NULL)
     {
         throw CustomException("Walikota tidak bisa beli bangunan");
     }
@@ -176,14 +176,14 @@ void Walikota::cekBeli(Shop &toko)
     }
 
     // validasi gulden
-    if (quantity * toko.getGameObject(masukan - 1)->getPrice() > getGulden())
+    if (quantity * toko[masukan - 1]->getPrice() > getGulden())
     {
         throw CustomException("Gulden Anda kurang!");
     }
 
     // Berikan IO dan kurangi uang
-    setGulden(getGulden() - quantity * toko.getGameObject(masukan - 1)->getPrice());
-    cout << "Selamat Anda berhasil membeli " << quantity << " " << toko.getGameObject(masukan - 1)->getName() << ".";
+    setGulden(getGulden() - quantity * toko[masukan - 1]->getPrice());
+    cout << "Selamat Anda berhasil membeli " << quantity << " " << toko[masukan - 1]->getName() << ".";
     cout << "Uang Anda tersisa " << getGulden();
 
     // IO pemilihan slot
@@ -210,13 +210,13 @@ void Walikota::cekBeli(Shop &toko)
             // eksekusi
             for (int i = 0; i < (int)slotS.size(); i++)
             {
-                GameObject *item = Util::callCCtor(toko.getGameObject(masukan - 1));
+                GameObject *item = Util::callCCtor(toko[masukan - 1]);
                 inventory.addItem(slotS[i], item);
             }
 
-            if (dynamic_cast<Plant *>(toko.getGameObject(masukan - 1)) == NULL && dynamic_cast<Animal *>(toko.getGameObject(masukan - 1)) == NULL)
+            if (dynamic_cast<Plant *>(toko[masukan - 1]) == NULL && dynamic_cast<Animal *>(toko[masukan - 1]) == NULL)
             {
-                toko.setStock(toko.getGameObject(masukan - 1)->getName(), toko.getStock(masukan - 1) - quantity);
+                toko.setStock(toko[masukan - 1]->getName(), toko.getStock(masukan - 1) - quantity);
             }
             isDone = true;
         }
