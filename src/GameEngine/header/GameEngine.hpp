@@ -37,6 +37,7 @@ private:
     void save();
     void tambah_pemain();
     void load(vector<vector<string>>);
+    void info();
     bool check_win();
 
 public:
@@ -48,9 +49,6 @@ public:
      * Destructor
      */
     ~GameEngine();
-
-    /* GETTER */
-    vector<Player *> getPlayerVector();
 
     /* ACTION */
     /**

@@ -14,7 +14,7 @@ const vector<string> GameEngine::commands({"NEXT",
                                            "JUAL",
                                            "PANEN",
                                            "SIMPAN",
-                                           "TAMBAH_PEMAIN", "EXIT"});
+                                           "TAMBAH_PEMAIN", "INFO", "EXIT"});
 
 GameEngine::GameEngine() : gameConfig(), shop()
 {
@@ -69,16 +69,6 @@ GameEngine::GameEngine() : gameConfig(), shop()
 
 GameEngine::~GameEngine()
 {
-}
-
-vector<Player *> GameEngine::getPlayerVector()
-{
-    vector<Player *> res;
-    for (auto player : players)
-    {
-        res.push_back(player.second);
-    }
-    return res;
 }
 
 int GameEngine::checkCommand(string input)
@@ -258,6 +248,9 @@ void GameEngine::run()
                 stillRun = check_win();
                 break;
             case 15:
+                info();
+                break;
+            case 16:
                 stillRun = false;
                 cout << "Sampai Jumpa Lagi di Permainan Kelola Kerajaan (o^ ^o)/";
                 break;
@@ -300,8 +293,14 @@ void GameEngine::pungut_pajak()
     {
         throw CommandInvalidException();
     }
-    vector<Player *> vecPlayer = getPlayerVector();
-    dynamic_cast<Walikota *>(players[playerNames[currentTurn]])->tarikPajak(vecPlayer);
+
+    vector<Player *> res;
+    for (auto player : players)
+    {
+        res.push_back(player.second);
+    }
+
+    dynamic_cast<Walikota *>(players[playerNames[currentTurn]])->tarikPajak(res);
 }
 
 void GameEngine::cetak_ladang()
@@ -642,4 +641,25 @@ bool GameEngine::check_win()
         return false;
     }
     return true;
+}
+
+void GameEngine::info()
+{
+    // cetak
+    players[playerNames[currentTurn]]->printInventory();
+    cout << "Gulden: " << players[playerNames[currentTurn]]->getGulden() << endl;
+    cout << "Banyak gulden untuk menang: " << max(gameConfig.getGuldenWin() - players[playerNames[currentTurn]]->getGulden(), 0) << endl;
+    cout << "Weight: " << players[playerNames[currentTurn]]->getWeight() << endl;
+    cout << "Berat untuk menang: " << max(gameConfig.getWeightWin() - players[playerNames[currentTurn]]->getWeight(), 0) << endl;
+    
+    if (players[playerNames[currentTurn]]->getType() == "PETANI")
+    {
+        cout << endl;
+        dynamic_cast <Petani *>(players[playerNames[currentTurn]])->printLahan();
+    }
+    if (players[playerNames[currentTurn]]->getType() == "PETERNAK")
+    {
+        cout << endl;
+        dynamic_cast <Peternak *>(players[playerNames[currentTurn]])->printPeternakan();
+    }
 }
