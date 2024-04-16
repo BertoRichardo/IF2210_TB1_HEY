@@ -44,7 +44,7 @@ public:
 
     /**
      * add plant to lahan
-    */
+     */
     void addPlantToLahan(Plant *plant, string coordinate);
 
     /**
@@ -55,7 +55,7 @@ public:
     /**
      * Memanen tanaman atau men-throw error
      */
-    void cekPanen(string cell);
+    void cekPanen(string cell, string kode);
 
     /**
      * Memanen tanaman dan memberikan pesan

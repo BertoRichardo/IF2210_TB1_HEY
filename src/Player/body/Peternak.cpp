@@ -119,11 +119,15 @@ bool Peternak::isPanenableMatrix()
     return false;
 }
 
-void Peternak::cekPanen(string cell)
+void Peternak::cekPanen(string cell, string kode)
 {
     if (peternakan.isCellEmpty(cell))
     {
         throw CustomException("Peternakan kosong");
+    }
+    if (peternakan.getItem(cell)->getKodeHuruf() != kode)
+    {
+        throw CustomException("Hewan tidak sesuai");
     }
     if (!peternakan.getItem(cell)->isReadyToHarvest())
     {
@@ -226,7 +230,7 @@ void Peternak::panenTernak()
             cin.ignore();
 
             // validasi cell masukan
-            cekPanen(cell);
+            cekPanen(cell, item->first.first);
 
             // lolos dari validasi, bisa dieksekusi
             validCell.push_back(cell);
@@ -257,7 +261,7 @@ void Peternak::panenTernak()
     cout << quantity << " petak hewan " << item->first.first << " pada petak ";
     for (int i = 0; i < (int)validCell.size(); i++)
     {
-        cout << validCell[i];
+        // cout << validCell[i];
         if (i != (int)validCell.size() - 1)
         {
             cout << ", ";

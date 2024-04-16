@@ -39,7 +39,7 @@ public:
 
     /**
      * add animal to peternakan
-    */
+     */
     void addAnimalToPeternakan(Animal *animal, string coordinate);
 
     /**
@@ -57,7 +57,7 @@ public:
     /**
      * Memanen ternak atau men-throw error
      */
-    void cekPanen(string cell);
+    void cekPanen(string cell, string kode);
 
     /**
      * @return true jika ada kotak peternakan yang siap dipanen
@@ -81,7 +81,7 @@ public:
 
     /**
      * @return vector of animals' data in peternakan
-    */
+     */
     vector<pair<string, pair<string, string>>> getPeternakanAnimal();
 };
 

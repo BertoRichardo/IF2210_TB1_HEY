@@ -49,12 +49,16 @@ bool Petani::isPanenableMatrix()
     return false;
 }
 
-void Petani::cekPanen(string cell)
+void Petani::cekPanen(string cell, string kode)
 {
 
     if (lahan.isCellEmpty(cell))
     {
         throw CustomException("Cell/petak kosong");
+    }
+    if (lahan.getItem(cell)->getKodeHuruf() != kode)
+    {
+        throw CustomException("Tanaman yang tidak sesuai");
     }
     if (!lahan.getItem(cell)->isReadyToHarvest())
     {
@@ -155,8 +159,7 @@ void Petani::panenTanaman()
             cin.ignore();
 
             // validasi cell masukanl
-            cekPanen(cell);
-
+            cekPanen(cell, item->first);
             Plant *plant = lahan.getItem(cell);
             inventory + (new Product(plant->harvest()));
             lahan.removeItem(cell);
