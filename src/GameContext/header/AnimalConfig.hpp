@@ -31,7 +31,7 @@ class AnimalConfig : public Config {
         /** TYPE GETTER
          * @return type of object
         */
-        string getType();
+        string getType() const;
 
         /** TYPE SETTER
          * @param type Replaces the attribute type with the new one from the parameter
@@ -43,7 +43,7 @@ class AnimalConfig : public Config {
         /** WEIGHT_TO_HARVEST GETTER
          * @return weight_to_harvest of object
         */
-        int getWeightToHarvest();
+        int getWeightToHarvest() const;
 
         /** WEIGHT_TO_HARVEST SETTER
          * @param weight_to_harvest Replaces the attribute weight_to_harvest with the new one from the parameter

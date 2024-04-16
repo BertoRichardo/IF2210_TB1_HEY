@@ -2,6 +2,7 @@
 #define CONFIG_HPP
 
 #include <iostream>
+#include <string>
 using namespace std;
 
 class Config {
@@ -35,7 +36,7 @@ class Config {
         /** ID GETTER
          * @return id from the object attribute
         */
-        int getID();
+        int getID() const;
 
         /** ID SETTER
          * @param id Replace the attribute id with the new one from the parameter
@@ -47,7 +48,7 @@ class Config {
         /** KODE_HURUF GETTER
          * @return kode_huruf from the object attribute
         */
-        string getKodeHuruf();
+        string getKodeHuruf() const;
 
         /** KODE_HURUF SETTER
          * @param kode_huruf Replace the attribute kode_huruf with the new one from the parameter
@@ -59,7 +60,7 @@ class Config {
         /** NAMA GETTER
          * @return nama from the object attribute
         */
-        string getNama();
+        string getNama() const;
 
         /** NAMA SETTER
          * @param nama Replace the attribute nama with the new one from the parameter
@@ -71,7 +72,7 @@ class Config {
         /** PRICE GETTER
          * @return price value from the object attribute
         */
-        int getPrice();
+        int getPrice() const;
 
         /** PRICE SETTER
          * @param price Replace the attribute price with the new one from the parameter

@@ -101,5 +101,5 @@ void Plant::grow()
 
 void Plant::operator++(int)
 {
-    duration++;
+    grow();
 }

@@ -33,7 +33,7 @@ class ProductConfig : public Config {
         /** TYPE GETTER
          * @return type of object
         */
-        string getType();
+        string getType() const;
 
         /** TYPE SETTER
          * @param type Replaces the attribute type with the new one from the parameter
@@ -45,7 +45,7 @@ class ProductConfig : public Config {
         /** ORIGIN GETTER
          * @return origin of attribute
         */
-        string getOrigin();
+        string getOrigin() const;
 
         /** ORIGIN SETTER
          * @param origin Replaces the attribute origin with the new one from the parameter
@@ -57,7 +57,7 @@ class ProductConfig : public Config {
         /** ADDED WEIGHT GETTER
          * @return added weight of attribute
         */
-        int getAddedWeight();
+        int getAddedWeight() const;
 
         /** ADDED WEIGHT SETTER
          * @param added_weight Replaces the attribute added_weight with the new one from the parameter

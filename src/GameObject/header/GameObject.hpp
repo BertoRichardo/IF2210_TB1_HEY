@@ -93,6 +93,15 @@ public:
      * a.k.a. Mengosongkan object
     */
     void clearData();
+
+    /**
+     * Mengecek apakah kedua objek sama atau tidak
+     * Mengecek 
+     * - kodeHuruf
+     * - name
+     * - price
+    */
+    bool operator==(const GameObject& other);
 };
 
 #endif

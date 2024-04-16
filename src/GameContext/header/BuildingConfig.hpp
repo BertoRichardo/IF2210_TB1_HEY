@@ -31,7 +31,7 @@ class BuildingConfig : public Config {
         /** RECIPE GETTER
          * @return list of recipes (containing product name and quantity)
         */
-        vector<pair<string,int>> getRecipe();
+        vector<pair<string,int>> getRecipe() const;
 
         /** RECIPE SETTER
          * @param recipe Replaces the whole recipe with the new one
@@ -44,7 +44,7 @@ class BuildingConfig : public Config {
          * @param idx Chooses the element based on index
          * @return pair of string and integer in the element index of object
         */
-        pair<string,int> getRecipeComp(int);
+        pair<string,int> getRecipeComp(int) const;
 
         /** RECIPE COMP SETTER
          * @param element Replaces the element from the recipe with the new one
@@ -58,7 +58,7 @@ class BuildingConfig : public Config {
          * @param idx Chooses the element based on index and the program will choose the product name
          * @return product name from the element based on parameter
         */
-        string getProductName(int);
+        string getProductName(int) const;
 
         /** PRODUCT NAME SETTER
          * @param nama Replaces the product name from the recipe with the new one based on index
@@ -72,7 +72,7 @@ class BuildingConfig : public Config {
          * @param idx Chooses the element based on index and the program will choose the quantity
          * @return quantity from the element based on parameter
         */
-        int getQuantity(int);
+        int getQuantity(int) const;
 
         /** PRODUCT NAME SETTER
          * @param val Replaces the quantity from the recipe with the new one based on index

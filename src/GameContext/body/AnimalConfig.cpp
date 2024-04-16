@@ -19,7 +19,7 @@ AnimalConfig::AnimalConfig(int id,
     this->weight_to_harvest = weight_to_harvest;
 }
 
-string AnimalConfig::getType() {
+string AnimalConfig::getType() const {
     return this->type;
 }
 
@@ -27,7 +27,7 @@ void AnimalConfig::setType(string type) {
     this->type = type;
 }
 
-int AnimalConfig::getWeightToHarvest() {
+int AnimalConfig::getWeightToHarvest() const {
     return this->weight_to_harvest;
 }
 
