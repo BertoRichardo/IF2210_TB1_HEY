@@ -139,6 +139,11 @@ void GameEngine::setup()
         {
             e.displayMessage();
         }
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << "\n\n";
+        }
+        
     }
 
     cout << "Giliran saat ini adalah pemain dengan username " << playerNames[currentTurn] << " dan role " << players[playerNames[currentTurn]]->getType() << "\n\n";
